@@ -4,6 +4,7 @@ import User from "../pages/User";
 import Role from "../pages/Role";
 import ErrorIndicator from "../pages/ErrorPage";
 import Home from "../pages/Home";
+import Permissions from "../pages/Permissions";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "/role",
         element: <Role />,
+      },
+      {
+        path: "/permissions",
+        element: <Permissions />,
       },
     ],
   },

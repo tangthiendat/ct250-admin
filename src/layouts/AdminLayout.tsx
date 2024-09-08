@@ -29,6 +29,11 @@ const items = [
     key: "role",
     icon: <FaUserCog />,
   },
+  {
+    label: <NavLink to="/permissions">Permissions</NavLink>,
+    key: "permissions",
+    icon: <FaUserCog />,
+  },
 ];
 
 const AdminLayout: React.FC = () => {

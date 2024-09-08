@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import type { GetProp, TableProps } from "antd";
 import { Table } from "antd";
 import type { SorterResult } from "antd/es/table/interface";
-import { IUser } from "../interfaces/IUser";
+import { IUser } from "../interfaces/auth/IUser";
 
 type ColumnsType<T extends object = object> = TableProps<T>["columns"];
 type TablePaginationConfig = Exclude<

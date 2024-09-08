@@ -13,4 +13,8 @@
     font-weight: 400;
     min-width: 440px;
   }
+
+  .card {
+    @apply rounded-lg bg-white px-6 py-4 shadow-md;
+  }
 }
