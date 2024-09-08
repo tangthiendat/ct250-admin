@@ -1,15 +1,18 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminLayout from "../layouts/AdminLayout";
-import Home from "../pages/Home";
 import User from "../pages/User";
 import Role from "../pages/Role";
+import ErrorIndicator from "../pages/ErrorPage";
+import Home from "../pages/Home";
 
 const router = createBrowserRouter([
   {
     element: <AdminLayout />,
+    errorElement: <ErrorIndicator />,
     children: [
       {
         path: "/",
+        index: true,
         element: <Home />,
       },
       {
