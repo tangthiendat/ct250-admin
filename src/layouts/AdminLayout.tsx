@@ -20,13 +20,13 @@ const items = [
     icon: <MdDashboard />,
   },
   {
-    label: <NavLink to="/user">User</NavLink>,
-    key: "user",
+    label: <NavLink to="/users">User</NavLink>,
+    key: "users",
     icon: <FaUser />,
   },
   {
-    label: <NavLink to="/role">Role</NavLink>,
-    key: "role",
+    label: <NavLink to="/roles">Role</NavLink>,
+    key: "roles",
     icon: <FaUserCog />,
   },
   {
