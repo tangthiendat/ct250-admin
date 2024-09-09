@@ -1,5 +1,5 @@
 import React from "react";
-import { Space, Table } from "antd";
+import { Space, Table, Tooltip } from "antd";
 import { formatDate } from "date-fns";
 import { TableProps, Badge } from "antd";
 import { IUser } from "../../../interfaces";
@@ -10,12 +10,14 @@ interface UsersTableProps {
   search: string;
   users: IUser[];
   updateUser: (user: IUser) => void;
+  deleteUser: (userId: number) => void;
 }
 
 const UsersTable: React.FC<UsersTableProps> = ({
   search,
   users,
   updateUser,
+  deleteUser,
 }) => {
   const filteredUsers = users.filter((user: IUser) => {
     return (
@@ -31,6 +33,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
       dataIndex: "id",
       width: "5%",
       align: "center",
+      sorter: (a, b) => a.id - b.id,
     },
     {
       key: "name",
@@ -52,15 +55,15 @@ const UsersTable: React.FC<UsersTableProps> = ({
       align: "center",
       filters: [
         { text: "Admin", value: "admin" },
-        { text: "User", value: "-" },
+        { text: "User", value: "user" },
         { text: "Super Admin", value: "super_admin" },
       ],
       onFilter: (value, record) => record.role === value,
       render: (role: string) => {
         return role === "admin" ? (
-          <p className="text-green-600">{role.toUpperCase()}</p>
+          <p className="font-bold text-green-600">{role.toUpperCase()}</p>
         ) : role === "super_admin" ? (
-          <p className="text-blue-600">{role.toUpperCase()}</p>
+          <p className="font-bold text-blue-600">{role.toUpperCase()}</p>
         ) : (
           <p>-</p>
         );
@@ -70,7 +73,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
       key: "status",
       title: "Trạng thái",
       dataIndex: "status",
-      width: "10%",
+      width: "8%",
       align: "center",
       filters: [
         { text: "Active", value: "active" },
@@ -79,9 +82,13 @@ const UsersTable: React.FC<UsersTableProps> = ({
       onFilter: (value, record) => record.status === value,
       render: (status: string) => {
         return status === "active" ? (
-          <Badge status="success" text="active" />
+          <Tooltip title="Active">
+            <Badge status="success" />
+          </Tooltip>
         ) : (
-          <Badge status="error" text="inactive" />
+          <Tooltip title="Inactive">
+            <Badge status="error" />
+          </Tooltip>
         );
       },
     },
@@ -113,7 +120,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
       render: (record: IUser) => (
         <Space>
           <UpdateUser user={record} updateUser={updateUser} />
-          <DeleteUser />
+          <DeleteUser userID={record.id} deleteUser={deleteUser} />
         </Space>
       ),
     },

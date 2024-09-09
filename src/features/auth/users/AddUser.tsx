@@ -6,10 +6,10 @@ import UpdateUserForm from "./UpdateUserForm";
 
 interface AddUserProps {
   addUser: (user: IUser) => void;
-  idForNewUser: number;
+  IDForNewUser: number;
 }
 
-const AddUser: React.FC<AddUserProps> = ({ addUser, idForNewUser }) => {
+const AddUser: React.FC<AddUserProps> = ({ addUser, IDForNewUser }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [addUserForm] = Form.useForm<IUser>();
 
@@ -25,7 +25,7 @@ const AddUser: React.FC<AddUserProps> = ({ addUser, idForNewUser }) => {
   const handleFinish = (values: IUser) => {
     const newUser: IUser = {
       ...values,
-      id: idForNewUser,
+      id: IDForNewUser,
       status: "active",
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),

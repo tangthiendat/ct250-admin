@@ -69,6 +69,19 @@ const Users: React.FC = () => {
     setSearch(value);
   };
 
+  function calculateIDForNewUser(): number {
+    // Các id từ 1 đến id lớn nhất trong mảng users nếu không liên tục thì sẽ lấy id đầu tiên của các id thiếu đó.
+    // Nếu id các user đã liên tục thì id mới sẽ là id lớn nhất + 1.
+
+    const ids = users.map((user) => user.id).sort((a, b) => a - b);
+    for (let i = 0; i < ids.length; i++) {
+      if (ids[i] !== i + 1) {
+        return i + 1;
+      }
+    }
+    return ids[ids.length - 1] + 1;
+  }
+
   const addUser = (newUser: IUser) => {
     setUsers([...users, newUser]);
   };
@@ -77,6 +90,10 @@ const Users: React.FC = () => {
     setUsers(
       users.map((user) => (user.id === updatedUser.id ? updatedUser : user)),
     );
+  };
+
+  const deleteUser = (userId: number) => {
+    setUsers(users.filter((user) => user.id !== userId));
   };
 
   return (
@@ -96,9 +113,14 @@ const Users: React.FC = () => {
             </div>
           </div>
 
-          <AddUser addUser={addUser} idForNewUser={users.length + 1} />
+          <AddUser addUser={addUser} IDForNewUser={calculateIDForNewUser()} />
         </div>
-        <UsersTable search={search} users={users} updateUser={updateUser} />
+        <UsersTable
+          search={search}
+          users={users}
+          updateUser={updateUser}
+          deleteUser={deleteUser}
+        />
       </div>
     </>
   );
