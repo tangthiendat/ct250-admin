@@ -1,6 +1,6 @@
 import { Input } from "antd";
-import AddUser from "../features/auth/AddUser";
-import UsersTable from "../features/auth/UsersTable";
+import AddUser from "../features/auth/users/AddUser";
+import UsersTable from "../features/auth/users/UsersTable";
 import { useState } from "react";
 import { IUser } from "../interfaces";
 
@@ -73,6 +73,12 @@ const Users: React.FC = () => {
     setUsers([...users, newUser]);
   };
 
+  const updateUser = (updatedUser: IUser) => {
+    setUsers(
+      users.map((user) => (user.id === updatedUser.id ? updatedUser : user)),
+    );
+  };
+
   return (
     <>
       <div className="card">
@@ -92,7 +98,7 @@ const Users: React.FC = () => {
 
           <AddUser addUser={addUser} idForNewUser={users.length + 1} />
         </div>
-        <UsersTable search={search} users={users} />
+        <UsersTable search={search} users={users} updateUser={updateUser} />
       </div>
     </>
   );

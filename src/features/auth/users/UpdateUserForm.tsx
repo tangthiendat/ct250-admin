@@ -8,7 +8,7 @@ import {
   Select,
   Space,
 } from "antd";
-import { IUser } from "../../interfaces";
+import { IUser } from "../../../interfaces";
 import { useEffect } from "react";
 
 interface UpdateUserFormProps {
@@ -21,15 +21,26 @@ interface UpdateUserFormProps {
 const roleOptions = [
   {
     value: "admin",
-    label: "Admin",
+    label: "ADMIN",
   },
   {
     value: "user",
-    label: "User",
+    label: "USER",
   },
   {
     value: "super_admin",
-    label: "Super Admin",
+    label: "SUPER_ADMIN",
+  },
+];
+
+const statusOptions = [
+  {
+    value: "active",
+    label: "active",
+  },
+  {
+    value: "inactive",
+    label: "inactive",
   },
 ];
 
@@ -39,10 +50,6 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
   onCancel,
   onFinish,
 }) => {
-  //   function handleFinish(values: IUser) {
-  //     console.log({ ...userToUpdate, ...values });
-  //   }
-
   useEffect(() => {
     if (userToUpdate) {
       console.log(userToUpdate);
@@ -77,14 +84,22 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
               defaultValue={roleOptions[1].value}
             />
           </Form.Item>
+
+          <Form.Item label="Trạng thái" name="status">
+            <Select
+              allowClear
+              options={statusOptions}
+              defaultValue={statusOptions[0].value}
+            />
+          </Form.Item>
         </Col>
       </Row>
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
-          <Button onClick={onCancel}>Hủy</Button>
+          <Button onClick={onCancel}>Cancel</Button>
 
           <Button type="primary" htmlType="submit">
-            Thêm
+            Apply
           </Button>
         </Space>
       </Form.Item>

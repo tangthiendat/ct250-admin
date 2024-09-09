@@ -1,7 +1,7 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Modal } from "antd";
 import { useState } from "react";
-import { IUser } from "../../interfaces";
+import { IUser } from "../../../interfaces";
 import UpdateUserForm from "./UpdateUserForm";
 
 interface AddUserProps {
