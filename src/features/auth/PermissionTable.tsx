@@ -80,14 +80,6 @@ const permissionData: IPermission[] = [
 ];
 
 const PermissionTable: React.FC = () => {
-  const locale: TableProps<IPermission>["locale"] = {
-    triggerAsc: "Sắp xếp tăng dần",
-    triggerDesc: "Sắp xếp giảm dần",
-    cancelSort: "Hủy sắp xếp",
-    filterConfirm: "Lọc",
-    filterReset: "Đặt lại",
-  };
-
   const columns: TableProps<IPermission>["columns"] = [
     {
       title: "ID",
@@ -180,7 +172,6 @@ const PermissionTable: React.FC = () => {
       dataSource={permissionData}
       columns={columns}
       size="middle"
-      locale={locale}
     />
   );
 };
