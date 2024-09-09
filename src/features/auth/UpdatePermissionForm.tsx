@@ -9,9 +9,11 @@ import {
   Space,
 } from "antd";
 import { IPermission } from "../../interfaces";
+import { useEffect } from "react";
 
 interface UpdatePermissionFormProps {
   form: FormInstance<IPermission>;
+  permissionToUpdate?: IPermission;
   onCancel: () => void;
 }
 
@@ -47,11 +49,19 @@ const moduleOptions = [
 
 const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
   form,
+  permissionToUpdate,
   onCancel,
 }) => {
   function handleFinish(values: IPermission) {
-    console.log(values);
+    console.log({ ...permissionToUpdate, ...values });
   }
+
+  useEffect(() => {
+    if (permissionToUpdate) {
+      console.log(permissionToUpdate);
+      form.setFieldsValue(permissionToUpdate);
+    }
+  }, [form, permissionToUpdate]);
 
   return (
     <Form onFinish={handleFinish} layout="vertical" form={form}>

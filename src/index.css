@@ -17,4 +17,8 @@
   .card {
     @apply rounded-lg bg-white px-6 py-4 shadow-md;
   }
+
+  .table-icon {
+    @apply h-6 w-6 cursor-pointer;
+  }
 }

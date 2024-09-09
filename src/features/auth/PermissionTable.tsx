@@ -1,8 +1,9 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import { Space, Table, TableProps } from "antd";
 import { formatDate } from "date-fns";
 import { IPermission } from "../../interfaces";
 import { colorMethod } from "../../utils";
+import UpdatePermission from "./UpdatePermission";
 
 const permissionData: IPermission[] = [
   {
@@ -157,9 +158,10 @@ const PermissionTable: React.FC = () => {
       title: "Hành động",
       key: "action",
       width: "10%",
-      render: () => (
-        <Space>
-          <EditOutlined className="text-xl text-[#ffa500]" />
+      align: "center",
+      render: (record: IPermission) => (
+        <Space size="middle">
+          <UpdatePermission permission={record} />
           <DeleteOutlined className="text-xl text-[#ff4d4f]" />
         </Space>
       ),
