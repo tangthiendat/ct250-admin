@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminLayout from "../layouts/AdminLayout";
-import User from "../pages/User";
-import Role from "../pages/Role";
+import Users from "../pages/Users";
+import Roles from "../pages/Roles";
 import ErrorIndicator from "../pages/ErrorPage";
 import Home from "../pages/Home";
 import Permissions from "../pages/Permissions";
@@ -22,12 +22,12 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/user",
-        element: <User />,
+        path: "/users",
+        element: <Users />,
       },
       {
-        path: "/role",
-        element: <Role />,
+        path: "/roles",
+        element: <Roles />,
       },
       {
         path: "/permissions",
