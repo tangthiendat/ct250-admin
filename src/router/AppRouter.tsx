@@ -5,8 +5,13 @@ import Role from "../pages/Role";
 import ErrorIndicator from "../pages/ErrorPage";
 import Home from "../pages/Home";
 import Permissions from "../pages/Permissions";
+import Login from "../pages/Login";
 
 const router = createBrowserRouter([
+  {
+    element: <Login />,
+    path: "/login",
+  },
   {
     element: <AdminLayout />,
     errorElement: <ErrorIndicator />,
