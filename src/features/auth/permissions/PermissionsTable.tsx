@@ -1,7 +1,7 @@
 import { Space, Table, TableProps } from "antd";
 import { formatDate } from "date-fns";
-import { IPermission } from "../../interfaces";
-import { colorMethod } from "../../utils";
+import { IPermission } from "../../../interfaces";
+import { colorMethod } from "../../../utils";
 import DeletePermission from "./DeletePermission";
 import UpdatePermission from "./UpdatePermission";
 

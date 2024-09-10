@@ -2,7 +2,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Modal } from "antd";
 import { useState } from "react";
 import UpdatePermissionForm from "./UpdatePermissionForm";
-import { IPermission } from "../../interfaces";
+import { IPermission } from "../../../interfaces";
 
 const AddPermission: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);

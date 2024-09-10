@@ -8,7 +8,7 @@ import {
   Select,
   Space,
 } from "antd";
-import { IPermission } from "../../interfaces";
+import { IPermission } from "../../../interfaces";
 import { useEffect } from "react";
 
 interface UpdatePermissionFormProps {

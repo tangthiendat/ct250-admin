@@ -1,7 +1,7 @@
 import { EditOutlined } from "@ant-design/icons";
 import { Form, Modal, Tooltip } from "antd";
 import { useState } from "react";
-import { IPermission } from "../../interfaces";
+import { IPermission } from "../../../interfaces";
 import UpdatePermissionForm from "./UpdatePermissionForm";
 
 interface UpdatePermissionProps {
@@ -32,7 +32,7 @@ const UpdatePermission: React.FC<UpdatePermissionProps> = ({ permission }) => {
       <Modal
         open={isOpenModal}
         width="30%"
-        title={<span className="text-lg">Thêm quyền hạn</span>}
+        title={<span className="text-lg">Chỉnh sửa quyền hạn</span>}
         destroyOnClose
         onCancel={handleCloseModal}
         footer={null}

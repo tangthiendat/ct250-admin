@@ -1,5 +1,5 @@
-import AddPermission from "../features/auth/AddPermission";
-import PermissionTable from "../features/auth/PermissionTable";
+import AddPermission from "../features/auth/permissions/AddPermission";
+import PermissionsTable from "../features/auth/permissions/PermissionsTable";
 
 const Permissions: React.FC = () => {
   return (
@@ -8,7 +8,7 @@ const Permissions: React.FC = () => {
         <h2 className="text-xl font-semibold">Quyền hạn</h2>
         <AddPermission />
       </div>
-      <PermissionTable />
+      <PermissionsTable />
     </div>
   );
 };
