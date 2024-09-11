@@ -11,6 +11,7 @@ import {
 } from "antd";
 import { IRole } from "../../../interfaces";
 import RolePermissions from "./RolePermissions";
+import { useEffect } from "react";
 
 interface UpdateRoleFormProps {
   form: FormInstance<IRole>;
@@ -18,10 +19,25 @@ interface UpdateRoleFormProps {
   onCancel: () => void;
 }
 
-const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({ form, onCancel }) => {
+const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
+  form,
+  roleToUpdate,
+  onCancel,
+}) => {
   function handleFinish(values: IRole) {
-    console.log({ ...form.getFieldsValue(true), ...values });
+    console.log({ ...roleToUpdate, ...form.getFieldsValue(true), ...values });
   }
+
+  useEffect(() => {
+    if (roleToUpdate) {
+      form.setFieldsValue({
+        ...roleToUpdate,
+        permissions: roleToUpdate.permissions.map((permission) => ({
+          permissionId: permission.permissionId,
+        })),
+      });
+    }
+  }, [roleToUpdate, form]);
 
   return (
     <Form
@@ -53,7 +69,7 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({ form, onCancel }) => {
         </Col>
         <Col span={24}>
           <Card className="mb-5" title="Quyền hạn của vai trò" size="small">
-            <RolePermissions form={form} />
+            <RolePermissions form={form} roleToUpdate={roleToUpdate} />
           </Card>
         </Col>
       </Row>
@@ -62,7 +78,7 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({ form, onCancel }) => {
         <Space>
           <Button onClick={onCancel}>Hủy</Button>
           <Button type="primary" htmlType="submit">
-            Cập nhật
+            {roleToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>
       </Form.Item>

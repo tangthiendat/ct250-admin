@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 
 interface RolePermissionsProps {
   form: FormInstance<IRole>;
+  roleToUpdate?: IRole;
 }
 
 const permissionData: IPermission[] = [
@@ -126,7 +127,10 @@ const permissionData: IPermission[] = [
   },
 ];
 
-const RolePermissions: React.FC<RolePermissionsProps> = ({ form }) => {
+const RolePermissions: React.FC<RolePermissionsProps> = ({
+  form,
+  roleToUpdate,
+}) => {
   const allRolePermissions = groupBy<IPermission, string>(
     permissionData,
     (permission) => permission.module,
@@ -144,6 +148,26 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({ form }) => {
       ),
     });
   }, [selectedPermissions, form]);
+
+  //set selectedPermissions when there is a roleToUpdate
+  useEffect(() => {
+    if (roleToUpdate) {
+      setSelectedPermissions((prev) => {
+        const rolePermissions = groupBy<IPermission, string>(
+          roleToUpdate.permissions,
+          (permission) => permission.module,
+        );
+        const newSelectedPermissions = new Map<string, Set<number>>(prev);
+        rolePermissions.forEach((permissions, module) => {
+          newSelectedPermissions.set(
+            module,
+            new Set(permissions.map((permission) => permission.permissionId)),
+          );
+        });
+        return newSelectedPermissions;
+      });
+    }
+  }, [roleToUpdate]);
 
   function isModuleChecked(module: string): boolean {
     const selectedPermissionIds = selectedPermissions.get(module) || new Set();
