@@ -2,6 +2,7 @@ import { Space, Table, TableProps, Tag } from "antd";
 import { IPermission, IRole } from "../../../interfaces";
 import { formatDate } from "date-fns";
 import UpdateRole from "./UpdateRole";
+import DeleteRole from "./DeleteRole";
 
 const permissionData: IPermission[] = [
   {
@@ -190,6 +191,7 @@ const RolesTable: React.FC = () => {
       render: (record: IRole) => (
         <Space size="middle">
           <UpdateRole role={record} />
+          <DeleteRole roleId={record.roleId} />
         </Space>
       ),
     },
