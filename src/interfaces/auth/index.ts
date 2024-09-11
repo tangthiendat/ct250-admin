@@ -17,3 +17,13 @@ export interface IPermission {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IRole {
+  roleId: number;
+  name: string;
+  active: boolean;
+  description?: string;
+  permissions: IPermission[];
+  createdAt: string;
+  updatedAt: string;
+}
