@@ -3,7 +3,7 @@ export interface IUser {
   name: string;
   email: string;
   role: string;
-  status: string;
+  active: boolean;
   created_at: string;
   updated_at: string;
 }

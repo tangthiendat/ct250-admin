@@ -1,7 +1,7 @@
 import React from "react";
-import { Space, Table, Tooltip } from "antd";
+import { Space, Table, Tag } from "antd";
 import { formatDate } from "date-fns";
-import { TableProps, Badge } from "antd";
+import { TableProps } from "antd";
 import { IUser } from "../../../interfaces";
 import UpdateUser from "./UpdateUser";
 import DeleteUser from "./DeleteUser";
@@ -70,27 +70,21 @@ const UsersTable: React.FC<UsersTableProps> = ({
       },
     },
     {
-      key: "status",
+      key: "active",
       title: "Trạng thái",
-      dataIndex: "status",
+      dataIndex: "active",
       width: "8%",
       align: "center",
       filters: [
-        { text: "Active", value: "active" },
-        { text: "Inactive", value: "inactive" },
+        { text: "ACTIVE", value: true },
+        { text: "INACTIVE", value: false },
       ],
-      onFilter: (value, record) => record.status === value,
-      render: (status: string) => {
-        return status === "active" ? (
-          <Tooltip title="Active">
-            <Badge status="success" />
-          </Tooltip>
-        ) : (
-          <Tooltip title="Inactive">
-            <Badge status="error" />
-          </Tooltip>
-        );
-      },
+      onFilter: (value, record) => record.active === value,
+      render: (active: boolean) => (
+        <Tag color={active ? "green" : "red"}>
+          {active ? "ACTIVE" : "INACTIVE"}
+        </Tag>
+      ),
     },
     {
       key: "created_at",

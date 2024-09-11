@@ -7,6 +7,7 @@ import {
   Row,
   Select,
   Space,
+  Switch,
 } from "antd";
 import { IUser } from "../../../interfaces";
 import { useEffect } from "react";
@@ -30,17 +31,6 @@ const roleOptions = [
   {
     value: "super_admin",
     label: "SUPER_ADMIN",
-  },
-];
-
-const statusOptions = [
-  {
-    value: "active",
-    label: "active",
-  },
-  {
-    value: "inactive",
-    label: "inactive",
   },
 ];
 
@@ -85,12 +75,15 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
             />
           </Form.Item>
 
-          <Form.Item label="Trạng thái" name="status">
+          {/* <Form.Item label="Trạng thái" name="status">
             <Select
               allowClear
               options={statusOptions}
               defaultValue={statusOptions[0].value}
             />
+          </Form.Item> */}
+          <Form.Item label="Trạng thái" name="active" valuePropName="checked">
+            <Switch checkedChildren="ACTIVE" unCheckedChildren="INACTIVE" />
           </Form.Item>
         </Col>
       </Row>

@@ -114,6 +114,11 @@ const RolesTable: React.FC = () => {
       dataIndex: "active",
       key: "active",
       width: "15%",
+      filters: [
+        { text: "ACTIVE", value: true },
+        { text: "INACTIVE", value: false },
+      ],
+      onFilter: (value, record) => record.active === value,
       render: (active: boolean) => (
         <Tag color={active ? "green" : "red"}>
           {active ? "ACTIVE" : "INACTIVE"}
