@@ -1,11 +1,17 @@
 export interface IUser {
-  id: number;
-  name: string;
+  userId: string;
   email: string;
-  role: string;
+  firstName: string;
+  lastName: string;
+  gender: "MALE" | "FEMALE" | "OTHER";
+  identityNumber: string;
+  phoneNumber: string;
+  countryId: number;
   active: boolean;
-  created_at: string;
-  updated_at: string;
+  dateOfBirth: string;
+  roles: IRole;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 export interface IPermission {
@@ -26,4 +32,14 @@ export interface IRole {
   permissions: IPermission[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface IAuthRequest {
+  email: string;
+  password: string;
+}
+
+export interface IAuthResponse {
+  accessToken: string;
+  user: IUser;
 }

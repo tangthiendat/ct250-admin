@@ -2,17 +2,19 @@ import { Form, Input } from "antd";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import { useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { IAuthRequest } from "../../interfaces";
 
 const LoginForm: React.FC = () => {
   const [componentSize, setComponentSize] = useState<SizeType | "default">(
     "default",
   );
+  const [loginForm] = Form.useForm();
 
   const onFormLayoutChange = ({ size }: { size: SizeType }) => {
     setComponentSize(size);
   };
 
-  function onSubmit(data: any): void {
+  function onSubmit(data: IAuthRequest): void {
     console.log(data);
   }
 
@@ -20,6 +22,7 @@ const LoginForm: React.FC = () => {
     <Form
       className="flex flex-col"
       onFinish={onSubmit}
+      form={loginForm}
       layout="vertical"
       initialValues={{ size: componentSize }}
       onValuesChange={onFormLayoutChange}
