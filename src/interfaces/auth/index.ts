@@ -21,7 +21,7 @@ export interface IPermission {
   method: "GET" | "POST" | "PUT" | "DELETE";
   module: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface IRole {
@@ -31,7 +31,7 @@ export interface IRole {
   description?: string;
   permissions: IPermission[];
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface IAuthRequest {
@@ -41,5 +41,4 @@ export interface IAuthRequest {
 
 export interface IAuthResponse {
   accessToken: string;
-  user: IUser;
 }

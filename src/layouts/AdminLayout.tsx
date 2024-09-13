@@ -6,6 +6,9 @@ import { MdDashboard } from "react-icons/md";
 import { FaUser, FaUserCircle, FaUserCog } from "react-icons/fa";
 import { Outlet, useLocation } from "react-router";
 import { NavLink } from "react-router-dom";
+import { userService } from "../services/users-service";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "../common/Loading";
 
 const { Header, Sider } = Layout;
 
@@ -44,6 +47,12 @@ const AdminLayout: React.FC = () => {
       : location.pathname.slice(1).split("/"),
   );
   const [collapsed, setCollapsed] = useState(false);
+  const { data, isLoading } = useQuery({
+    queryKey: ["user", "logged-in"],
+    queryFn: userService.getLoggedInUser,
+  });
+
+  const user = data?.payload;
 
   const {
     token: { colorBgContainer },
@@ -65,6 +74,10 @@ const AdminLayout: React.FC = () => {
       window.removeEventListener("resize", checkScreenWidth);
     };
   }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Layout className="min-h-screen">
@@ -101,7 +114,7 @@ const AdminLayout: React.FC = () => {
               }}
             />
             <div className="mr-5 flex items-center gap-1">
-              <p>Welcome name!</p>
+              <p>{user ? `${user.firstName} ${user.lastName}` : ""}</p>
               <Button
                 type="text"
                 icon={<FaUserCircle />}
