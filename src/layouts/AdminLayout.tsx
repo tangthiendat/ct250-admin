@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, Layout, Menu, theme } from "antd";
+import { Button, Layout, Menu, MenuProps, theme } from "antd";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { FaUser, FaUserCircle, FaUserCog } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
@@ -8,35 +8,9 @@ import { Outlet, useLocation } from "react-router";
 import { NavLink } from "react-router-dom";
 import Loading from "../common/Loading";
 import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
+import { ALL_PERMISSIONS } from "../constants";
 
 const { Header, Sider } = Layout;
-
-const items = [
-  {
-    label: (
-      <NavLink className="" to="/">
-        Dashboard
-      </NavLink>
-    ),
-    key: "dashboard",
-    icon: <MdDashboard />,
-  },
-  {
-    label: <NavLink to="/users">User</NavLink>,
-    key: "users",
-    icon: <FaUser />,
-  },
-  {
-    label: <NavLink to="/roles">Role</NavLink>,
-    key: "roles",
-    icon: <FaUserCog />,
-  },
-  {
-    label: <NavLink to="/permissions">Permissions</NavLink>,
-    key: "permissions",
-    icon: <FaUserCog />,
-  },
-];
 
 const AdminLayout: React.FC = () => {
   const location = useLocation();
@@ -45,8 +19,73 @@ const AdminLayout: React.FC = () => {
       ? ["dashboard"]
       : location.pathname.slice(1).split("/"),
   );
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [menuItems, setMenuItems] = useState<MenuProps["items"]>([]);
   const { user, isLoading } = useLoggedInUser();
+
+  useEffect(() => {
+    if (user?.role.permissions) {
+      const permissions = user.role.permissions;
+
+      const viewUsers = permissions.find(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.USERS.GET_PAGINATION.apiPath &&
+          item.method === ALL_PERMISSIONS.USERS.GET_PAGINATION.method,
+      );
+      const viewRoles = permissions.find(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.ROLES.GET_PAGINATION.apiPath &&
+          item.method === ALL_PERMISSIONS.ROLES.GET_PAGINATION.method,
+      );
+
+      const viewPermissions = permissions.find(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATION.apiPath &&
+          item.method === ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATION.method,
+      );
+
+      const menuItems = [
+        {
+          label: (
+            <NavLink className="" to="/">
+              Dashboard
+            </NavLink>
+          ),
+          key: "dashboard",
+          icon: <MdDashboard />,
+        },
+        ...(viewUsers
+          ? [
+              {
+                label: <NavLink to="/users">User</NavLink>,
+                key: "users",
+                icon: <FaUser />,
+              },
+            ]
+          : []),
+        ...(viewRoles
+          ? [
+              {
+                label: <NavLink to="/roles">Role</NavLink>,
+                key: "roles",
+                icon: <FaUserCog />,
+              },
+            ]
+          : []),
+        ...(viewPermissions
+          ? [
+              {
+                label: <NavLink to="/permissions">Permissions</NavLink>,
+                key: "permissions",
+                icon: <FaUserCog />,
+              },
+            ]
+          : []),
+      ];
+
+      setMenuItems(menuItems);
+    }
+  }, [user]);
 
   const {
     token: { colorBgContainer },
@@ -90,7 +129,7 @@ const AdminLayout: React.FC = () => {
           theme="light"
           mode="inline"
           selectedKeys={selectedKeys}
-          items={items}
+          items={menuItems}
           onClick={({ key }) => {
             setSelectedKeys([key]);
           }}

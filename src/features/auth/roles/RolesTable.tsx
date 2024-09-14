@@ -137,7 +137,7 @@ const RolesTable: React.FC = () => {
     },
     {
       title: "Tên",
-      dataIndex: "name",
+      dataIndex: "roleName",
       key: "roleName",
       width: "10%",
     },
