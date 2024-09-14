@@ -9,7 +9,7 @@ interface IUserService {
 const apiClient: AxiosInstance = createApiClient("users");
 class UserService implements IUserService {
   async getLoggedInUser(): Promise<ApiResponse<IUser>> {
-    return (await apiClient.get("/me")).data;
+    return (await apiClient.get("/logged-in")).data;
   }
 }
 
