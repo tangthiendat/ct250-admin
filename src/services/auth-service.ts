@@ -6,15 +6,10 @@ interface IAuthService {
   login(authRequest: IAuthRequest): Promise<ApiResponse<IAuthResponse>>;
 }
 
+const apiClient: AxiosInstance = createApiClient("auth", { auth: false });
 class AuthService implements IAuthService {
-  private apiClient: AxiosInstance;
-
-  constructor() {
-    this.apiClient = createApiClient("auth", { auth: false });
-  }
-
   async login(authRequest: IAuthRequest): Promise<ApiResponse<IAuthResponse>> {
-    return (await this.apiClient.post("/login", authRequest)).data;
+    return (await apiClient.post("/login", authRequest)).data;
   }
 }
 

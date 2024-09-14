@@ -9,7 +9,7 @@ export interface IUser {
   countryId: number;
   active: boolean;
   dateOfBirth: string;
-  roles: IRole;
+  role: IRole;
   createdAt: string;
   updatedAt?: string;
 }
@@ -21,17 +21,17 @@ export interface IPermission {
   method: "GET" | "POST" | "PUT" | "DELETE";
   module: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface IRole {
   roleId: number;
-  name: string;
+  roleName: string;
   active: boolean;
   description?: string;
   permissions: IPermission[];
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface IAuthRequest {
@@ -41,5 +41,4 @@ export interface IAuthRequest {
 
 export interface IAuthResponse {
   accessToken: string;
-  user: IUser;
 }
