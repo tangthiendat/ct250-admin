@@ -118,7 +118,7 @@ const permissionData: IPermission[] = [
 const rolesData: IRole[] = [
   {
     roleId: 1,
-    name: "ADMIN",
+    roleName: "ADMIN",
     description: "Quản trị viên có toàn quyền",
     active: true,
     permissions: permissionData,
@@ -138,7 +138,7 @@ const RolesTable: React.FC = () => {
     {
       title: "Tên",
       dataIndex: "name",
-      key: "name",
+      key: "roleName",
       width: "10%",
     },
     {
@@ -180,8 +180,14 @@ const RolesTable: React.FC = () => {
       width: "15%",
       render: (updatedAt: string) =>
         formatDate(new Date(updatedAt), "dd-MM-yyyy hh:mm:ss"),
-      sorter: (a, b) =>
-        new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+      sorter: (a, b) => {
+        if (a.updatedAt && b.updatedAt) {
+          return (
+            new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
+          );
+        }
+        return 0;
+      },
     },
     {
       title: "Hành động",
