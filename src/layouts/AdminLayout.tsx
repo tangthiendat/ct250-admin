@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 
 import { Button, Layout, Menu, theme } from "antd";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
-import { MdDashboard } from "react-icons/md";
 import { FaUser, FaUserCircle, FaUserCog } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
 import { Outlet, useLocation } from "react-router";
 import { NavLink } from "react-router-dom";
-import { userService } from "../services/users-service";
-import { useQuery } from "@tanstack/react-query";
 import Loading from "../common/Loading";
+import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
 
 const { Header, Sider } = Layout;
 
@@ -47,12 +46,7 @@ const AdminLayout: React.FC = () => {
       : location.pathname.slice(1).split("/"),
   );
   const [collapsed, setCollapsed] = useState(false);
-  const { data, isLoading } = useQuery({
-    queryKey: ["user", "logged-in"],
-    queryFn: userService.getLoggedInUser,
-  });
-
-  const user = data?.payload;
+  const { user, isLoading } = useLoggedInUser();
 
   const {
     token: { colorBgContainer },

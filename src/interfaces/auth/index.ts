@@ -9,7 +9,7 @@ export interface IUser {
   countryId: number;
   active: boolean;
   dateOfBirth: string;
-  roles: IRole;
+  role: IRole;
   createdAt: string;
   updatedAt?: string;
 }
@@ -26,7 +26,7 @@ export interface IPermission {
 
 export interface IRole {
   roleId: number;
-  name: string;
+  roleName: string;
   active: boolean;
   description?: string;
   permissions: IPermission[];

@@ -1,5 +1,6 @@
 import { useEffect, type PropsWithChildren } from "react";
 import { useNavigate } from "react-router";
+import RoleBasedRoute from "./RoleBasedRoute";
 
 const ProtectedRoute: React.FC<PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const ProtectedRoute: React.FC<PropsWithChildren> = ({ children }) => {
     }
   }, [accessToken, navigate]);
 
-  return <>{accessToken && children}</>;
+  return <>{accessToken && <RoleBasedRoute>{children}</RoleBasedRoute>}</>;
 };
 
 export default ProtectedRoute;
