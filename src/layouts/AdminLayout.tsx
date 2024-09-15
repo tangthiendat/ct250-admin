@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Layout, Menu, theme } from "antd";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { MdDashboard } from "react-icons/md";
-import { FaUser, FaUserCircle, FaUserCog } from "react-icons/fa";
+import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
 import { Outlet, useLocation } from "react-router";
 import { NavLink } from "react-router-dom";
 
@@ -20,19 +20,19 @@ const items = [
     icon: <MdDashboard />,
   },
   {
-    label: <NavLink to="/users">User</NavLink>,
+    label: <NavLink to="/users">Users</NavLink>,
     key: "users",
-    icon: <FaUser />,
+    icon: <FaUsers />,
   },
   {
-    label: <NavLink to="/roles">Role</NavLink>,
+    label: <NavLink to="/roles">Roles</NavLink>,
     key: "roles",
     icon: <FaUserCog />,
   },
   {
     label: <NavLink to="/permissions">Permissions</NavLink>,
     key: "permissions",
-    icon: <FaUserCog />,
+    icon: <FaKey />,
   },
 ];
 
