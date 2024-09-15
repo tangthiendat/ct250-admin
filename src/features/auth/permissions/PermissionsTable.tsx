@@ -21,6 +21,7 @@ interface TableParams {
 const PermissionTable: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  console.log("RENDER");
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: Number(searchParams.get("page")) || 1,
@@ -29,6 +30,7 @@ const PermissionTable: React.FC = () => {
       showTotal: (total) => `Tổng ${total} quyền hạn`,
     },
   });
+
   const paginationParams = {
     page: tableParams.pagination.current || 1,
     pageSize: tableParams.pagination.pageSize || 10,
@@ -38,8 +40,8 @@ const PermissionTable: React.FC = () => {
     queryKey: [
       "permissions",
       paginationParams,
-      tableParams.sortParams || null,
-      tableParams.filterParams !== "()" ? tableParams.filterParams : null,
+      searchParams.get("filter") || "",
+      searchParams.get("sort") || "",
     ].filter((key) => Boolean(key)),
 
     queryFn: () =>
@@ -52,15 +54,15 @@ const PermissionTable: React.FC = () => {
 
   useEffect(() => {
     if (status === "success") {
-      setTableParams({
-        ...tableParams,
+      setTableParams((prev) => ({
+        ...prev,
         pagination: {
-          ...tableParams.pagination,
+          ...prev.pagination,
           total: data?.payload?.meta?.total || 0,
         },
-      });
+      }));
     }
-  }, [status, data, tableParams, setTableParams]);
+  }, [status, data]);
 
   const handleTableChange: TableProps<IPermission>["onChange"] = (
     pagination,
@@ -70,13 +72,14 @@ const PermissionTable: React.FC = () => {
     // const filterParams = createFilterParams(filters);
     const sortParams = createSortParams<IPermission>(sorter);
 
-    setTableParams({
-      ...tableParams,
+    setTableParams((prev) => ({
+      ...prev,
       pagination,
       sorter,
       sortParams,
+      filters,
       // filterParams,
-    });
+    }));
     searchParams.set("page", String(pagination.current));
     searchParams.set("pageSize", String(pagination.pageSize));
     if (sortParams) {
@@ -184,6 +187,7 @@ const PermissionTable: React.FC = () => {
       rowKey={(record: IPermission) => record.permissionId}
       dataSource={data?.payload?.content || []}
       columns={columns}
+      pagination={tableParams.pagination}
       size="middle"
       loading={{
         spinning: isLoading,
