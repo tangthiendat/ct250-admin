@@ -18,6 +18,6 @@ export interface PaginationMeta {
 }
 
 export interface Page<T> {
-  data: T[];
+  content: T[];
   meta: PaginationMeta;
 }

@@ -24,6 +24,11 @@ export interface IPermission {
   updatedAt?: string;
 }
 
+export interface PermissionFilterCriteria {
+  method?: string;
+  module?: string;
+}
+
 export interface IRole {
   roleId: number;
   roleName: string;

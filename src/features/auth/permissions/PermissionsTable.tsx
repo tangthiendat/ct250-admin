@@ -1,122 +1,118 @@
-import { Space, Table, TableProps } from "antd";
-import { formatDate } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { GetProp, Space, Table, TablePaginationConfig, TableProps } from "antd";
+import { SorterResult } from "antd/es/table/interface";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { IPermission } from "../../../interfaces";
-import { colorMethod } from "../../../utils";
+import { permissionsService } from "../../../services";
+import {
+  colorMethod,
+  createSortParams,
+  getDefaultFilterValue,
+  getDefaultSortOrder,
+} from "../../../utils";
 import DeletePermission from "./DeletePermission";
 import UpdatePermission from "./UpdatePermission";
 
-const permissionData: IPermission[] = [
-  {
-    permissionId: 1,
-    name: "Create a user",
-    apiPath: "/api/v1/users",
-    method: "POST",
-    module: "USERS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 2,
-    name: "Read users",
-    apiPath: "/api/v1/users",
-    method: "GET",
-    module: "USERS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 3,
-    name: "Update a user",
-    apiPath: "/api/v1/users/{id}",
-    method: "PUT",
-    module: "USERS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 4,
-    name: "Delete a user",
-    apiPath: "/api/v1/users/{id}",
-    method: "DELETE",
-    module: "USERS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 5,
-    name: "Create a role",
-    apiPath: "/api/v1/roles",
-    method: "POST",
-    module: "ROLES",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 6,
-    name: "Read roles",
-    apiPath: "/api/v1/roles",
-    method: "GET",
-    module: "ROLES",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 7,
-    name: "Update a role",
-    apiPath: "/api/v1/roles/{id}",
-    method: "PUT",
-    module: "ROLES",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 8,
-    name: "Delete a role",
-    apiPath: "/api/v1/roles/{id}",
-    method: "DELETE",
-    module: "ROLES",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 9,
-    name: "Create a permission",
-    apiPath: "/api/v1/permissions",
-    method: "POST",
-    module: "PERMISSIONS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 10,
-    name: "Read permissions",
-    apiPath: "/api/v1/permissions",
-    method: "GET",
-    module: "PERMISSIONS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 11,
-    name: "Update permissions",
-    apiPath: "/api/v1/permissions/{id}",
-    method: "PUT",
-    module: "PERMISSIONS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 12,
-    name: "Delete a permission",
-    apiPath: "/api/v1/permissions/{id}",
-    method: "DELETE",
-    module: "PERMISSIONS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-];
+interface TableParams {
+  pagination: TablePaginationConfig;
+  sorter?: SorterResult<IPermission> | SorterResult<IPermission>[];
+  filters?: Parameters<GetProp<TableProps, "onChange">>[1];
+}
 
 const PermissionTable: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [tableParams, setTableParams] = useState<TableParams>(() => ({
+    pagination: {
+      current: Number(searchParams.get("page")) || 1,
+      pageSize: Number(searchParams.get("pageSize")) || 10,
+      showSizeChanger: true,
+      showTotal: (total) => `Tổng ${total} quyền hạn`,
+    },
+  }));
+
+  const paginationParams = {
+    page: tableParams.pagination.current || 1,
+    pageSize: tableParams.pagination.pageSize || 10,
+  };
+
+  const { data, isLoading, status } = useQuery({
+    queryKey: [
+      "permissions",
+      paginationParams,
+      {
+        method: searchParams.get("method") || undefined,
+        module: searchParams.get("module") || undefined,
+      },
+      searchParams.get("sort") || "",
+    ].filter((key) => Boolean(key)),
+
+    queryFn: () =>
+      permissionsService.getPermissions(
+        paginationParams,
+        {
+          method: searchParams.get("method") || undefined,
+          module: searchParams.get("module") || undefined,
+        },
+        searchParams.get("sort") || "",
+      ),
+  });
+
+  useEffect(() => {
+    if (status === "success") {
+      setTableParams((prev) => ({
+        ...prev,
+        pagination: {
+          ...prev.pagination,
+          total: data?.payload?.meta?.total || 0,
+          showTotal: (total) => `Tổng ${total} quyền hạn`,
+        },
+      }));
+    }
+  }, [status, data]);
+
+  const handleTableChange: TableProps<IPermission>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+  ) => {
+    const sortParams = createSortParams<IPermission>(sorter);
+
+    setTableParams((prev) => ({
+      ...prev,
+      pagination,
+      sorter,
+      filters,
+    }));
+
+    searchParams.set("page", String(pagination.current));
+    searchParams.set("pageSize", String(pagination.pageSize));
+
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          searchParams.set(key, value.join(","));
+        } else {
+          if (value) {
+            searchParams.set(key, `${value}`);
+          } else {
+            searchParams.delete(key);
+          }
+        }
+      });
+    }
+
+    if (sortParams) {
+      searchParams.set("sort", sortParams);
+    } else {
+      searchParams.delete("sort");
+    }
+
+    setSearchParams(searchParams);
+  };
+
   const columns: TableProps<IPermission>["columns"] = [
     {
       title: "ID",
@@ -158,17 +154,18 @@ const PermissionTable: React.FC = () => {
         { text: "PUT", value: "PUT" },
         { text: "DELETE", value: "DELETE" },
       ],
-      onFilter: (value, record) => record.method === value,
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "method"),
     },
     {
       title: "Module",
       dataIndex: "module",
       key: "module",
       filters: [
-        { text: "FLIGHT", value: "FLIGHT" },
-        { text: "BOOKING", value: "BOOKING" },
+        { text: "USERS", value: "USERS" },
+        { text: "ROLES", value: "ROLES" },
+        { text: "PERMISSIONS", value: "PERMISSIONS" },
       ],
-      onFilter: (value, record) => record.module === value,
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "module"),
     },
     {
       title: "Thời gian tạo",
@@ -176,19 +173,21 @@ const PermissionTable: React.FC = () => {
       key: "createdAt",
       width: "15%",
       render: (createdAt: string) =>
-        formatDate(new Date(createdAt), "dd-MM-yyyy hh:mm:ss"),
-      sorter: (a, b) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        format(new Date(createdAt), "dd-MM-yyyy hh:mm:ss"),
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
     },
     {
       title: "Thời gian cập nhật",
       dataIndex: "updatedAt",
       key: "updatedAt",
       width: "15%",
-      render: (updatedAt: string) =>
-        formatDate(new Date(updatedAt), "dd-MM-yyyy hh:mm:ss"),
-      sorter: (a, b) =>
-        new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+      render: (updatedAt: string) => {
+        if (updatedAt) {
+          return format(new Date(updatedAt), "dd-MM-yyyy hh:mm:ss");
+        }
+        return "";
+      },
     },
     {
       title: "Hành động",
@@ -207,9 +206,15 @@ const PermissionTable: React.FC = () => {
     <Table
       bordered
       rowKey={(record: IPermission) => record.permissionId}
-      dataSource={permissionData}
+      dataSource={data?.payload?.content || []}
       columns={columns}
+      pagination={tableParams.pagination}
       size="middle"
+      loading={{
+        spinning: isLoading,
+        tip: "Đang tải dữ liệu...",
+      }}
+      onChange={handleTableChange}
     />
   );
 };
