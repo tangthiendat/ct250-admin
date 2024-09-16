@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import { Button, Layout, Menu, MenuProps, theme } from "antd";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
-import { FaUser, FaUserCircle, FaUserCog } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
 import { Outlet, useLocation } from "react-router";
 import { NavLink } from "react-router-dom";
 import Loading from "../common/Loading";
@@ -11,6 +11,33 @@ import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
 import { ALL_PERMISSIONS } from "../constants";
 
 const { Header, Sider } = Layout;
+
+const items = [
+  {
+    label: (
+      <NavLink className="" to="/">
+        Dashboard
+      </NavLink>
+    ),
+    key: "dashboard",
+    icon: <MdDashboard />,
+  },
+  {
+    label: <NavLink to="/users">Users</NavLink>,
+    key: "users",
+    icon: <FaUsers />,
+  },
+  {
+    label: <NavLink to="/roles">Roles</NavLink>,
+    key: "roles",
+    icon: <FaUserCog />,
+  },
+  {
+    label: <NavLink to="/permissions">Permissions</NavLink>,
+    key: "permissions",
+    icon: <FaKey />,
+  },
+];
 
 const AdminLayout: React.FC = () => {
   const location = useLocation();
