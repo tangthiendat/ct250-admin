@@ -6,6 +6,7 @@ import ErrorIndicator from "../pages/ErrorPage";
 import Home from "../pages/Home";
 import Permissions from "../pages/Permissions";
 import Login from "../pages/Login";
+import ProtectedRoute from "../features/auth/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -13,7 +14,11 @@ const router = createBrowserRouter([
     path: "/login",
   },
   {
-    element: <AdminLayout />,
+    element: (
+      <ProtectedRoute>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
     errorElement: <ErrorIndicator />,
     children: [
       {

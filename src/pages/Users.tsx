@@ -1,4 +1,6 @@
 import { Input } from "antd";
+import Access from "../features/auth/Access";
+import { ALL_PERMISSIONS } from "../constants";
 // import AddUser from "../features/auth/users/AddUser";
 // import UsersTable from "../features/auth/users/UsersTable";
 // import { useState } from "react";
@@ -97,7 +99,7 @@ const Users: React.FC = () => {
   // };
 
   return (
-    <>
+    <Access permission={ALL_PERMISSIONS.USERS.GET_PAGINATION}>
       <div className="card">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Danh sách Users</h2>
@@ -122,7 +124,7 @@ const Users: React.FC = () => {
           deleteUser={deleteUser}
         /> */}
       </div>
-    </>
+    </Access>
   );
 };
 

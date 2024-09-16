@@ -10,7 +10,7 @@ const permissionData: IPermission[] = [
     name: "Create a user",
     apiPath: "/api/v1/users",
     method: "POST",
-    module: "USER",
+    module: "USERS",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -19,7 +19,7 @@ const permissionData: IPermission[] = [
     name: "Read a user",
     apiPath: "/api/v1/users",
     method: "GET",
-    module: "USER",
+    module: "USERS",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -28,7 +28,7 @@ const permissionData: IPermission[] = [
     name: "Update a user",
     apiPath: "/api/v1/users/{id}",
     method: "PUT",
-    module: "USER",
+    module: "USERS",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -37,7 +37,7 @@ const permissionData: IPermission[] = [
     name: "Delete a user",
     apiPath: "/api/v1/users/{id}",
     method: "DELETE",
-    module: "USER",
+    module: "USERS",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -46,7 +46,7 @@ const permissionData: IPermission[] = [
     name: "Create a role",
     apiPath: "/api/v1/roles",
     method: "POST",
-    module: "ROLE",
+    module: "ROLES",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -55,7 +55,7 @@ const permissionData: IPermission[] = [
     name: "Read a role",
     apiPath: "/api/v1/roles",
     method: "GET",
-    module: "ROLE",
+    module: "ROLES",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -64,7 +64,7 @@ const permissionData: IPermission[] = [
     name: "Update a role",
     apiPath: "/api/v1/roles/{id}",
     method: "PUT",
-    module: "ROLE",
+    module: "ROLES",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -73,7 +73,7 @@ const permissionData: IPermission[] = [
     name: "Delete a role",
     apiPath: "/api/v1/roles/{id}",
     method: "DELETE",
-    module: "ROLE",
+    module: "ROLES",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -82,7 +82,7 @@ const permissionData: IPermission[] = [
     name: "Create a permission",
     apiPath: "/api/v1/permissions",
     method: "POST",
-    module: "PERMISSION",
+    module: "PERMISSIONS",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -91,7 +91,7 @@ const permissionData: IPermission[] = [
     name: "Read a permission",
     apiPath: "/api/v1/permissions",
     method: "GET",
-    module: "PERMISSION",
+    module: "PERMISSIONS",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -100,7 +100,7 @@ const permissionData: IPermission[] = [
     name: "Update a permission",
     apiPath: "/api/v1/permissions/{id}",
     method: "PUT",
-    module: "PERMISSION",
+    module: "PERMISSIONS",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -109,7 +109,7 @@ const permissionData: IPermission[] = [
     name: "Delete a permission",
     apiPath: "/api/v1/permissions/{id}",
     method: "DELETE",
-    module: "PERMISSION",
+    module: "PERMISSIONS",
     createdAt: "2021-09-01",
     updatedAt: "2021-09-01",
   },
@@ -118,7 +118,7 @@ const permissionData: IPermission[] = [
 const rolesData: IRole[] = [
   {
     roleId: 1,
-    name: "ADMIN",
+    roleName: "ADMIN",
     description: "Quản trị viên có toàn quyền",
     active: true,
     permissions: permissionData,
@@ -137,8 +137,8 @@ const RolesTable: React.FC = () => {
     },
     {
       title: "Tên",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "roleName",
+      key: "roleName",
       width: "10%",
     },
     {
@@ -180,8 +180,14 @@ const RolesTable: React.FC = () => {
       width: "15%",
       render: (updatedAt: string) =>
         formatDate(new Date(updatedAt), "dd-MM-yyyy hh:mm:ss"),
-      sorter: (a, b) =>
-        new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+      sorter: (a, b) => {
+        if (a.updatedAt && b.updatedAt) {
+          return (
+            new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
+          );
+        }
+        return 0;
+      },
     },
     {
       title: "Hành động",
