@@ -10,55 +10,70 @@ import {
 } from "antd";
 import { IPermission } from "../../../interfaces";
 import { useEffect } from "react";
+import { ALL_METHODS, ALL_MODULES } from "../../../constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { permissionsService } from "../../../services";
+import { NotificationInstance } from "antd/lib/notification/interface";
 
 interface UpdatePermissionFormProps {
   form: FormInstance<IPermission>;
   permissionToUpdate?: IPermission;
   onCancel: () => void;
+  notificationApi: NotificationInstance;
 }
 
-const methodOptions = [
-  {
-    value: "GET",
-    label: "GET",
-  },
-  {
-    value: "POST",
-    label: "POST",
-  },
-  {
-    value: "PUT",
-    label: "PUT",
-  },
-  {
-    value: "DELETE",
-    label: "DELETE",
-  },
-];
+const methodOptions = ALL_METHODS.map((method: string) => ({
+  value: method,
+  label: method,
+}));
 
-const moduleOptions = [
-  {
-    value: "FLIGHT",
-    label: "FLIGHT",
-  },
-  {
-    value: "BOOKING",
-    label: "BOOKING",
-  },
-];
+const moduleOptions = ALL_MODULES.map((module: string) => ({
+  value: module,
+  label: module,
+}));
 
 const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
   form,
   permissionToUpdate,
+  notificationApi,
   onCancel,
 }) => {
+  const queryClient = useQueryClient();
+
+  const { mutate: createPermission, isPending: isCreating } = useMutation({
+    mutationFn: permissionsService.create,
+    onSuccess: () => {
+      notificationApi.success({
+        message: "Thêm quyền hạn thành công",
+      });
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey[0] === "permissions";
+        },
+      });
+    },
+    onError: () => {
+      notificationApi.error({
+        message: "Thêm quyền hạn thất bại",
+      });
+    },
+  });
+
   function handleFinish(values: IPermission) {
-    console.log({ ...permissionToUpdate, ...values });
+    if (permissionToUpdate) {
+      console.log({ ...permissionToUpdate, ...values });
+    } else {
+      // console.log(values);
+      createPermission(values, {
+        onSuccess: () => {
+          onCancel();
+        },
+      });
+    }
   }
 
   useEffect(() => {
     if (permissionToUpdate) {
-      console.log(permissionToUpdate);
       form.setFieldsValue(permissionToUpdate);
     }
   }, [form, permissionToUpdate]);
@@ -71,7 +86,10 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
             label="Tên quyền hạn"
             name="name"
             rules={[
-              { required: true, message: "Tên quyền hạn không được để trống" },
+              {
+                required: true,
+                message: "Tên quyền hạn không được để trống",
+              },
             ]}
           >
             <Input />
@@ -80,7 +98,10 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
             label="Đường dẫn API"
             name="apiPath"
             rules={[
-              { required: true, message: "Đường dẫn API không được để trống" },
+              {
+                required: true,
+                message: "Đường dẫn API không được để trống",
+              },
             ]}
           >
             <Input />
@@ -106,8 +127,8 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
           <Button onClick={onCancel}>Hủy</Button>
-          <Button type="primary" htmlType="submit">
-            Cập nhật
+          <Button type="primary" htmlType="submit" loading={isCreating}>
+            {permissionToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>
       </Form.Item>

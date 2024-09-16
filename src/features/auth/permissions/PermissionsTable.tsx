@@ -14,6 +14,7 @@ import {
 } from "../../../utils";
 import DeletePermission from "./DeletePermission";
 import UpdatePermission from "./UpdatePermission";
+import { ALL_METHODS, ALL_MODULES } from "../../../constants";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -148,23 +149,20 @@ const PermissionTable: React.FC = () => {
           </p>
         );
       },
-      filters: [
-        { text: "GET", value: "GET" },
-        { text: "POST", value: "POST" },
-        { text: "PUT", value: "PUT" },
-        { text: "DELETE", value: "DELETE" },
-      ],
+      filters: ALL_METHODS.map((method: string) => ({
+        text: method,
+        value: method,
+      })),
       defaultFilteredValue: getDefaultFilterValue(searchParams, "method"),
     },
     {
       title: "Module",
       dataIndex: "module",
       key: "module",
-      filters: [
-        { text: "USERS", value: "USERS" },
-        { text: "ROLES", value: "ROLES" },
-        { text: "PERMISSIONS", value: "PERMISSIONS" },
-      ],
+      filters: ALL_MODULES.map((module: string) => ({
+        text: module,
+        value: module,
+      })),
       defaultFilteredValue: getDefaultFilterValue(searchParams, "module"),
     },
     {

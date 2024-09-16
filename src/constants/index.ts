@@ -22,3 +22,7 @@ export const ALL_PERMISSIONS = {
     DELETE: { method: "DELETE", apiPath: "/api/v1/permissions/{id}" },
   },
 };
+
+export const ALL_MODULES = ["USERS", "ROLES", "PERMISSIONS", "FLIGHTS"];
+
+export const ALL_METHODS = ["GET", "POST", "PUT", "DELETE"];

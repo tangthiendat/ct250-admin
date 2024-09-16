@@ -12,33 +12,6 @@ import { ALL_PERMISSIONS } from "../constants";
 
 const { Header, Sider } = Layout;
 
-const items = [
-  {
-    label: (
-      <NavLink className="" to="/">
-        Dashboard
-      </NavLink>
-    ),
-    key: "dashboard",
-    icon: <MdDashboard />,
-  },
-  {
-    label: <NavLink to="/users">Users</NavLink>,
-    key: "users",
-    icon: <FaUsers />,
-  },
-  {
-    label: <NavLink to="/roles">Roles</NavLink>,
-    key: "roles",
-    icon: <FaUserCog />,
-  },
-  {
-    label: <NavLink to="/permissions">Permissions</NavLink>,
-    key: "permissions",
-    icon: <FaKey />,
-  },
-];
-
 const AdminLayout: React.FC = () => {
   const location = useLocation();
   const [selectedKeys, setSelectedKeys] = useState<string[]>(
@@ -75,7 +48,7 @@ const AdminLayout: React.FC = () => {
         {
           label: (
             <NavLink className="" to="/">
-              Dashboard
+              Trang chủ
             </NavLink>
           ),
           key: "dashboard",
@@ -84,16 +57,16 @@ const AdminLayout: React.FC = () => {
         ...(viewUsers
           ? [
               {
-                label: <NavLink to="/users">User</NavLink>,
+                label: <NavLink to="/users">Người dùng</NavLink>,
                 key: "users",
-                icon: <FaUser />,
+                icon: <FaUsers />,
               },
             ]
           : []),
         ...(viewRoles
           ? [
               {
-                label: <NavLink to="/roles">Role</NavLink>,
+                label: <NavLink to="/roles">Vai trò</NavLink>,
                 key: "roles",
                 icon: <FaUserCog />,
               },
@@ -102,9 +75,9 @@ const AdminLayout: React.FC = () => {
         ...(viewPermissions
           ? [
               {
-                label: <NavLink to="/permissions">Permissions</NavLink>,
+                label: <NavLink to="/permissions">Quyền hạn</NavLink>,
                 key: "permissions",
-                icon: <FaUserCog />,
+                icon: <FaKey />,
               },
             ]
           : []),
