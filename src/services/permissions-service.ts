@@ -25,7 +25,7 @@ class PermissionsService implements IPermissionsService {
       await apiClient.get("", {
         params: {
           ...pagination,
-          filter: filter !== "()" ? filter : undefined,
+          filter: filter !== "" ? filter : undefined,
           sort: sort !== "" ? sort : undefined,
         },
       })

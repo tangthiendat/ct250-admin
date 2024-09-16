@@ -6,7 +6,11 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { IPermission } from "../../../interfaces";
 import { permissionsService } from "../../../services";
-import { colorMethod, createSortParams } from "../../../utils";
+import {
+  colorMethod,
+  createSortParams,
+  getDefaultSortOrder,
+} from "../../../utils";
 import DeletePermission from "./DeletePermission";
 import UpdatePermission from "./UpdatePermission";
 
@@ -76,10 +80,10 @@ const PermissionTable: React.FC = () => {
       ...prev,
       pagination,
       sorter,
-      sortParams,
       filters,
       // filterParams,
     }));
+
     searchParams.set("page", String(pagination.current));
     searchParams.set("pageSize", String(pagination.pageSize));
     if (sortParams) {
@@ -155,6 +159,7 @@ const PermissionTable: React.FC = () => {
       render: (createdAt: string) =>
         format(new Date(createdAt), "dd-MM-yyyy hh:mm:ss"),
       sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
     },
     {
       title: "Thời gian cập nhật",

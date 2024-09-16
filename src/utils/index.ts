@@ -1,6 +1,6 @@
 import { grey, green, blue, red, orange } from "@ant-design/colors";
 import { GetProp, TableProps } from "antd";
-import { SorterResult } from "antd/es/table/interface";
+import { SorterResult, SortOrder } from "antd/es/table/interface";
 import { sfAnd, sfIn, sfLike } from "spring-filter-query-builder";
 
 export function colorMethod(method: "GET" | "POST" | "PUT" | "DELETE") {
@@ -78,4 +78,67 @@ export function createSortParams<T>(
     .map((sort) => (sort.order ? `${sort.field},${sort.order}` : ""))
     .filter((sort) => Boolean(sort))
     .join(";");
+}
+
+// export function parseSortParams<T>(
+//   sortParams: string,
+// ): SorterResult<T>[] | SorterResult<T> {
+//   const sortRecord = sortParams.split(";");
+//   const sorter: SorterResult<T>[] = [];
+//   if (sortRecord.length === 0) return sorter;
+//   else if (sortRecord.length === 1) {
+//     const [field, order] = sortRecord[0].split(",");
+//     return {
+//       field,
+//       columnKey: field,
+//       order: order === "asc" ? "ascend" : order === "desc" ? "descend" : null,
+//     };
+//   } else {
+//     sortRecord.forEach((sort) => {
+//       const [field, order] = sort.split(",");
+//       sorter.push({
+//         field,
+//         columnKey: field,
+//         order: order === "asc" ? "ascend" : order === "desc" ? "descend" : null,
+//       });
+//     });
+//     return sorter;
+//   }
+// }
+
+// export function getDefaultSortOrder<T>(
+//   sorter: SorterResult<T> | SorterResult<T>[],
+//   columnKey: string,
+// ): SortOrder | undefined {
+//   if (Array.isArray(sorter)) {
+//     const sort = sorter.find((sort) => sort.field === columnKey);
+//     return sort ? sort.order : undefined;
+//   } else {
+//     return sorter.field === columnKey ? sorter.order : undefined;
+//   }
+// }
+
+export function getDefaultSortOrder(
+  searchParams: URLSearchParams,
+  columnKey: string,
+): SortOrder | undefined {
+  const sortParams = searchParams.get("sort");
+  if (!sortParams) return undefined;
+  const sortRecord = sortParams.split(";");
+  if (sortRecord.length === 0) return undefined;
+  else if (sortRecord.length === 1) {
+    const [field, order] = sortRecord[0].split(",");
+    return field === columnKey
+      ? order === "asc"
+        ? "ascend"
+        : "descend"
+      : undefined;
+  } else {
+    const sort = sortRecord.find((sort) => sort.split(",")[0] === columnKey);
+    return sort
+      ? sort.split(",")[1] === "asc"
+        ? "ascend"
+        : "descend"
+      : undefined;
+  }
 }
