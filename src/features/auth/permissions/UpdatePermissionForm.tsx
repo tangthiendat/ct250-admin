@@ -59,11 +59,37 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
     },
   });
 
+  const { mutate: updatePermission, isPending: isUpdating } = useMutation({
+    mutationFn: permissionsService.update,
+    onSuccess: () => {
+      notificationApi.success({
+        message: "Cập nhật quyền hạn thành công",
+      });
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey[0] === "permissions";
+        },
+      });
+    },
+    onError: () => {
+      notificationApi.error({
+        message: "Cập nhật quyền hạn thất bại",
+      });
+    },
+  });
+
   function handleFinish(values: IPermission) {
     if (permissionToUpdate) {
       console.log({ ...permissionToUpdate, ...values });
+      updatePermission(
+        { ...permissionToUpdate, ...values },
+        {
+          onSuccess: () => {
+            onCancel();
+          },
+        },
+      );
     } else {
-      // console.log(values);
       createPermission(values, {
         onSuccess: () => {
           onCancel();
@@ -127,7 +153,11 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
           <Button onClick={onCancel}>Hủy</Button>
-          <Button type="primary" htmlType="submit" loading={isCreating}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isCreating || isUpdating}
+          >
             {permissionToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>
