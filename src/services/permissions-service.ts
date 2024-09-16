@@ -16,6 +16,7 @@ interface IPermissionsService {
   create(
     permission: Omit<IPermission, "permissionId">,
   ): Promise<ApiResponse<IPermission>>;
+  update(permission: IPermission): Promise<ApiResponse<IPermission>>;
 }
 
 const apiClient = createApiClient("permissions");
@@ -40,6 +41,11 @@ class PermissionsService implements IPermissionsService {
     permission: Omit<IPermission, "permissionId">,
   ): Promise<ApiResponse<IPermission>> {
     return (await apiClient.post("", permission)).data;
+  }
+
+  async update(permission: IPermission): Promise<ApiResponse<IPermission>> {
+    return (await apiClient.put(`/${permission.permissionId}`, permission))
+      .data;
   }
 }
 
