@@ -1,7 +1,6 @@
 import { grey, green, blue, red, orange } from "@ant-design/colors";
-import { GetProp, TableProps } from "antd";
+// import { GetProp, TableProps } from "antd";
 import { SorterResult, SortOrder } from "antd/es/table/interface";
-import { sfAnd, sfIn, sfLike } from "spring-filter-query-builder";
 
 export function colorMethod(method: "GET" | "POST" | "PUT" | "DELETE") {
   switch (method) {
@@ -35,21 +34,6 @@ export function groupBy<T, K>(
   return map;
 }
 
-export function createFilterParams(
-  filters: Parameters<GetProp<TableProps, "onChange">>[1],
-) {
-  const filterRecords = Object.entries(filters)
-    .map(([key, value]) => {
-      if (Array.isArray(value)) {
-        if (value.length >= 2) return sfIn(key, value as string[]);
-        if (value.length === 1) return sfLike(key, `${value[0]}`);
-      }
-      return value ? sfLike(key, `${value}`) : "";
-    })
-    .filter((filter) => Boolean(filter)); //loai bo chuoi rong
-  return sfAnd(filterRecords).toString();
-}
-
 export function createSortParams<T>(
   sorter: SorterResult<T> | SorterResult<T>[],
 ) {
@@ -80,44 +64,6 @@ export function createSortParams<T>(
     .join(";");
 }
 
-// export function parseSortParams<T>(
-//   sortParams: string,
-// ): SorterResult<T>[] | SorterResult<T> {
-//   const sortRecord = sortParams.split(";");
-//   const sorter: SorterResult<T>[] = [];
-//   if (sortRecord.length === 0) return sorter;
-//   else if (sortRecord.length === 1) {
-//     const [field, order] = sortRecord[0].split(",");
-//     return {
-//       field,
-//       columnKey: field,
-//       order: order === "asc" ? "ascend" : order === "desc" ? "descend" : null,
-//     };
-//   } else {
-//     sortRecord.forEach((sort) => {
-//       const [field, order] = sort.split(",");
-//       sorter.push({
-//         field,
-//         columnKey: field,
-//         order: order === "asc" ? "ascend" : order === "desc" ? "descend" : null,
-//       });
-//     });
-//     return sorter;
-//   }
-// }
-
-// export function getDefaultSortOrder<T>(
-//   sorter: SorterResult<T> | SorterResult<T>[],
-//   columnKey: string,
-// ): SortOrder | undefined {
-//   if (Array.isArray(sorter)) {
-//     const sort = sorter.find((sort) => sort.field === columnKey);
-//     return sort ? sort.order : undefined;
-//   } else {
-//     return sorter.field === columnKey ? sorter.order : undefined;
-//   }
-// }
-
 export function getDefaultSortOrder(
   searchParams: URLSearchParams,
   columnKey: string,
@@ -141,4 +87,12 @@ export function getDefaultSortOrder(
         : "descend"
       : undefined;
   }
+}
+
+export function getDefaultFilterValue(
+  searchParams: URLSearchParams,
+  key: string,
+): string[] | undefined {
+  const value = searchParams.get(key);
+  return value ? value.split(",") : undefined;
 }

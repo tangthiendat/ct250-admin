@@ -9,6 +9,7 @@ import { permissionsService } from "../../../services";
 import {
   colorMethod,
   createSortParams,
+  getDefaultFilterValue,
   getDefaultSortOrder,
 } from "../../../utils";
 import DeletePermission from "./DeletePermission";
@@ -18,22 +19,19 @@ interface TableParams {
   pagination: TablePaginationConfig;
   sorter?: SorterResult<IPermission> | SorterResult<IPermission>[];
   filters?: Parameters<GetProp<TableProps, "onChange">>[1];
-  sortParams?: string;
-  filterParams?: string;
 }
 
 const PermissionTable: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  console.log("RENDER");
-  const [tableParams, setTableParams] = useState<TableParams>({
+  const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
       current: Number(searchParams.get("page")) || 1,
       pageSize: Number(searchParams.get("pageSize")) || 10,
       showSizeChanger: true,
       showTotal: (total) => `Tổng ${total} quyền hạn`,
     },
-  });
+  }));
 
   const paginationParams = {
     page: tableParams.pagination.current || 1,
@@ -44,14 +42,20 @@ const PermissionTable: React.FC = () => {
     queryKey: [
       "permissions",
       paginationParams,
-      searchParams.get("filter") || "",
+      {
+        method: searchParams.get("method") || undefined,
+        module: searchParams.get("module") || undefined,
+      },
       searchParams.get("sort") || "",
     ].filter((key) => Boolean(key)),
 
     queryFn: () =>
       permissionsService.getPermissions(
         paginationParams,
-        searchParams.get("filter") || "",
+        {
+          method: searchParams.get("method") || undefined,
+          module: searchParams.get("module") || undefined,
+        },
         searchParams.get("sort") || "",
       ),
   });
@@ -63,6 +67,7 @@ const PermissionTable: React.FC = () => {
         pagination: {
           ...prev.pagination,
           total: data?.payload?.meta?.total || 0,
+          showTotal: (total) => `Tổng ${total} quyền hạn`,
         },
       }));
     }
@@ -73,7 +78,6 @@ const PermissionTable: React.FC = () => {
     filters,
     sorter,
   ) => {
-    // const filterParams = createFilterParams(filters);
     const sortParams = createSortParams<IPermission>(sorter);
 
     setTableParams((prev) => ({
@@ -81,21 +85,31 @@ const PermissionTable: React.FC = () => {
       pagination,
       sorter,
       filters,
-      // filterParams,
     }));
 
     searchParams.set("page", String(pagination.current));
     searchParams.set("pageSize", String(pagination.pageSize));
+
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          searchParams.set(key, value.join(","));
+        } else {
+          if (value) {
+            searchParams.set(key, `${value}`);
+          } else {
+            searchParams.delete(key);
+          }
+        }
+      });
+    }
+
     if (sortParams) {
       searchParams.set("sort", sortParams);
     } else {
       searchParams.delete("sort");
     }
-    // if (filterParams !== "()") {
-    //   searchParams.set("filter", encodeURIComponent(filterParams));
-    // } else {
-    //   searchParams.delete("filter");
-    // }
+
     setSearchParams(searchParams);
   };
 
@@ -140,6 +154,7 @@ const PermissionTable: React.FC = () => {
         { text: "PUT", value: "PUT" },
         { text: "DELETE", value: "DELETE" },
       ],
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "method"),
     },
     {
       title: "Module",
@@ -150,6 +165,7 @@ const PermissionTable: React.FC = () => {
         { text: "ROLES", value: "ROLES" },
         { text: "PERMISSIONS", value: "PERMISSIONS" },
       ],
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "module"),
     },
     {
       title: "Thời gian tạo",
