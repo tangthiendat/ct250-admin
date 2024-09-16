@@ -13,6 +13,9 @@ interface IPermissionsService {
     filter?: PermissionFilterCriteria,
     sort?: string,
   ): Promise<ApiResponse<Page<IPermission>>>;
+  create(
+    permission: Omit<IPermission, "permissionId">,
+  ): Promise<ApiResponse<IPermission>>;
 }
 
 const apiClient = createApiClient("permissions");
@@ -32,6 +35,11 @@ class PermissionsService implements IPermissionsService {
         },
       })
     ).data;
+  }
+  async create(
+    permission: Omit<IPermission, "permissionId">,
+  ): Promise<ApiResponse<IPermission>> {
+    return (await apiClient.post("", permission)).data;
   }
 }
 
