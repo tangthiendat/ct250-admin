@@ -186,6 +186,8 @@ const PermissionTable: React.FC = () => {
         }
         return "";
       },
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
     },
     {
       title: "Hành động",
