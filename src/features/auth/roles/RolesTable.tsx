@@ -86,11 +86,6 @@ const RolesTable: React.FC = () => {
       dataIndex: "active",
       key: "active",
       width: "15%",
-      filters: [
-        { text: "ACTIVE", value: true },
-        { text: "INACTIVE", value: false },
-      ],
-      onFilter: (value, record) => record.active === value,
       render: (active: boolean) => (
         <Tag color={active ? "green" : "red"}>
           {active ? "ACTIVE" : "INACTIVE"}
@@ -104,8 +99,6 @@ const RolesTable: React.FC = () => {
       width: "15%",
       render: (createdAt: string) =>
         formatDate(new Date(createdAt), "dd-MM-yyyy hh:mm:ss"),
-      sorter: (a, b) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     },
     {
       title: "Ngày cập nhật",
@@ -114,14 +107,6 @@ const RolesTable: React.FC = () => {
       width: "15%",
       render: (updatedAt: string) =>
         updatedAt ? formatDate(new Date(updatedAt), "dd-MM-yyyy hh:mm:ss") : "",
-      sorter: (a, b) => {
-        if (a.updatedAt && b.updatedAt) {
-          return (
-            new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
-          );
-        }
-        return 0;
-      },
     },
     {
       title: "Hành động",

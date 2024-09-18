@@ -1,8 +1,11 @@
-import React from "react";
-import { Space, Table, Tag } from "antd";
+import React, { useState } from "react";
+import { Space, Table, TablePaginationConfig, Tag } from "antd";
 import { format } from "date-fns";
 import { TableProps } from "antd";
 import { IUser } from "../../../interfaces";
+import { useSearchParams } from "react-router-dom";
+import { userService } from "../../../services/user-service";
+import { useQuery } from "@tanstack/react-query";
 
 // const usersData: IUser[] = [
 //   {
@@ -164,7 +167,46 @@ import { IUser } from "../../../interfaces";
 //   },
 // ];
 
+interface TableParams {
+  pagination: TablePaginationConfig;
+}
 const UsersTable: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [tableParams, setTableParams] = useState<TableParams>(() => ({
+    pagination: {
+      current: Number(searchParams.get("page")) || 1,
+      pageSize: Number(searchParams.get("pageSize")) || 10,
+      showSizeChanger: true,
+      showTotal: (total) => `Tổng ${total} vai trò`,
+    },
+  }));
+
+  const pagination = {
+    page: Number(searchParams.get("page")) || 1,
+    pageSize: Number(searchParams.get("pageSize")) || 10,
+  };
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["users", pagination],
+    queryFn: () => userService.getUsers(pagination),
+  });
+
+  const handleTableChange: TableProps<IUser>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+  ) => {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination,
+      sorter,
+      filters,
+    }));
+    searchParams.set("page", String(pagination.current));
+    searchParams.set("pageSize", String(pagination.pageSize));
+    setSearchParams(searchParams);
+  };
+
   const columns: TableProps<IUser>["columns"] = [
     {
       title: "Tên đệm và tên",
@@ -176,16 +218,19 @@ const UsersTable: React.FC = () => {
       title: "Họ",
       key: "lastName",
       dataIndex: "lastName",
+      width: "10%",
     },
     {
       key: "email",
       title: "Email",
       dataIndex: "email",
+      width: "15%",
     },
     {
       key: "role",
       title: "Vai trò",
       dataIndex: "role",
+      width: "10%",
       render: (role) => role.roleName,
     },
     {
@@ -193,11 +238,6 @@ const UsersTable: React.FC = () => {
       title: "Trạng thái",
       dataIndex: "active",
       width: "8%",
-      filters: [
-        { text: "ACTIVE", value: true },
-        { text: "INACTIVE", value: false },
-      ],
-      onFilter: (value, record) => record.active === value,
       render: (active: boolean) => (
         <Tag color={active ? "green" : "red"}>
           {active ? "ACTIVE" : "INACTIVE"}
@@ -208,6 +248,7 @@ const UsersTable: React.FC = () => {
       key: "createdAt",
       title: "Ngày tạo",
       dataIndex: "createdAt",
+      width: "15%",
       render: (createdAt: string) =>
         createdAt ? format(new Date(createdAt), "dd-MM-yyyy hh:mm:ss") : "",
     },
@@ -215,6 +256,7 @@ const UsersTable: React.FC = () => {
       key: "updatedAt",
       title: "Ngày cập nhật",
       dataIndex: "updatedAt",
+      width: "15%",
       render: (updatedAt: string) =>
         updatedAt ? format(new Date(updatedAt), "dd-MM-yyyy hh:mm:ss") : "",
     },
@@ -235,6 +277,13 @@ const UsersTable: React.FC = () => {
     <Table
       columns={columns}
       rowKey={(record: IUser) => record.userId}
+      pagination={tableParams.pagination}
+      dataSource={data?.payload?.content}
+      loading={{
+        spinning: isLoading,
+        tip: "Đang tải dữ liệu...",
+      }}
+      onChange={handleTableChange}
       size="small"
     />
   );

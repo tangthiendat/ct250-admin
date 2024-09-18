@@ -15,7 +15,6 @@ const Users: React.FC = () => {
             <div className="flex gap-3">
               <Input.Search
                 placeholder="Nhập tên hoặc email của User để tìm kiếm..."
-                // onSearch={onSearch}
                 enterButton
                 allowClear
               />
