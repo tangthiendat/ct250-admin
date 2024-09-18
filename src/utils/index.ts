@@ -1,6 +1,7 @@
 import { grey, green, blue, red, orange } from "@ant-design/colors";
 // import { GetProp, TableProps } from "antd";
 import { SorterResult, SortOrder } from "antd/es/table/interface";
+import { format } from "date-fns";
 
 export function colorMethod(method: "GET" | "POST" | "PUT" | "DELETE") {
   switch (method) {
@@ -95,4 +96,8 @@ export function getDefaultFilterValue(
 ): string[] | undefined {
   const value = searchParams.get(key);
   return value ? value.split(",") : undefined;
+}
+
+export function formatISODate(date: string) {
+  return format(new Date(date), "yyyy-MM-dd'T'HH:mm:ss.SSS");
 }

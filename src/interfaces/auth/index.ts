@@ -1,3 +1,5 @@
+import { ICountry } from "../common";
+
 export interface IUser {
   userId: string;
   email: string;
@@ -6,7 +8,7 @@ export interface IUser {
   gender: "MALE" | "FEMALE" | "OTHER";
   identityNumber: string;
   phoneNumber: string;
-  countryId: number;
+  country: ICountry;
   active: boolean;
   dateOfBirth: string;
   role: IRole;

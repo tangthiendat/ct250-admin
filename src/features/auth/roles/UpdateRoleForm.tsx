@@ -44,15 +44,11 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
   const { mutate: createRole, isPending: isCreating } = useMutation({
     mutationFn: roleService.create,
     onSuccess: () => {
-      toast.success("Thêm vai trò thành công");
       queryClient.invalidateQueries({
         predicate: (query) => {
           return query.queryKey.includes("roles");
         },
       });
-    },
-    onError: () => {
-      toast.error("Thêm vai trò thất bại");
     },
   });
 
@@ -60,15 +56,11 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
     mutationFn: ({ roleId, updatedRole }: UpdateRoleArgs) =>
       roleService.update(roleId, updatedRole),
     onSuccess: () => {
-      toast.success("Cập nhật vai trò thành công");
       queryClient.invalidateQueries({
         predicate: (query) => {
           return query.queryKey.includes("roles");
         },
       });
-    },
-    onError: () => {
-      toast.error("Cập nhật vai trò thất bại");
     },
   });
 
@@ -89,12 +81,15 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
         ...roleToUpdate,
         ...form.getFieldsValue(true),
       };
-      console.log(updatedRole);
       updateRole(
         { roleId: roleToUpdate.roleId, updatedRole },
         {
           onSuccess: () => {
+            toast.success("Cập nhật vai trò thành công");
             onCancel();
+          },
+          onError: () => {
+            toast.error("Cập nhật vai trò thất bại");
           },
         },
       );
@@ -105,7 +100,11 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
       };
       createRole(newRole, {
         onSuccess: () => {
+          toast.success("Thêm mới vai trò thành công");
           onCancel();
+        },
+        onError: () => {
+          toast.error("Thêm mới vai trò thất bại");
         },
       });
     }
@@ -123,17 +122,16 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
       initialValues={{ permissions: [], active: true }}
     >
       <Row>
-        <Col span={16}>
+        <Col span={15}>
           <Form.Item
             label="Tên vai trò"
             name="roleName"
-            wrapperCol={{ span: 22 }}
             rules={[{ required: true, message: "Vui lòng nhập tên vai trò" }]}
           >
             <Input className="uppercase" />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={8} offset={1}>
           <Form.Item label="Trạng thái" name="active" valuePropName="checked">
             <Switch checkedChildren="ACTIVE" unCheckedChildren="INACTIVE" />
           </Form.Item>
