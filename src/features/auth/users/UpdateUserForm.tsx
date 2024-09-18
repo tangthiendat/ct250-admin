@@ -11,7 +11,8 @@ import {
   Space,
   Switch,
 } from "antd";
-import { endOfDay, isAfter } from "date-fns";
+import { endOfToday, isAfter } from "date-fns";
+import dayjs from "dayjs";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/Loading";
@@ -33,17 +34,26 @@ const genderOptions = [
   { value: "OTHER", label: "Khác" },
 ];
 
+interface UpdateUserArgs {
+  userId: string;
+  updatedUser: IUser;
+}
+
 const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
   form,
   userToUpdate,
   onCancel,
 }) => {
   const queryClient = useQueryClient();
+
   useEffect(() => {
     if (userToUpdate) {
-      form.setFieldsValue(userToUpdate);
+      form.setFieldsValue({
+        ...userToUpdate,
+        dateOfBirth: dayjs(userToUpdate.dateOfBirth),
+      });
     }
-  }, [form, userToUpdate]);
+  }, [userToUpdate, form]);
 
   const { data: countriesData, isLoading: isCountriesLoading } = useQuery({
     queryKey: ["countries"],
@@ -66,6 +76,19 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
     },
   });
 
+  const { mutate: updateUser, isPending: isUpdating } = useMutation({
+    mutationFn: ({ userId, updatedUser }: UpdateUserArgs) => {
+      return userService.update(userId, updatedUser);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey.includes("users");
+        },
+      });
+    },
+  });
+
   const countryOptions = countriesData?.payload?.map((country) => ({
     value: country.countryId,
     label: country.countryName,
@@ -76,21 +99,44 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
   }));
 
   const disabledDate: DatePickerProps["disabledDate"] = (current) => {
-    return current && isAfter(current.toDate(), endOfDay(new Date()));
+    return current && isAfter(current.toDate(), endOfToday());
   };
 
   function handleFinish(values: IUser) {
-    const newUser = {
-      ...values,
-      dateOfBirth: formatISODate(values.dateOfBirth),
-    };
-    createUser(newUser, {
-      onSuccess: () => {
-        toast.success("Thêm mới người dùng thành công");
-        onCancel();
-      },
-    });
-    console.log(newUser);
+    if (userToUpdate) {
+      const updatedUser = {
+        ...userToUpdate,
+        ...values,
+        dateOfBirth: formatISODate(values.dateOfBirth.toString()),
+      };
+      console.log(updatedUser);
+      updateUser(
+        { userId: userToUpdate.userId, updatedUser },
+        {
+          onSuccess: () => {
+            toast.success("Cập nhật người dùng thành công");
+            onCancel();
+          },
+          onError: () => {
+            toast.error("Cập nhật người dùng thất bại");
+          },
+        },
+      );
+    } else {
+      const newUser = {
+        ...values,
+        dateOfBirth: formatISODate(values.dateOfBirth.toString()),
+      };
+      createUser(newUser, {
+        onSuccess: () => {
+          toast.success("Thêm mới người dùng thành công");
+          onCancel();
+        },
+        onError: () => {
+          toast.error("Thêm mới người dùng thất bại");
+        },
+      });
+    }
   }
 
   if (isCountriesLoading || isRolesLoading) {
@@ -269,56 +315,36 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
           <Input placeholder="Email" />
         </Form.Item>
       </div>
-      <div className="flex gap-8">
-        <Form.Item
-          className="flex-1"
-          label="Mật khẩu"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập mật khẩu",
-            },
-            {
-              min: 6,
-              message: "Mật khẩu phải chứa ít nhất 6 ký tự",
-            },
-          ]}
-        >
-          <Input.Password placeholder="Mật khẩu" />
-        </Form.Item>
-
-        <Form.Item
-          className="flex-1"
-          label="Xác nhận mật khẩu"
-          name="confirmPassword"
-          dependencies={["password"]}
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng xác nhận mật khẩu",
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error("Mật khẩu xác nhận không khớp!"),
-                );
+      {!userToUpdate && (
+        <div className="flex gap-8">
+          <Form.Item
+            className="flex-1"
+            label="Mật khẩu"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập mật khẩu",
               },
-            }),
-          ]}
-        >
-          <Input.Password placeholder="Xác nhận mật khẩu" />
-        </Form.Item>
-      </div>
-
+              {
+                min: 6,
+                message: "Mật khẩu phải chứa ít nhất 6 ký tự",
+              },
+            ]}
+          >
+            <Input.Password placeholder="Mật khẩu" />
+          </Form.Item>
+        </div>
+      )}
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
           <Button onClick={onCancel}>Hủy</Button>
 
-          <Button type="primary" htmlType="submit" loading={isCreating}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isCreating || isUpdating}
+          >
             {userToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>

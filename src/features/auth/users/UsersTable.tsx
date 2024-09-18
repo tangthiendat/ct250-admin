@@ -6,8 +6,10 @@ import { IUser } from "../../../interfaces";
 import { useSearchParams } from "react-router-dom";
 import { userService } from "../../../services/user-service";
 import { useQuery } from "@tanstack/react-query";
+import UpdateUser from "./UpdateUser";
+import Access from "../Access";
+import { ALL_PERMISSIONS } from "../../../constants";
 
-// const usersData: IUser[] = [
 //   {
 //     userId: "4d967bff-9735-4cca-bc3e-5237b6aebbdf",
 //     email: "admin@gmail.com",
@@ -264,10 +266,12 @@ const UsersTable: React.FC = () => {
       title: "Hành động",
       key: "action",
 
-      render: () => (
+      render: (record: IUser) => (
         <Space>
-          {/* <UpdateUser user={record} updateUser={updateUser} />
-          <DeleteUser userID={record.id} deleteUser={deleteUser} /> */}
+          <Access permission={ALL_PERMISSIONS.USERS.UPDATE}>
+            <UpdateUser user={record} />
+          </Access>
+          {/* <DeleteUser userID={record.id} deleteUser={deleteUser} /> */}
         </Space>
       ),
     },

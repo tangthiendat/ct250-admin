@@ -6,10 +6,9 @@ import UpdateUserForm from "./UpdateUserForm";
 
 interface UpdateUserProps {
   user: IUser;
-  updateUser: (user: IUser) => void;
 }
 
-const UpdateUser: React.FC<UpdateUserProps> = ({ user, updateUser }) => {
+const UpdateUser: React.FC<UpdateUserProps> = ({ user }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [updateUserForm] = Form.useForm<IUser>();
 
@@ -22,16 +21,6 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ user, updateUser }) => {
     updateUserForm.resetFields();
   };
 
-  const handleFinish = (values: IUser) => {
-    const updatedUser: IUser = {
-      ...user,
-      ...values,
-      updated_at: new Date().toISOString(),
-    };
-    updateUser(updatedUser);
-    handleCloseModal();
-  };
-
   return (
     <>
       <Tooltip title="Chỉnh sửa">
@@ -42,7 +31,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ user, updateUser }) => {
       </Tooltip>
       <Modal
         open={isOpenModal}
-        width="30%"
+        width="50%"
         title={<span className="text-lg">Cập nhật thông tin</span>}
         destroyOnClose
         onCancel={handleCloseModal}
@@ -52,7 +41,6 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ user, updateUser }) => {
           form={updateUserForm}
           userToUpdate={user}
           onCancel={handleCloseModal}
-          onFinish={handleFinish}
         />
       </Modal>
     </>
