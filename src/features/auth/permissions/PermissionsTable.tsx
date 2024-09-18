@@ -35,8 +35,8 @@ const PermissionTable: React.FC = () => {
   }));
 
   const pagination: PaginationParams = {
-    page: tableParams.pagination.current || 1,
-    pageSize: tableParams.pagination.pageSize || 10,
+    page: Number(searchParams.get("page")) || 1,
+    pageSize: Number(searchParams.get("pageSize")) || 10,
   };
 
   const { data, isLoading } = useQuery({

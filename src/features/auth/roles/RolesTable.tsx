@@ -1,9 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import { formatDate } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { IRole } from "../../../interfaces";
-import { useRolesPage } from "../hooks/useRolesPage";
+import { roleService } from "../../../services/role-service";
 import DeleteRole from "./DeleteRole";
 import UpdateRole from "./UpdateRole";
 
@@ -21,20 +22,28 @@ const RolesTable: React.FC = () => {
       showTotal: (total) => `Tổng ${total} vai trò`,
     },
   }));
-  const { rolesPage, isLoading } = useRolesPage();
+
+  const pagination = {
+    page: Number(searchParams.get("page")) || 1,
+    pageSize: Number(searchParams.get("pageSize")) || 10,
+  };
+  const { data, isLoading } = useQuery({
+    queryKey: ["roles", pagination],
+    queryFn: () => roleService.getRoles(pagination),
+  });
 
   useEffect(() => {
-    if (rolesPage) {
+    if (data) {
       setTableParams((prev) => ({
         ...prev,
         pagination: {
           ...prev.pagination,
-          total: rolesPage.meta.total,
+          total: data.payload?.meta.total,
           showTotal: (total) => `Tổng ${total} vai trò`,
         },
       }));
     }
-  }, [rolesPage]);
+  }, [data]);
 
   const handleTableChange: TableProps<IRole>["onChange"] = (
     pagination,
@@ -129,7 +138,7 @@ const RolesTable: React.FC = () => {
   return (
     <Table
       rowKey={(role: IRole) => role.roleId}
-      dataSource={rolesPage?.content}
+      dataSource={data?.payload?.content}
       columns={columns}
       pagination={tableParams.pagination}
       bordered
