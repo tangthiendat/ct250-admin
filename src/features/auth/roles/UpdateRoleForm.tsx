@@ -9,9 +9,14 @@ import {
   Switch,
   type FormInstance,
 } from "antd";
+import { useEffect } from "react";
 import { IRole } from "../../../interfaces";
 import RolePermissions from "./RolePermissions";
-import { useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { permissionsService } from "../../../services";
+import Loading from "../../../common/Loading";
+import { roleService } from "../../../services/role-service";
+import toast from "react-hot-toast";
 
 interface UpdateRoleFormProps {
   form: FormInstance<IRole>;
@@ -24,9 +29,27 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
   roleToUpdate,
   onCancel,
 }) => {
-  function handleFinish(values: IRole) {
-    console.log({ ...roleToUpdate, ...form.getFieldsValue(true), ...values });
-  }
+  const queryClient = useQueryClient();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["permissions"],
+    queryFn: permissionsService.getAllPermissions,
+  });
+
+  const { mutate: createRole, isPending: isCreating } = useMutation({
+    mutationFn: roleService.create,
+    onSuccess: () => {
+      toast.success("Thêm vai trò thành công");
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey.includes("roles");
+        },
+      });
+    },
+    onError: () => {
+      toast.error("Thêm vai trò thất bại");
+    },
+  });
 
   useEffect(() => {
     if (roleToUpdate) {
@@ -39,6 +62,32 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
     }
   }, [roleToUpdate, form]);
 
+  function handleFinish(values: IRole) {
+    if (roleToUpdate) {
+      // Update role
+      const updatedRole = {
+        ...roleToUpdate,
+        ...form.getFieldsValue(true),
+        ...values,
+      };
+      console.log(updatedRole);
+    } else {
+      const newRole = {
+        ...values,
+        roleName: values.roleName.toUpperCase(),
+      };
+      createRole(newRole, {
+        onSuccess: () => {
+          onCancel();
+        },
+      });
+    }
+  }
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <Form
       onFinish={handleFinish}
@@ -50,11 +99,11 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
         <Col span={16}>
           <Form.Item
             label="Tên vai trò"
-            name="name"
+            name="roleName"
             wrapperCol={{ span: 22 }}
             rules={[{ required: true, message: "Vui lòng nhập tên vai trò" }]}
           >
-            <Input />
+            <Input className="uppercase" />
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -69,7 +118,11 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
         </Col>
         <Col span={24}>
           <Card className="mb-5" title="Quyền hạn của vai trò" size="small">
-            <RolePermissions form={form} roleToUpdate={roleToUpdate} />
+            <RolePermissions
+              form={form}
+              roleToUpdate={roleToUpdate}
+              permissions={data?.payload || []}
+            />
           </Card>
         </Col>
       </Row>
@@ -77,7 +130,7 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
           <Button onClick={onCancel}>Hủy</Button>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={isCreating}>
             {roleToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>

@@ -1,7 +1,7 @@
+import { EditOutlined } from "@ant-design/icons";
+import { Form, Modal, Tooltip } from "antd";
 import { useState } from "react";
 import { type IRole } from "../../../interfaces";
-import { Form, Modal, Tooltip } from "antd";
-import { EditOutlined } from "@ant-design/icons";
 import UpdateRoleForm from "./UpdateRoleForm";
 
 interface UpdateRoleProps {

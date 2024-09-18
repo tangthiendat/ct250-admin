@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { IRole } from "../../../interfaces";
 import { roleService } from "../../../services/role-service";
-import DeleteRole from "./DeleteRole";
 import UpdateRole from "./UpdateRole";
 
 interface TableParams {
@@ -130,7 +129,7 @@ const RolesTable: React.FC = () => {
       render: (record: IRole) => (
         <Space size="middle">
           <UpdateRole role={record} />
-          <DeleteRole roleId={record.roleId} />
+          {/* <DeleteRole roleId={record.roleId} /> */}
         </Space>
       ),
     },

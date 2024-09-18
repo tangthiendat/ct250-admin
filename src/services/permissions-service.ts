@@ -13,6 +13,8 @@ interface IPermissionsService {
     filter?: PermissionFilterCriteria,
     sort?: string,
   ): Promise<ApiResponse<Page<IPermission>>>;
+
+  getAllPermissions(): Promise<ApiResponse<IPermission[]>>;
   create(
     permission: Omit<IPermission, "permissionId">,
   ): Promise<ApiResponse<IPermission>>;
@@ -37,6 +39,11 @@ class PermissionsService implements IPermissionsService {
       })
     ).data;
   }
+
+  async getAllPermissions(): Promise<ApiResponse<IPermission[]>> {
+    return (await apiClient.get("/all")).data;
+  }
+
   async create(
     permission: Omit<IPermission, "permissionId">,
   ): Promise<ApiResponse<IPermission>> {

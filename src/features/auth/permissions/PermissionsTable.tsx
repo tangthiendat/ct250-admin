@@ -4,6 +4,7 @@ import { SorterResult } from "antd/es/table/interface";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { ALL_METHODS, ALL_MODULES } from "../../../constants";
 import { IPermission, PaginationParams } from "../../../interfaces";
 import { permissionsService } from "../../../services";
 import {
@@ -12,9 +13,7 @@ import {
   getDefaultFilterValue,
   getDefaultSortOrder,
 } from "../../../utils";
-import DeletePermission from "./DeletePermission";
 import UpdatePermission from "./UpdatePermission";
-import { ALL_METHODS, ALL_MODULES } from "../../../constants";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -197,7 +196,7 @@ const PermissionTable: React.FC = () => {
       render: (record: IPermission) => (
         <Space size="middle">
           <UpdatePermission permission={record} />
-          <DeletePermission permissionId={record.permissionId} />
+          {/* <DeletePermission permissionId={record.permissionId} />O */}
         </Space>
       ),
     },
