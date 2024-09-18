@@ -80,7 +80,6 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
 
   function handleFinish(values: IPermission) {
     if (permissionToUpdate) {
-      console.log({ ...permissionToUpdate, ...values });
       updatePermission(
         { ...permissionToUpdate, ...values },
         {

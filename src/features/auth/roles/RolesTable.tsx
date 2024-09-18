@@ -1,133 +1,57 @@
-import { Space, Table, TableProps, Tag } from "antd";
-import { IPermission, IRole } from "../../../interfaces";
+import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import { formatDate } from "date-fns";
-import UpdateRole from "./UpdateRole";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { IRole } from "../../../interfaces";
+import { useRolesPage } from "../hooks/useRolesPage";
 import DeleteRole from "./DeleteRole";
+import UpdateRole from "./UpdateRole";
 
-const permissionData: IPermission[] = [
-  {
-    permissionId: 1,
-    name: "Create a user",
-    apiPath: "/api/v1/users",
-    method: "POST",
-    module: "USERS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 2,
-    name: "Read a user",
-    apiPath: "/api/v1/users",
-    method: "GET",
-    module: "USERS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 3,
-    name: "Update a user",
-    apiPath: "/api/v1/users/{id}",
-    method: "PUT",
-    module: "USERS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 4,
-    name: "Delete a user",
-    apiPath: "/api/v1/users/{id}",
-    method: "DELETE",
-    module: "USERS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 5,
-    name: "Create a role",
-    apiPath: "/api/v1/roles",
-    method: "POST",
-    module: "ROLES",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 6,
-    name: "Read a role",
-    apiPath: "/api/v1/roles",
-    method: "GET",
-    module: "ROLES",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 7,
-    name: "Update a role",
-    apiPath: "/api/v1/roles/{id}",
-    method: "PUT",
-    module: "ROLES",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 8,
-    name: "Delete a role",
-    apiPath: "/api/v1/roles/{id}",
-    method: "DELETE",
-    module: "ROLES",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 9,
-    name: "Create a permission",
-    apiPath: "/api/v1/permissions",
-    method: "POST",
-    module: "PERMISSIONS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 10,
-    name: "Read a permission",
-    apiPath: "/api/v1/permissions",
-    method: "GET",
-    module: "PERMISSIONS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 11,
-    name: "Update a permission",
-    apiPath: "/api/v1/permissions/{id}",
-    method: "PUT",
-    module: "PERMISSIONS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-  {
-    permissionId: 12,
-    name: "Delete a permission",
-    apiPath: "/api/v1/permissions/{id}",
-    method: "DELETE",
-    module: "PERMISSIONS",
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-];
-
-const rolesData: IRole[] = [
-  {
-    roleId: 1,
-    roleName: "ADMIN",
-    description: "Quản trị viên có toàn quyền",
-    active: true,
-    permissions: permissionData,
-    createdAt: "2021-09-01",
-    updatedAt: "2021-09-01",
-  },
-];
+interface TableParams {
+  pagination: TablePaginationConfig;
+}
 
 const RolesTable: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [tableParams, setTableParams] = useState<TableParams>(() => ({
+    pagination: {
+      current: Number(searchParams.get("page")) || 1,
+      pageSize: Number(searchParams.get("pageSize")) || 10,
+      showSizeChanger: true,
+      showTotal: (total) => `Tổng ${total} vai trò`,
+    },
+  }));
+  const { rolesPage, isLoading } = useRolesPage();
+
+  useEffect(() => {
+    if (rolesPage) {
+      setTableParams((prev) => ({
+        ...prev,
+        pagination: {
+          ...prev.pagination,
+          total: rolesPage.meta.total,
+          showTotal: (total) => `Tổng ${total} vai trò`,
+        },
+      }));
+    }
+  }, [rolesPage]);
+
+  const handleTableChange: TableProps<IRole>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+  ) => {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination,
+      sorter,
+      filters,
+    }));
+    searchParams.set("page", String(pagination.current));
+    searchParams.set("pageSize", String(pagination.pageSize));
+    setSearchParams(searchParams);
+  };
+
   const columns: TableProps<IRole>["columns"] = [
     {
       title: "ID",
@@ -179,7 +103,7 @@ const RolesTable: React.FC = () => {
       key: "updatedAt",
       width: "15%",
       render: (updatedAt: string) =>
-        formatDate(new Date(updatedAt), "dd-MM-yyyy hh:mm:ss"),
+        updatedAt ? formatDate(new Date(updatedAt), "dd-MM-yyyy hh:mm:ss") : "",
       sorter: (a, b) => {
         if (a.updatedAt && b.updatedAt) {
           return (
@@ -205,10 +129,16 @@ const RolesTable: React.FC = () => {
   return (
     <Table
       rowKey={(role: IRole) => role.roleId}
-      dataSource={rolesData}
+      dataSource={rolesPage?.content}
       columns={columns}
+      pagination={tableParams.pagination}
       bordered
       size="middle"
+      loading={{
+        spinning: isLoading,
+        tip: "Đang tải dữ liệu...",
+      }}
+      onChange={handleTableChange}
     />
   );
 };
