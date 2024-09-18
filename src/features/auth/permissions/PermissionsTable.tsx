@@ -4,7 +4,7 @@ import { SorterResult } from "antd/es/table/interface";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { IPermission } from "../../../interfaces";
+import { IPermission, PaginationParams } from "../../../interfaces";
 import { permissionsService } from "../../../services";
 import {
   colorMethod,
@@ -34,15 +34,15 @@ const PermissionTable: React.FC = () => {
     },
   }));
 
-  const paginationParams = {
+  const pagination: PaginationParams = {
     page: tableParams.pagination.current || 1,
     pageSize: tableParams.pagination.pageSize || 10,
   };
 
-  const { data, isLoading, status } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [
       "permissions",
-      paginationParams,
+      pagination,
       {
         method: searchParams.get("method") || undefined,
         module: searchParams.get("module") || undefined,
@@ -52,7 +52,7 @@ const PermissionTable: React.FC = () => {
 
     queryFn: () =>
       permissionsService.getPermissions(
-        paginationParams,
+        pagination,
         {
           method: searchParams.get("method") || undefined,
           module: searchParams.get("module") || undefined,
@@ -62,7 +62,7 @@ const PermissionTable: React.FC = () => {
   });
 
   useEffect(() => {
-    if (status === "success") {
+    if (data) {
       setTableParams((prev) => ({
         ...prev,
         pagination: {
@@ -72,7 +72,7 @@ const PermissionTable: React.FC = () => {
         },
       }));
     }
-  }, [status, data]);
+  }, [data]);
 
   const handleTableChange: TableProps<IPermission>["onChange"] = (
     pagination,
