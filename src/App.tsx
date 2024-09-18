@@ -26,21 +26,20 @@ function App() {
         <AppRouter />
       </QueryClientProvider>
       <Toaster
-        position="bottom-right"
+        position="top-center"
+        containerStyle={{
+          marginTop: "0.25rem",
+        }}
         toastOptions={{
           success: {
-            // style: {
-            //   background: "#00b894",
-            //   color: "#fff",
-            // },
             duration: 3000,
           },
           error: {
-            // style: {
-            //   background: "#d63031",
-            //   color: "#fff",
-            // },
             duration: 3000,
+          },
+          style: {
+            fontSize: "1rem",
+            padding: "0.75rem 1rem",
           },
         }}
       />
