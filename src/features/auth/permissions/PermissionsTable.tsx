@@ -4,7 +4,8 @@ import { SorterResult } from "antd/es/table/interface";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { IPermission } from "../../../interfaces";
+import { ALL_METHODS, ALL_MODULES, ALL_PERMISSIONS } from "../../../constants";
+import { IPermission, PaginationParams } from "../../../interfaces";
 import { permissionsService } from "../../../services";
 import {
   colorMethod,
@@ -12,9 +13,8 @@ import {
   getDefaultFilterValue,
   getDefaultSortOrder,
 } from "../../../utils";
-import DeletePermission from "./DeletePermission";
 import UpdatePermission from "./UpdatePermission";
-import { ALL_METHODS, ALL_MODULES } from "../../../constants";
+import Access from "../Access";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -34,15 +34,15 @@ const PermissionTable: React.FC = () => {
     },
   }));
 
-  const paginationParams = {
-    page: tableParams.pagination.current || 1,
-    pageSize: tableParams.pagination.pageSize || 10,
+  const pagination: PaginationParams = {
+    page: Number(searchParams.get("page")) || 1,
+    pageSize: Number(searchParams.get("pageSize")) || 10,
   };
 
-  const { data, isLoading, status } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [
       "permissions",
-      paginationParams,
+      pagination,
       {
         method: searchParams.get("method") || undefined,
         module: searchParams.get("module") || undefined,
@@ -52,7 +52,7 @@ const PermissionTable: React.FC = () => {
 
     queryFn: () =>
       permissionsService.getPermissions(
-        paginationParams,
+        pagination,
         {
           method: searchParams.get("method") || undefined,
           module: searchParams.get("module") || undefined,
@@ -62,7 +62,7 @@ const PermissionTable: React.FC = () => {
   });
 
   useEffect(() => {
-    if (status === "success") {
+    if (data) {
       setTableParams((prev) => ({
         ...prev,
         pagination: {
@@ -72,7 +72,7 @@ const PermissionTable: React.FC = () => {
         },
       }));
     }
-  }, [status, data]);
+  }, [data]);
 
   const handleTableChange: TableProps<IPermission>["onChange"] = (
     pagination,
@@ -196,8 +196,10 @@ const PermissionTable: React.FC = () => {
       align: "center",
       render: (record: IPermission) => (
         <Space size="middle">
-          <UpdatePermission permission={record} />
-          <DeletePermission permissionId={record.permissionId} />
+          <Access permission={ALL_PERMISSIONS.PERMISSIONS.UPDATE}>
+            <UpdatePermission permission={record} />
+          </Access>
+          {/* <DeletePermission permissionId={record.permissionId} />O */}
         </Space>
       ),
     },

@@ -48,7 +48,7 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
       });
       queryClient.invalidateQueries({
         predicate: (query) => {
-          return query.queryKey[0] === "permissions";
+          return query.queryKey.includes("permissions");
         },
       });
     },
@@ -80,7 +80,6 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
 
   function handleFinish(values: IPermission) {
     if (permissionToUpdate) {
-      console.log({ ...permissionToUpdate, ...values });
       updatePermission(
         { ...permissionToUpdate, ...values },
         {
