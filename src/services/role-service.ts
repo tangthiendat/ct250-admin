@@ -4,6 +4,7 @@ import { createApiClient } from "./api-client";
 interface IRoleService {
   getRoles(pagination: PaginationParams): Promise<ApiResponse<Page<IRole>>>;
   create(newRole: Omit<IRole, "roleId">): Promise<ApiResponse<IRole>>;
+  update(roleId: number, updatedRole: IRole): Promise<ApiResponse<IRole>>;
 }
 
 const apiClient = createApiClient("roles");
@@ -14,8 +15,16 @@ class RoleService implements IRoleService {
   ): Promise<ApiResponse<Page<IRole>>> {
     return (await apiClient.get("", { params: pagination })).data;
   }
+
   async create(newRole: Omit<IRole, "roleId">): Promise<ApiResponse<IRole>> {
     return (await apiClient.post("", newRole)).data;
+  }
+
+  async update(
+    roleId: number,
+    updatedRole: IRole,
+  ): Promise<ApiResponse<IRole>> {
+    return (await apiClient.put(`/${roleId}`, updatedRole)).data;
   }
 }
 

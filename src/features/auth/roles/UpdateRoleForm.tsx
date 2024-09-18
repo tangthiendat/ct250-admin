@@ -24,6 +24,11 @@ interface UpdateRoleFormProps {
   onCancel: () => void;
 }
 
+interface UpdateRoleArgs {
+  roleId: number;
+  updatedRole: IRole;
+}
+
 const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
   form,
   roleToUpdate,
@@ -51,6 +56,22 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
     },
   });
 
+  const { mutate: updateRole, isPending: isUpdating } = useMutation({
+    mutationFn: ({ roleId, updatedRole }: UpdateRoleArgs) =>
+      roleService.update(roleId, updatedRole),
+    onSuccess: () => {
+      toast.success("Cập nhật vai trò thành công");
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey.includes("roles");
+        },
+      });
+    },
+    onError: () => {
+      toast.error("Cập nhật vai trò thất bại");
+    },
+  });
+
   useEffect(() => {
     if (roleToUpdate) {
       form.setFieldsValue({
@@ -64,13 +85,19 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
 
   function handleFinish(values: IRole) {
     if (roleToUpdate) {
-      // Update role
       const updatedRole = {
         ...roleToUpdate,
         ...form.getFieldsValue(true),
-        ...values,
       };
       console.log(updatedRole);
+      updateRole(
+        { roleId: roleToUpdate.roleId, updatedRole },
+        {
+          onSuccess: () => {
+            onCancel();
+          },
+        },
+      );
     } else {
       const newRole = {
         ...values,
@@ -130,7 +157,11 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
           <Button onClick={onCancel}>Hủy</Button>
-          <Button type="primary" htmlType="submit" loading={isCreating}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isCreating || isUpdating}
+          >
             {roleToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>
