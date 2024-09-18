@@ -9,7 +9,9 @@ const Permissions: React.FC = () => {
       <div className="card">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Quyền hạn</h2>
-          <AddPermission />
+          <Access permission={ALL_PERMISSIONS.PERMISSIONS.CREATE}>
+            <AddPermission />
+          </Access>
         </div>
         <PermissionsTable />
       </div>
