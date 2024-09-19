@@ -1,17 +1,13 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useMutation } from "@tanstack/react-query";
 import { Form, Input } from "antd";
-import { SizeType } from "antd/es/config-provider/SizeContext";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { ApiResponse, IAuthRequest, IAuthResponse } from "../../interfaces";
 import { authService } from "../../services";
 
 const LoginForm: React.FC = () => {
-  const [componentSize, setComponentSize] = useState<SizeType | "default">(
-    "default",
-  );
   const [loginForm] = Form.useForm<IAuthRequest>();
   const navigate = useNavigate();
   const accessToken = window.localStorage.getItem("access_token");
@@ -33,10 +29,6 @@ const LoginForm: React.FC = () => {
     },
   });
 
-  const onFormLayoutChange = ({ size }: { size: SizeType }) => {
-    setComponentSize(size);
-  };
-
   function onFinish(data: IAuthRequest): void {
     login(data, {
       onSuccess: () => {
@@ -55,9 +47,7 @@ const LoginForm: React.FC = () => {
         onFinish={onFinish}
         form={loginForm}
         layout="vertical"
-        initialValues={{ size: componentSize }}
-        onValuesChange={onFormLayoutChange}
-        size={componentSize as SizeType}
+        size="large"
       >
         <Form.Item
           label="Email"
