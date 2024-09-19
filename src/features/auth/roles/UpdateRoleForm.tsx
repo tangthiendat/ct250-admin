@@ -9,13 +9,12 @@ import {
   Switch,
   type FormInstance,
 } from "antd";
-import { useEffect } from "react";
-import { IRole } from "../../../interfaces";
-import RolePermissions from "./RolePermissions";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { permissionsService } from "../../../services";
+import { useEffect } from "react";
+import RolePermissions from "./RolePermissions";
+import { IRole } from "../../../interfaces";
 import Loading from "../../../common/Loading";
-import { roleService } from "../../../services/role-service";
+import { roleService, permissionsService } from "../../../services";
 import toast from "react-hot-toast";
 
 interface UpdateRoleFormProps {

@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import UpdateUser from "./UpdateUser";
 import Access from "../Access";
 import { ALL_PERMISSIONS } from "../../../constants";
+import DeleteUser from "./DeleteUser";
 
 //   {
 //     userId: "4d967bff-9735-4cca-bc3e-5237b6aebbdf",
@@ -271,7 +272,9 @@ const UsersTable: React.FC = () => {
           <Access permission={ALL_PERMISSIONS.USERS.UPDATE}>
             <UpdateUser user={record} />
           </Access>
-          {/* <DeleteUser userID={record.id} deleteUser={deleteUser} /> */}
+          <Access permission={ALL_PERMISSIONS.USERS.DELETE}>
+            <DeleteUser userId={record.userId} />
+          </Access>
         </Space>
       ),
     },

@@ -4,6 +4,10 @@ import AppRouter from "./router/AppRouter";
 import { ConfigProvider, notification } from "antd";
 import viVN from "antd/locale/vi_VN";
 import { Toaster } from "react-hot-toast";
+import "dayjs/locale/vi";
+import dayjs from "dayjs";
+
+dayjs.locale("vi");
 
 const queryClient = new QueryClient({
   defaultOptions: {

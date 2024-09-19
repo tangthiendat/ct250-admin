@@ -3,7 +3,7 @@ import { userService } from "../../../services/user-service";
 
 export function useLoggedInUser() {
   const { data, isLoading } = useQuery({
-    queryKey: ["user", "logged-in"],
+    queryKey: ["logged-in-user"],
     queryFn: userService.getLoggedInUser,
   });
   return { user: data?.payload, isLoading };

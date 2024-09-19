@@ -24,7 +24,7 @@ const AddUser: React.FC = () => {
       </Button>
       <Modal
         open={isOpenModal}
-        width="60%"
+        width="50%"
         title={<span className="text-lg">Thêm người dùng</span>}
         destroyOnClose
         onCancel={handleCloseModal}

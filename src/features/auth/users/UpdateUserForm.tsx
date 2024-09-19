@@ -17,9 +17,7 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/Loading";
 import { IUser } from "../../../interfaces";
-import { countryService } from "../../../services/country-service";
-import { roleService } from "../../../services/role-service";
-import { userService } from "../../../services/user-service";
+import { userService, roleService, countryService } from "../../../services";
 import { formatISODate } from "../../../utils";
 
 interface UpdateUserFormProps {
@@ -109,7 +107,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
         ...values,
         dateOfBirth: formatISODate(values.dateOfBirth.toString()),
       };
-      console.log(updatedUser);
+
       updateUser(
         { userId: userToUpdate.userId, updatedUser },
         {
@@ -126,6 +124,8 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
       const newUser = {
         ...values,
         dateOfBirth: formatISODate(values.dateOfBirth.toString()),
+        firstName: values.firstName.toUpperCase(),
+        lastName: values.lastName.toUpperCase(),
       };
       createUser(newUser, {
         onSuccess: () => {
@@ -144,7 +144,12 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
   }
 
   return (
-    <Form layout="vertical" form={form} onFinish={handleFinish}>
+    <Form
+      layout="vertical"
+      form={form}
+      onFinish={handleFinish}
+      initialValues={{ active: true }}
+    >
       <div className="flex gap-8">
         <Form.Item
           className="flex-1"

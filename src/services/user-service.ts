@@ -7,6 +7,7 @@ interface IUserService {
   getUsers(pagination: PaginationParams): Promise<ApiResponse<Page<IUser>>>;
   create(newUser: Omit<IUser, "userId">): Promise<ApiResponse<IUser>>;
   update(userId: string, updatedUser: IUser): Promise<ApiResponse<IUser>>;
+  delete(userId: string): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("users");
@@ -30,6 +31,10 @@ class UserService implements IUserService {
     updatedUser: IUser,
   ): Promise<ApiResponse<IUser>> {
     return (await apiClient.put(`/${userId}`, updatedUser)).data;
+  }
+
+  async delete(userId: string): Promise<ApiResponse<void>> {
+    return (await apiClient.delete(`/${userId}`)).data;
   }
 }
 
