@@ -191,7 +191,7 @@ const AdminLayout: React.FC = () => {
                 }}
               >
                 <p className="cursor-pointer">
-                  {user ? `${user.firstName} ${user.lastName}` : ""}
+                  {user ? `${user.lastName} ${user.firstName}` : ""}
                 </p>
               </Dropdown>
             </div>
