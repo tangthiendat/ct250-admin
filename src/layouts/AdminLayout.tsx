@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, Layout, Menu, MenuProps, theme } from "antd";
+import { Button, Dropdown, Layout, Menu, MenuProps, theme } from "antd";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { MdDashboard } from "react-icons/md";
 import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
-import { Outlet, useLocation } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import Loading from "../common/Loading";
 import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
 import { ALL_PERMISSIONS } from "../constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { authService } from "../services";
 
 const { Header, Sider } = Layout;
 
@@ -22,6 +24,31 @@ const AdminLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [menuItems, setMenuItems] = useState<MenuProps["items"]>([]);
   const { user, isLoading } = useLoggedInUser();
+
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const { mutate: logout } = useMutation({
+    mutationFn: () => authService.logout(),
+    onSuccess: () => {
+      window.localStorage.removeItem("access_token");
+      queryClient.removeQueries({
+        queryKey: ["logged-in-user"],
+      });
+      navigate("/login");
+    },
+  });
+
+  const items: MenuProps["items"] = [
+    {
+      key: "logout",
+      label: (
+        <span onClick={() => logout()} className="px-1">
+          Đăng xuất
+        </span>
+      ),
+    },
+  ];
 
   useEffect(() => {
     if (user?.role.permissions) {
@@ -146,8 +173,7 @@ const AdminLayout: React.FC = () => {
                 fontSize: "20px",
               }}
             />
-            <div className="mr-5 flex items-center gap-1">
-              <p>{user ? `${user.firstName} ${user.lastName}` : ""}</p>
+            <div className="relative mr-5 flex items-center gap-2">
               <Button
                 type="text"
                 icon={<FaUserCircle />}
@@ -156,6 +182,18 @@ const AdminLayout: React.FC = () => {
                   fontSize: "30px",
                 }}
               />
+              <Dropdown
+                menu={{ items }}
+                placement="bottom"
+                overlayStyle={{
+                  position: "absolute",
+                  top: "50px",
+                }}
+              >
+                <p className="cursor-pointer">
+                  {user ? `${user.firstName} ${user.lastName}` : ""}
+                </p>
+              </Dropdown>
             </div>
           </div>
         </Header>
