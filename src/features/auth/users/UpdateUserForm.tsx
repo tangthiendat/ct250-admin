@@ -106,6 +106,8 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
         ...userToUpdate,
         ...values,
         dateOfBirth: formatISODate(values.dateOfBirth.toString()),
+        firstName: values.firstName.toUpperCase(),
+        lastName: values.lastName.toUpperCase(),
       };
 
       updateUser(
