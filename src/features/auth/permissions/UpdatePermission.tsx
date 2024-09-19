@@ -1,5 +1,5 @@
 import { EditOutlined } from "@ant-design/icons";
-import { Form, Modal, notification, Tooltip } from "antd";
+import { Form, Modal, Tooltip } from "antd";
 import { useState } from "react";
 import { IPermission } from "../../../interfaces";
 import UpdatePermissionForm from "./UpdatePermissionForm";
@@ -11,7 +11,6 @@ interface UpdatePermissionProps {
 const UpdatePermission: React.FC<UpdatePermissionProps> = ({ permission }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [updatePermissionForm] = Form.useForm<IPermission>();
-  const [notificationApi, contextHolder] = notification.useNotification();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -24,7 +23,6 @@ const UpdatePermission: React.FC<UpdatePermissionProps> = ({ permission }) => {
 
   return (
     <>
-      {contextHolder}
       <Tooltip title="Chỉnh sửa">
         <EditOutlined
           className="table-icon text-xl text-[#ffa500]"
@@ -43,7 +41,6 @@ const UpdatePermission: React.FC<UpdatePermissionProps> = ({ permission }) => {
           form={updatePermissionForm}
           permissionToUpdate={permission}
           onCancel={handleCloseModal}
-          notificationApi={notificationApi}
         />
       </Modal>
     </>

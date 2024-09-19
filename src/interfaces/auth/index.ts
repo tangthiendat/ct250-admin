@@ -1,14 +1,18 @@
+import { Dayjs } from "dayjs";
+import { ICountry } from "../common";
+
 export interface IUser {
   userId: string;
   email: string;
   firstName: string;
   lastName: string;
   gender: "MALE" | "FEMALE" | "OTHER";
+  password?: string;
   identityNumber: string;
   phoneNumber: string;
-  countryId: number;
+  country: ICountry;
   active: boolean;
-  dateOfBirth: string;
+  dateOfBirth: string | Dayjs;
   role: IRole;
   createdAt: string;
   updatedAt?: string;

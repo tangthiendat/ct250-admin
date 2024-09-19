@@ -21,3 +21,9 @@ export interface Page<T> {
   content: T[];
   meta: PaginationMeta;
 }
+
+export interface ICountry {
+  countryId: number;
+  countryName: string;
+  countryCode: number;
+}

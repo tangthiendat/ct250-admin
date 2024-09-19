@@ -4,6 +4,10 @@ import AppRouter from "./router/AppRouter";
 import { ConfigProvider, notification } from "antd";
 import viVN from "antd/locale/vi_VN";
 import { Toaster } from "react-hot-toast";
+import "dayjs/locale/vi";
+import dayjs from "dayjs";
+
+dayjs.locale("vi");
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,21 +30,20 @@ function App() {
         <AppRouter />
       </QueryClientProvider>
       <Toaster
-        position="bottom-right"
+        position="top-center"
+        containerStyle={{
+          marginTop: "0.25rem",
+        }}
         toastOptions={{
           success: {
-            // style: {
-            //   background: "#00b894",
-            //   color: "#fff",
-            // },
             duration: 3000,
           },
           error: {
-            // style: {
-            //   background: "#d63031",
-            //   color: "#fff",
-            // },
             duration: 3000,
+          },
+          style: {
+            fontSize: "1rem",
+            padding: "0.75rem 1rem",
           },
         }}
       />

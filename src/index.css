@@ -1,3 +1,5 @@
+@import "./assets/fonts/stylesheet.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,8 +11,6 @@
   }
 
   body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 400;
     min-width: 440px;
   }
 

@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Col,
@@ -8,18 +9,16 @@ import {
   Select,
   Space,
 } from "antd";
-import { IPermission } from "../../../interfaces";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { ALL_METHODS, ALL_MODULES } from "../../../constants";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { IPermission } from "../../../interfaces";
 import { permissionsService } from "../../../services";
-import { NotificationInstance } from "antd/lib/notification/interface";
 
 interface UpdatePermissionFormProps {
   form: FormInstance<IPermission>;
   permissionToUpdate?: IPermission;
   onCancel: () => void;
-  notificationApi: NotificationInstance;
 }
 
 const methodOptions = ALL_METHODS.map((method: string) => ({
@@ -35,7 +34,6 @@ const moduleOptions = ALL_MODULES.map((module: string) => ({
 const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
   form,
   permissionToUpdate,
-  notificationApi,
   onCancel,
 }) => {
   const queryClient = useQueryClient();
@@ -43,18 +41,10 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
   const { mutate: createPermission, isPending: isCreating } = useMutation({
     mutationFn: permissionsService.create,
     onSuccess: () => {
-      notificationApi.success({
-        message: "Thêm quyền hạn thành công",
-      });
       queryClient.invalidateQueries({
         predicate: (query) => {
           return query.queryKey.includes("permissions");
         },
-      });
-    },
-    onError: () => {
-      notificationApi.error({
-        message: "Thêm quyền hạn thất bại",
       });
     },
   });
@@ -62,18 +52,10 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
   const { mutate: updatePermission, isPending: isUpdating } = useMutation({
     mutationFn: permissionsService.update,
     onSuccess: () => {
-      notificationApi.success({
-        message: "Cập nhật quyền hạn thành công",
-      });
       queryClient.invalidateQueries({
         predicate: (query) => {
           return query.queryKey[0] === "permissions";
         },
-      });
-    },
-    onError: () => {
-      notificationApi.error({
-        message: "Cập nhật quyền hạn thất bại",
       });
     },
   });
@@ -84,14 +66,22 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
         { ...permissionToUpdate, ...values },
         {
           onSuccess: () => {
+            toast.success("Cập nhật quyền hạn thành công");
             onCancel();
+          },
+          onError: () => {
+            toast.error("Cập nhật quyền hạn thất bại");
           },
         },
       );
     } else {
       createPermission(values, {
         onSuccess: () => {
+          toast.success("Thêm quyền hạn thành công");
           onCancel();
+        },
+        onError: () => {
+          toast.error("Thêm quyền hạn thất bại");
         },
       });
     }

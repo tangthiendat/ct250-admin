@@ -1,8 +1,9 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useMutation } from "@tanstack/react-query";
-import { Form, Input, notification } from "antd";
+import { Form, Input } from "antd";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { ApiResponse, IAuthRequest, IAuthResponse } from "../../interfaces";
 import { authService } from "../../services";
@@ -12,7 +13,6 @@ const LoginForm: React.FC = () => {
     "default",
   );
   const [loginForm] = Form.useForm<IAuthRequest>();
-  const [notificationApi, contextHolder] = notification.useNotification();
   const navigate = useNavigate();
   const accessToken = window.localStorage.getItem("access_token");
 
@@ -25,20 +25,11 @@ const LoginForm: React.FC = () => {
   const { mutate: login } = useMutation({
     mutationFn: authService.login,
     onSuccess: (data: ApiResponse<IAuthResponse>) => {
-      notificationApi.success({
-        message: "Đăng nhập thành công",
-      });
       if (data.payload) {
         const { accessToken } = data.payload;
         window.localStorage.setItem("access_token", accessToken);
         navigate("/");
       }
-    },
-    onError: (error) => {
-      console.error(error);
-      notificationApi.error({
-        message: "Đăng nhập thất bại",
-      });
     },
   });
 
@@ -47,12 +38,18 @@ const LoginForm: React.FC = () => {
   };
 
   function onFinish(data: IAuthRequest): void {
-    login(data);
+    login(data, {
+      onSuccess: () => {
+        toast.success("Đăng nhập thành công");
+      },
+      onError: () => {
+        toast.error("Đăng nhập thất bại");
+      },
+    });
   }
 
   return (
     <>
-      {contextHolder}
       <Form
         className="flex flex-col"
         onFinish={onFinish}
