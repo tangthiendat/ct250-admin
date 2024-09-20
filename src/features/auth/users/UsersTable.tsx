@@ -10,6 +10,7 @@ import UpdateUser from "./UpdateUser";
 import Access from "../Access";
 import { ALL_PERMISSIONS } from "../../../constants";
 import DeleteUser from "./DeleteUser";
+import ViewUser from "./ViewUser";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -110,6 +111,7 @@ const UsersTable: React.FC = () => {
 
       render: (record: IUser) => (
         <Space>
+          <ViewUser user={record} />
           <Access permission={ALL_PERMISSIONS.USERS.UPDATE}>
             <UpdateUser user={record} />
           </Access>
