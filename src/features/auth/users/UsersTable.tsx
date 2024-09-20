@@ -112,10 +112,10 @@ const UsersTable: React.FC = () => {
       render: (record: IUser) => (
         <Space>
           <ViewUser user={record} />
-          <Access permission={ALL_PERMISSIONS.USERS.UPDATE}>
+          <Access permission={ALL_PERMISSIONS.USERS.UPDATE} hideChildren>
             <UpdateUser user={record} />
           </Access>
-          <Access permission={ALL_PERMISSIONS.USERS.DELETE}>
+          <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
             <DeleteUser userId={record.userId} />
           </Access>
         </Space>

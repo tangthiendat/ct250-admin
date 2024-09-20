@@ -196,7 +196,7 @@ const PermissionTable: React.FC = () => {
       align: "center",
       render: (record: IPermission) => (
         <Space size="middle">
-          <Access permission={ALL_PERMISSIONS.PERMISSIONS.UPDATE}>
+          <Access permission={ALL_PERMISSIONS.PERMISSIONS.UPDATE} hideChildren>
             <UpdatePermission permission={record} />
           </Access>
           {/* <DeletePermission permissionId={record.permissionId} />O */}

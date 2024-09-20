@@ -21,7 +21,7 @@ const Users: React.FC = () => {
             </div>
           </div>
 
-          <Access permission={ALL_PERMISSIONS.USERS.CREATE}>
+          <Access permission={ALL_PERMISSIONS.USERS.CREATE} hideChildren>
             <AddUser />
           </Access>
         </div>

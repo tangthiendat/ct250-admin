@@ -117,7 +117,7 @@ const RolesTable: React.FC = () => {
       render: (record: IRole) => (
         <Space size="middle">
           <ViewRole role={record} />
-          <Access permission={ALL_PERMISSIONS.ROLES.UPDATE}>
+          <Access permission={ALL_PERMISSIONS.ROLES.UPDATE} hideChildren>
             <UpdateRole role={record} />
           </Access>
           {/* <DeleteRole roleId={record.roleId} /> */}

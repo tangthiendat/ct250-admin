@@ -9,7 +9,7 @@ const Role: React.FC = () => {
       <div className="card">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Vai trò</h2>
-          <Access permission={ALL_PERMISSIONS.ROLES.CREATE}>
+          <Access permission={ALL_PERMISSIONS.ROLES.CREATE} hideChildren>
             <AddRole />
           </Access>
         </div>

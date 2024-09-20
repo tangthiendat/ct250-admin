@@ -1,3 +1,4 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Card,
@@ -9,13 +10,12 @@ import {
   Switch,
   type FormInstance,
 } from "antd";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import RolePermissions from "./RolePermissions";
-import { IRole } from "../../../interfaces";
-import Loading from "../../../common/Loading";
-import { roleService, permissionsService } from "../../../services";
 import toast from "react-hot-toast";
+import Loading from "../../../common/Loading";
+import { IRole } from "../../../interfaces";
+import { permissionsService, roleService } from "../../../services";
+import RolePermissions from "./RolePermissions";
 
 interface UpdateRoleFormProps {
   form: FormInstance<IRole>;
@@ -95,19 +95,23 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
         },
       );
     } else {
-      const newRole = {
-        ...values,
-        roleName: values.roleName.toUpperCase(),
-      };
-      createRole(newRole, {
-        onSuccess: () => {
-          toast.success("Thêm mới vai trò thành công");
-          onCancel();
-        },
-        onError: () => {
-          toast.error("Thêm mới vai trò thất bại");
-        },
-      });
+      if (data?.payload) {
+        const newRole = {
+          ...values,
+          roleName: values.roleName.toUpperCase(),
+          permissions: form.getFieldValue("permissions"),
+        };
+        console.log(newRole);
+        createRole(newRole, {
+          onSuccess: () => {
+            toast.success("Thêm mới vai trò thành công");
+            onCancel();
+          },
+          onError: () => {
+            toast.error("Thêm mới vai trò thất bại");
+          },
+        });
+      }
     }
   }
 
