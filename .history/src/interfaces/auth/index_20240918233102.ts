@@ -2,7 +2,7 @@ import { Dayjs } from "dayjs";
 import { ICountry } from "../common";
 
 export interface IUser {
-  userId: string;
+  userId?: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -10,11 +10,10 @@ export interface IUser {
   password?: string;
   identityNumber: string;
   phoneNumber: string;
-  country: ICountry;
+  country?: ICountry;
   active: boolean;
   dateOfBirth: string | Dayjs;
-  role: IRole;
-  avatar?: string;
+  role?: IRole;
   createdAt: string;
   updatedAt?: string;
 }

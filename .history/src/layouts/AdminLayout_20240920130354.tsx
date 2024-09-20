@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, theme } from "antd";
+import { Button, Dropdown, Layout, Menu, MenuProps, theme } from "antd";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
-import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import Loading from "../common/Loading";
-import { ALL_PERMISSIONS } from "../constants";
-import { useAvatarUrl } from "../features/auth/hooks/useAvatarUrl";
 import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
+import { ALL_PERMISSIONS } from "../constants";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authService } from "../services";
 
 const { Header, Sider } = Layout;
@@ -29,7 +28,7 @@ const AdminLayout: React.FC = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const avatarUrl = useAvatarUrl(user ?? null);
+  const 
 
   const { mutate: logout } = useMutation({
     mutationFn: () => authService.logout(),
@@ -179,13 +178,7 @@ const AdminLayout: React.FC = () => {
             <div className="relative mr-5 flex items-center gap-2">
               <Button
                 type="text"
-                icon={
-                  avatarUrl ? (
-                    <Avatar src={avatarUrl} className="m-2" />
-                  ) : (
-                    <FaUserCircle />
-                  )
-                }
+                icon={<FaUserCircle />}
                 // onClick={}
                 style={{
                   fontSize: "30px",

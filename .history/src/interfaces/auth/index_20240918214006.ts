@@ -14,7 +14,6 @@ export interface IUser {
   active: boolean;
   dateOfBirth: string | Dayjs;
   role: IRole;
-  avatar?: string;
   createdAt: string;
   updatedAt?: string;
 }

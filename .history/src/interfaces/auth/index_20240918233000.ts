@@ -10,11 +10,10 @@ export interface IUser {
   password?: string;
   identityNumber: string;
   phoneNumber: string;
-  country: ICountry;
+  country?: ICountry;
   active: boolean;
   dateOfBirth: string | Dayjs;
-  role: IRole;
-  avatar?: string;
+  role?: IRole;
   createdAt: string;
   updatedAt?: string;
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, theme } from "antd";
+import { Button, Dropdown, Layout, Menu, MenuProps, theme } from "antd";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
@@ -179,13 +179,7 @@ const AdminLayout: React.FC = () => {
             <div className="relative mr-5 flex items-center gap-2">
               <Button
                 type="text"
-                icon={
-                  avatarUrl ? (
-                    <Avatar src={avatarUrl} className="m-2" />
-                  ) : (
-                    <FaUserCircle />
-                  )
-                }
+                icon={<FaUserCircle />}
                 // onClick={}
                 style={{
                   fontSize: "30px",

@@ -13,8 +13,7 @@ export interface IUser {
   country: ICountry;
   active: boolean;
   dateOfBirth: string | Dayjs;
-  role: IRole;
-  avatar?: string;
+  role?: IRole;
   createdAt: string;
   updatedAt?: string;
 }
