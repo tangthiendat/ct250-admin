@@ -21,6 +21,7 @@ interface UpdateRoleFormProps {
   form: FormInstance<IRole>;
   roleToUpdate?: IRole;
   onCancel: () => void;
+  viewOnly?: boolean;
 }
 
 interface UpdateRoleArgs {
@@ -32,6 +33,7 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
   form,
   roleToUpdate,
   onCancel,
+  viewOnly = false,
 }) => {
   const queryClient = useQueryClient();
 
@@ -127,17 +129,21 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
             name="roleName"
             rules={[{ required: true, message: "Vui lòng nhập tên vai trò" }]}
           >
-            <Input className="uppercase" />
+            <Input readOnly={viewOnly} className="uppercase" />
           </Form.Item>
         </Col>
         <Col span={8} offset={1}>
           <Form.Item label="Trạng thái" name="active" valuePropName="checked">
-            <Switch checkedChildren="ACTIVE" unCheckedChildren="INACTIVE" />
+            <Switch
+              disabled={viewOnly}
+              checkedChildren="ACTIVE"
+              unCheckedChildren="INACTIVE"
+            />
           </Form.Item>
         </Col>
         <Col span={24}>
           <Form.Item label="Mô tả" name="description">
-            <Input.TextArea rows={2} />
+            <Input.TextArea readOnly={viewOnly} rows={2} />
           </Form.Item>
         </Col>
         <Col span={24}>
@@ -146,23 +152,26 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
               form={form}
               roleToUpdate={roleToUpdate}
               permissions={data?.payload || []}
+              viewOnly={viewOnly}
             />
           </Card>
         </Col>
       </Row>
 
-      <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
-        <Space>
-          <Button onClick={onCancel}>Hủy</Button>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={isCreating || isUpdating}
-          >
-            {roleToUpdate ? "Cập nhật" : "Thêm mới"}
-          </Button>
-        </Space>
-      </Form.Item>
+      {!viewOnly && (
+        <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
+          <Space>
+            <Button onClick={onCancel}>Hủy</Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={isCreating || isUpdating}
+            >
+              {roleToUpdate ? "Cập nhật" : "Thêm mới"}
+            </Button>
+          </Space>
+        </Form.Item>
+      )}
     </Form>
   );
 };

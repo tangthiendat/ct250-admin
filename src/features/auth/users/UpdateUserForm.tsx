@@ -24,6 +24,7 @@ interface UpdateUserFormProps {
   form: FormInstance<IUser>;
   userToUpdate?: IUser;
   onCancel: () => void;
+  viewOnly?: boolean;
 }
 
 const genderOptions = [
@@ -41,6 +42,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
   form,
   userToUpdate,
   onCancel,
+  viewOnly = false,
 }) => {
   const queryClient = useQueryClient();
 
@@ -169,6 +171,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
           ]}
         >
           <Input
+            readOnly={viewOnly}
             placeholder="Họ, ví dụ PHAM"
             style={{ textTransform: "uppercase" }}
           />
@@ -190,6 +193,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
           ]}
         >
           <Input
+            readOnly={viewOnly}
             placeholder="Tên đệm & tên, ví dụ VAN A"
             style={{ textTransform: "uppercase" }}
           />
@@ -208,6 +212,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
           ]}
         >
           <DatePicker
+            disabled={viewOnly}
             className="w-full"
             format="DD/MM/YYYY"
             disabledDate={disabledDate}
@@ -226,7 +231,11 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
             },
           ]}
         >
-          <Radio.Group className="space-x-4" options={genderOptions} />
+          <Radio.Group
+            disabled={viewOnly}
+            className="space-x-4"
+            options={genderOptions}
+          />
         </Form.Item>
       </div>
       <div className="flex gap-8">
@@ -245,7 +254,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
             },
           ]}
         >
-          <Input placeholder="Số điện thoại" />
+          <Input readOnly={viewOnly} placeholder="Số điện thoại" />
         </Form.Item>
 
         <Form.Item
@@ -259,7 +268,11 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
             },
           ]}
         >
-          <Select placeholder="Chọn quốc gia" options={countryOptions} />
+          <Select
+            disabled={viewOnly}
+            placeholder="Chọn quốc gia"
+            options={countryOptions}
+          />
         </Form.Item>
       </div>
       <div className="flex gap-8">
@@ -274,7 +287,11 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
             },
           ]}
         >
-          <Select placeholder="Chọn vai trò" options={roleOptions} />
+          <Select
+            disabled={viewOnly}
+            placeholder="Chọn vai trò"
+            options={roleOptions}
+          />
         </Form.Item>
         <Form.Item
           className="flex-1"
@@ -282,7 +299,11 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
           name="active"
           valuePropName="checked"
         >
-          <Switch checkedChildren="ACTIVE" unCheckedChildren="INACTIVE" />
+          <Switch
+            disabled={viewOnly}
+            checkedChildren="ACTIVE"
+            unCheckedChildren="INACTIVE"
+          />
         </Form.Item>
       </div>
       <div className="flex gap-8">
@@ -301,7 +322,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
             },
           ]}
         >
-          <Input placeholder="Hộ chiếu/CCCD" />
+          <Input readOnly={viewOnly} placeholder="Hộ chiếu/CCCD" />
         </Form.Item>
 
         <Form.Item
@@ -319,7 +340,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
             },
           ]}
         >
-          <Input placeholder="Email" />
+          <Input readOnly={viewOnly} placeholder="Email" />
         </Form.Item>
       </div>
       {!userToUpdate && (
@@ -343,19 +364,21 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
           </Form.Item>
         </div>
       )}
-      <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
-        <Space>
-          <Button onClick={onCancel}>Hủy</Button>
+      {!viewOnly && (
+        <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
+          <Space>
+            <Button onClick={onCancel}>Hủy</Button>
 
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={isCreating || isUpdating}
-          >
-            {userToUpdate ? "Cập nhật" : "Thêm mới"}
-          </Button>
-        </Space>
-      </Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={isCreating || isUpdating}
+            >
+              {userToUpdate ? "Cập nhật" : "Thêm mới"}
+            </Button>
+          </Space>
+        </Form.Item>
+      )}
     </Form>
   );
 };

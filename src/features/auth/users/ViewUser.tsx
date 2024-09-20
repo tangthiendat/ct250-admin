@@ -1,16 +1,16 @@
-import { EditOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import { IUser } from "../../../interfaces";
 import { useState } from "react";
 import { Form, Modal, Tooltip } from "antd";
 import UpdateUserForm from "./UpdateUserForm";
 
-interface UpdateUserProps {
+interface ViewUserProps {
   user: IUser;
 }
 
-const UpdateUser: React.FC<UpdateUserProps> = ({ user }) => {
+const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [updateUserForm] = Form.useForm<IUser>();
+  const [viewUserForm] = Form.useForm<IUser>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -18,33 +18,33 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ user }) => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    updateUserForm.resetFields();
   };
 
   return (
     <>
-      <Tooltip title="Chỉnh sửa">
-        <EditOutlined
-          className="table-icon text-xl text-[#ffa500]"
+      <Tooltip title="Xem chi tiết">
+        <EyeOutlined
+          className="table-icon text-xl text-[#1677FF]"
           onClick={handleOpenModal}
         />
       </Tooltip>
       <Modal
         open={isOpenModal}
         width="50%"
-        title={<span className="text-lg">Cập nhật thông tin người dùng</span>}
+        title={<span className="text-lg">Xem thông tin người dùng</span>}
         destroyOnClose
         onCancel={handleCloseModal}
         footer={null}
       >
         <UpdateUserForm
-          form={updateUserForm}
+          form={viewUserForm}
           userToUpdate={user}
           onCancel={handleCloseModal}
+          viewOnly
         />
       </Modal>
     </>
   );
 };
 
-export default UpdateUser;
+export default ViewUser;
