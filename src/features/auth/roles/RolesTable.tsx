@@ -8,6 +8,7 @@ import { roleService } from "../../../services/role-service";
 import UpdateRole from "./UpdateRole";
 import Access from "../Access";
 import { ALL_PERMISSIONS } from "../../../constants";
+import ViewRole from "./ViewRole";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -115,6 +116,7 @@ const RolesTable: React.FC = () => {
       width: "10%",
       render: (record: IRole) => (
         <Space size="middle">
+          <ViewRole role={record} />
           <Access permission={ALL_PERMISSIONS.ROLES.UPDATE}>
             <UpdateRole role={record} />
           </Access>

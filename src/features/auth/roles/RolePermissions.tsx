@@ -15,12 +15,14 @@ interface RolePermissionsProps {
   form: FormInstance<IRole>;
   roleToUpdate?: IRole;
   permissions: IPermission[];
+  viewOnly: boolean;
 }
 
 const RolePermissions: React.FC<RolePermissionsProps> = ({
   form,
   roleToUpdate,
   permissions,
+  viewOnly,
 }) => {
   const allRolePermissions = groupBy<IPermission, string>(
     permissions,
@@ -141,6 +143,7 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({
     forceRender: true,
     extra: (
       <Switch
+        disabled={viewOnly}
         checked={isModuleChecked(module)}
         onClick={(_, event) => event.stopPropagation()}
         onChange={(checked) => handleModuleCheck(checked, module)}
@@ -156,6 +159,7 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({
                 <div className="flex flex-1">
                   <div className="flex flex-col items-center">
                     <Switch
+                      disabled={viewOnly}
                       checked={selectedPermissions
                         .get(module)
                         ?.has(permission.permissionId)}

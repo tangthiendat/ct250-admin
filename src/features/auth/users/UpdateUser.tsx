@@ -32,7 +32,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ user }) => {
       <Modal
         open={isOpenModal}
         width="50%"
-        title={<span className="text-lg">Cập nhật thông tin</span>}
+        title={<span className="text-lg">Cập nhật thông tin người dùng</span>}
         destroyOnClose
         onCancel={handleCloseModal}
         footer={null}

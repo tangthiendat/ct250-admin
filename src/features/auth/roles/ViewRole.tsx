@@ -1,16 +1,16 @@
 import { EyeOutlined } from "@ant-design/icons";
-import { IUser } from "../../../interfaces";
-import { useState } from "react";
 import { Form, Modal, Tooltip } from "antd";
-import UpdateUserForm from "./UpdateUserForm";
+import { useState } from "react";
+import { type IRole } from "../../../interfaces";
+import UpdateRoleForm from "./UpdateRoleForm";
 
-interface ViewUserProps {
-  user: IUser;
+interface ViewRoleProps {
+  role: IRole;
 }
 
-const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
+const ViewRole: React.FC<ViewRoleProps> = ({ role }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [viewUserForm] = Form.useForm<IUser>();
+  const [viewRoleForm] = Form.useForm<IRole>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -19,7 +19,6 @@ const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
   const handleCloseModal = () => {
     setIsOpenModal(false);
   };
-
   return (
     <>
       <Tooltip title="Xem chi tiết">
@@ -31,14 +30,14 @@ const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
       <Modal
         open={isOpenModal}
         width="50%"
-        title={<span className="text-lg">Xem thông tin người dùng</span>}
+        title={<span className="text-lg">Xem thông tin vai trò</span>}
         destroyOnClose
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdateUserForm
-          form={viewUserForm}
-          userToUpdate={user}
+        <UpdateRoleForm
+          form={viewRoleForm}
+          roleToUpdate={role}
           onCancel={handleCloseModal}
           viewOnly
         />
@@ -47,4 +46,4 @@ const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
   );
 };
 
-export default ViewUser;
+export default ViewRole;
