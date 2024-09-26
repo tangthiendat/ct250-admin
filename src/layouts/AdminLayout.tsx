@@ -35,9 +35,7 @@ const AdminLayout: React.FC = () => {
     mutationFn: () => authService.logout(),
     onSuccess: () => {
       window.localStorage.removeItem("access_token");
-      queryClient.removeQueries({
-        queryKey: ["logged-in-user"],
-      });
+      queryClient.removeQueries();
       navigate("/login");
     },
   });
