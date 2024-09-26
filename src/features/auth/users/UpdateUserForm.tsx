@@ -11,14 +11,12 @@ import {
   Space,
   Switch,
 } from "antd";
-import { endOfToday, isAfter } from "date-fns";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/Loading";
 import { IUser } from "../../../interfaces";
-import { userService, roleService, countryService } from "../../../services";
-import { formatISODate } from "../../../utils";
+import { countryService, roleService, userService } from "../../../services";
 
 interface UpdateUserFormProps {
   form: FormInstance<IUser>;
@@ -50,7 +48,6 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
     if (userToUpdate) {
       form.setFieldsValue({
         ...userToUpdate,
-        dateOfBirth: dayjs(userToUpdate.dateOfBirth),
       });
     }
   }, [userToUpdate, form]);
@@ -99,7 +96,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
   }));
 
   const disabledDate: DatePickerProps["disabledDate"] = (current) => {
-    return current && isAfter(current.toDate(), endOfToday());
+    return current && dayjs(current).isAfter(dayjs().endOf("day"));
   };
 
   function handleFinish(values: IUser) {
@@ -107,11 +104,9 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
       const updatedUser = {
         ...userToUpdate,
         ...values,
-        dateOfBirth: formatISODate(values.dateOfBirth.toString()),
         firstName: values.firstName.toUpperCase(),
         lastName: values.lastName.toUpperCase(),
       };
-
       updateUser(
         { userId: userToUpdate.userId, updatedUser },
         {
@@ -127,7 +122,6 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
     } else {
       const newUser = {
         ...values,
-        dateOfBirth: formatISODate(values.dateOfBirth.toString()),
         firstName: values.firstName.toUpperCase(),
         lastName: values.lastName.toUpperCase(),
       };
@@ -210,6 +204,10 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
               message: "Ngày sinh không hợp lệ",
             },
           ]}
+          getValueProps={(value: string) => ({
+            value: value && dayjs(value),
+          })}
+          normalize={(value: Dayjs) => value && value.tz().format("YYYY-MM-DD")}
         >
           <DatePicker
             disabled={viewOnly}

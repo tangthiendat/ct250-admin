@@ -26,3 +26,5 @@ export const ALL_PERMISSIONS = {
 export const ALL_MODULES = ["USERS", "ROLES", "PERMISSIONS", "FLIGHTS"];
 
 export const ALL_METHODS = ["GET", "POST", "PUT", "DELETE"];
+
+export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";

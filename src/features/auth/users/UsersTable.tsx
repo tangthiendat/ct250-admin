@@ -1,15 +1,14 @@
-import React, { useState } from "react";
-import { Space, Table, TablePaginationConfig, Tag } from "antd";
-import { format } from "date-fns";
-import { TableProps } from "antd";
-import { IUser } from "../../../interfaces";
-import { useSearchParams } from "react-router-dom";
-import { userService } from "../../../services/user-service";
 import { useQuery } from "@tanstack/react-query";
-import UpdateUser from "./UpdateUser";
-import Access from "../Access";
+import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
+import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ALL_PERMISSIONS } from "../../../constants";
+import { IUser } from "../../../interfaces";
+import { userService } from "../../../services/user-service";
+import { formatTimestamp } from "../../../utils";
+import Access from "../Access";
 import DeleteUser from "./DeleteUser";
+import UpdateUser from "./UpdateUser";
 import ViewUser from "./ViewUser";
 
 interface TableParams {
@@ -22,7 +21,7 @@ const UsersTable: React.FC = () => {
       current: Number(searchParams.get("page")) || 1,
       pageSize: Number(searchParams.get("pageSize")) || 10,
       showSizeChanger: true,
-      showTotal: (total) => `Tổng ${total} vai trò`,
+      showTotal: (total) => `Tổng ${total} người dùng`,
     },
   }));
 
@@ -95,7 +94,7 @@ const UsersTable: React.FC = () => {
       dataIndex: "createdAt",
       width: "15%",
       render: (createdAt: string) =>
-        createdAt ? format(new Date(createdAt), "dd-MM-yyyy hh:mm:ss") : "",
+        createdAt ? formatTimestamp(createdAt) : "",
     },
     {
       key: "updatedAt",
@@ -103,7 +102,7 @@ const UsersTable: React.FC = () => {
       dataIndex: "updatedAt",
       width: "15%",
       render: (updatedAt: string) =>
-        updatedAt ? format(new Date(updatedAt), "dd-MM-yyyy hh:mm:ss") : "",
+        updatedAt ? formatTimestamp(updatedAt) : "",
     },
     {
       title: "Hành động",

@@ -1,7 +1,6 @@
-import { grey, green, blue, red, orange } from "@ant-design/colors";
-// import { GetProp, TableProps } from "antd";
+import { blue, green, grey, orange, red } from "@ant-design/colors";
 import { SorterResult, SortOrder } from "antd/es/table/interface";
-import { format } from "date-fns";
+import dayjs from "dayjs";
 
 export function colorMethod(method: "GET" | "POST" | "PUT" | "DELETE") {
   switch (method) {
@@ -98,6 +97,6 @@ export function getDefaultFilterValue(
   return value ? value.split(",") : undefined;
 }
 
-export function formatISODate(date: string) {
-  return format(new Date(date), "yyyy-MM-dd'T'HH:mm:ss.SSS");
+export function formatTimestamp(timestamp: string) {
+  return dayjs(timestamp).format("DD-MM-YYYY HH:mm:ss");
 }

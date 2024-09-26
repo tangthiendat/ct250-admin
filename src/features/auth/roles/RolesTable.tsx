@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
-import { formatDate } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { ALL_PERMISSIONS } from "../../../constants";
 import { IRole } from "../../../interfaces";
 import { roleService } from "../../../services/role-service";
-import UpdateRole from "./UpdateRole";
+import { formatTimestamp } from "../../../utils";
 import Access from "../Access";
-import { ALL_PERMISSIONS } from "../../../constants";
+import UpdateRole from "./UpdateRole";
 import ViewRole from "./ViewRole";
 
 interface TableParams {
@@ -99,7 +99,7 @@ const RolesTable: React.FC = () => {
       key: "createdAt",
       width: "15%",
       render: (createdAt: string) =>
-        formatDate(new Date(createdAt), "dd-MM-yyyy hh:mm:ss"),
+        createdAt ? formatTimestamp(createdAt) : "",
     },
     {
       title: "Ngày cập nhật",
@@ -107,7 +107,7 @@ const RolesTable: React.FC = () => {
       key: "updatedAt",
       width: "15%",
       render: (updatedAt: string) =>
-        updatedAt ? formatDate(new Date(updatedAt), "dd-MM-yyyy hh:mm:ss") : "",
+        updatedAt ? formatTimestamp(updatedAt) : "",
     },
     {
       title: "Hành động",

@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { GetProp, Space, Table, TablePaginationConfig, TableProps } from "antd";
 import { SorterResult } from "antd/es/table/interface";
-import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ALL_METHODS, ALL_MODULES, ALL_PERMISSIONS } from "../../../constants";
@@ -10,11 +9,12 @@ import { permissionsService } from "../../../services";
 import {
   colorMethod,
   createSortParams,
+  formatTimestamp,
   getDefaultFilterValue,
   getDefaultSortOrder,
 } from "../../../utils";
-import UpdatePermission from "./UpdatePermission";
 import Access from "../Access";
+import UpdatePermission from "./UpdatePermission";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -171,7 +171,7 @@ const PermissionTable: React.FC = () => {
       key: "createdAt",
       width: "15%",
       render: (createdAt: string) =>
-        format(new Date(createdAt), "dd-MM-yyyy hh:mm:ss"),
+        createdAt ? formatTimestamp(createdAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
     },
@@ -180,12 +180,8 @@ const PermissionTable: React.FC = () => {
       dataIndex: "updatedAt",
       key: "updatedAt",
       width: "15%",
-      render: (updatedAt: string) => {
-        if (updatedAt) {
-          return format(new Date(updatedAt), "dd-MM-yyyy hh:mm:ss");
-        }
-        return "";
-      },
+      render: (updatedAt: string) =>
+        updatedAt ? formatTimestamp(updatedAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
     },

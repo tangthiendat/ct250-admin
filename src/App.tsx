@@ -6,8 +6,14 @@ import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import { Toaster } from "react-hot-toast";
 import AppRouter from "./router/AppRouter";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import { VIETNAM_TIMEZONE } from "./constants";
 
 dayjs.locale("vi");
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault(VIETNAM_TIMEZONE);
 
 const queryClient = new QueryClient({
   defaultOptions: {
