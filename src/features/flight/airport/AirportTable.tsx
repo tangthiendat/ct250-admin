@@ -1,10 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { Table, TablePaginationConfig, TableProps } from "antd";
-import { useState } from "react";
+import { Space, Table, TablePaginationConfig, TableProps } from "antd";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { ALL_PERMISSIONS } from "../../../constants";
 import { IAirport } from "../../../interfaces";
 import { airportService } from "../../../services/airport-service";
 import { formatTimestamp } from "../../../utils";
+import Access from "../../auth/Access";
+import DeleteAirport from "./DeleteAirport";
+import UpdateAirport from "./UpdateAirport";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -31,6 +35,19 @@ const AirportTable: React.FC = () => {
     queryFn: () => airportService.getAirports(pagination),
   });
 
+  useEffect(() => {
+    if (data) {
+      setTableParams((prev) => ({
+        ...prev,
+        pagination: {
+          ...prev.pagination,
+          total: data?.payload?.meta?.total || 0,
+          showTotal: (total) => `Tổng ${total} sân bay`,
+        },
+      }));
+    }
+  }, [data]);
+
   const handleTableChange: TableProps<IAirport>["onChange"] = (
     pagination,
     filters,
@@ -49,10 +66,16 @@ const AirportTable: React.FC = () => {
 
   const columns: TableProps<IAirport>["columns"] = [
     {
+      title: "Id",
+      key: "airportId",
+      dataIndex: "airportId",
+      width: "5%",
+    },
+    {
       title: "Tên sân bay",
       key: "airportName",
       dataIndex: "airportName",
-      width: "25%",
+      width: "20%",
     },
     {
       title: "Mã sân bay",
@@ -64,7 +87,7 @@ const AirportTable: React.FC = () => {
       key: "cityName",
       title: "Tên thành phố",
       dataIndex: "cityName",
-      width: "10%",
+      width: "15%",
     },
     {
       key: "cityCode",
@@ -76,7 +99,7 @@ const AirportTable: React.FC = () => {
       key: "createdAt",
       title: "Ngày tạo",
       dataIndex: "createdAt",
-      width: "10%",
+      width: "15%",
       render: (createdAt: string) =>
         createdAt ? formatTimestamp(createdAt) : "",
     },
@@ -92,22 +115,22 @@ const AirportTable: React.FC = () => {
       title: "Hành động",
       key: "action",
 
-      // render: (record: IAirport) => (
-      //   <Space>
-      //     <ViewUser user={record} />
-      //     <Access permission={ALL_PERMISSIONS.USERS.UPDATE} hideChildren>
-      //       <UpdateUser user={record} />
-      //     </Access>
-      //     <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
-      //       <DeleteUser userId={record.userId} />
-      //     </Access>
-      //   </Space>
-      // ),
+      render: (record: IAirport) => (
+        <Space>
+          <Access permission={ALL_PERMISSIONS.AIRPORTS.UPDATE} hideChildren>
+            <UpdateAirport airport={record} />
+          </Access>
+          <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
+            <DeleteAirport airportId={record.airportId} />
+          </Access>
+        </Space>
+      ),
     },
   ];
 
   return (
     <Table
+      bordered
       columns={columns}
       rowKey={(record: IAirport) => record.airportId}
       pagination={tableParams.pagination}

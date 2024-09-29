@@ -7,7 +7,6 @@ import { IUser } from "../../../interfaces";
 import { userService } from "../../../services/user-service";
 import { formatTimestamp } from "../../../utils";
 import Access from "../Access";
-import DeleteUser from "./DeleteUser";
 import UpdateUser from "./UpdateUser";
 import ViewUser from "./ViewUser";
 
@@ -114,9 +113,9 @@ const UsersTable: React.FC = () => {
           <Access permission={ALL_PERMISSIONS.USERS.UPDATE} hideChildren>
             <UpdateUser user={record} />
           </Access>
-          <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
+          {/* <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
             <DeleteUser userId={record.userId} />
-          </Access>
+          </Access> */}
         </Space>
       ),
     },
@@ -124,6 +123,7 @@ const UsersTable: React.FC = () => {
 
   return (
     <Table
+      bordered
       columns={columns}
       rowKey={(record: IUser) => record.userId}
       pagination={tableParams.pagination}
