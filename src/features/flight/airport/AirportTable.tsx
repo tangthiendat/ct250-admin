@@ -1,26 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
-import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
-import React, { useState } from "react";
+import { Space, Table, TablePaginationConfig, TableProps } from "antd";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ALL_PERMISSIONS } from "../../../constants";
-import { IUser } from "../../../interfaces";
-import { userService } from "../../../services/user-service";
+import { IAirport } from "../../../interfaces";
+import { airportService } from "../../../services/airport-service";
 import { formatTimestamp } from "../../../utils";
-import Access from "../Access";
-import UpdateUser from "./UpdateUser";
-import ViewUser from "./ViewUser";
+import Access from "../../auth/Access";
+import DeleteAirport from "./DeleteAirport";
+import UpdateAirport from "./UpdateAirport";
 
 interface TableParams {
   pagination: TablePaginationConfig;
 }
-const UsersTable: React.FC = () => {
+
+const AirportTable: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
       current: Number(searchParams.get("page")) || 1,
       pageSize: Number(searchParams.get("pageSize")) || 10,
       showSizeChanger: true,
-      showTotal: (total) => `Tổng ${total} người dùng`,
+      showTotal: (total) => `Tổng ${total} sân bay`,
     },
   }));
 
@@ -30,11 +31,24 @@ const UsersTable: React.FC = () => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["users", pagination],
-    queryFn: () => userService.getUsers(pagination),
+    queryKey: ["airports", pagination],
+    queryFn: () => airportService.getAirports(pagination),
   });
 
-  const handleTableChange: TableProps<IUser>["onChange"] = (
+  useEffect(() => {
+    if (data) {
+      setTableParams((prev) => ({
+        ...prev,
+        pagination: {
+          ...prev.pagination,
+          total: data?.payload?.meta?.total || 0,
+          showTotal: (total) => `Tổng ${total} sân bay`,
+        },
+      }));
+    }
+  }, [data]);
+
+  const handleTableChange: TableProps<IAirport>["onChange"] = (
     pagination,
     filters,
     sorter,
@@ -50,42 +64,36 @@ const UsersTable: React.FC = () => {
     setSearchParams(searchParams);
   };
 
-  const columns: TableProps<IUser>["columns"] = [
+  const columns: TableProps<IAirport>["columns"] = [
     {
-      title: "Họ",
-      key: "lastName",
-      dataIndex: "lastName",
+      title: "Id",
+      key: "airportId",
+      dataIndex: "airportId",
+      width: "5%",
+    },
+    {
+      title: "Tên sân bay",
+      key: "airportName",
+      dataIndex: "airportName",
+      width: "20%",
+    },
+    {
+      title: "Mã sân bay",
+      key: "airportCode",
+      dataIndex: "airportCode",
       width: "10%",
     },
     {
-      title: "Tên đệm và tên",
-      key: "firstName",
-      dataIndex: "firstName",
+      key: "cityName",
+      title: "Tên thành phố",
+      dataIndex: "cityName",
       width: "15%",
     },
     {
-      key: "email",
-      title: "Email",
-      dataIndex: "email",
-      width: "15%",
-    },
-    {
-      key: "role",
-      title: "Vai trò",
-      dataIndex: "role",
+      key: "cityCode",
+      title: "Mã thành phố",
+      dataIndex: "cityCode",
       width: "10%",
-      render: (role) => role.roleName,
-    },
-    {
-      key: "active",
-      title: "Trạng thái",
-      dataIndex: "active",
-      width: "8%",
-      render: (active: boolean) => (
-        <Tag color={active ? "green" : "red"}>
-          {active ? "ACTIVE" : "INACTIVE"}
-        </Tag>
-      ),
     },
     {
       key: "createdAt",
@@ -107,15 +115,14 @@ const UsersTable: React.FC = () => {
       title: "Hành động",
       key: "action",
 
-      render: (record: IUser) => (
+      render: (record: IAirport) => (
         <Space>
-          <ViewUser user={record} />
-          <Access permission={ALL_PERMISSIONS.USERS.UPDATE} hideChildren>
-            <UpdateUser user={record} />
+          <Access permission={ALL_PERMISSIONS.AIRPORTS.UPDATE} hideChildren>
+            <UpdateAirport airport={record} />
           </Access>
-          {/* <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
-            <DeleteUser userId={record.userId} />
-          </Access> */}
+          <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
+            <DeleteAirport airportId={record.airportId} />
+          </Access>
         </Space>
       ),
     },
@@ -125,7 +132,7 @@ const UsersTable: React.FC = () => {
     <Table
       bordered
       columns={columns}
-      rowKey={(record: IUser) => record.userId}
+      rowKey={(record: IAirport) => record.airportId}
       pagination={tableParams.pagination}
       dataSource={data?.payload?.content}
       loading={{
@@ -138,4 +145,4 @@ const UsersTable: React.FC = () => {
   );
 };
 
-export default UsersTable;
+export default AirportTable;
