@@ -1,10 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ALL_PERMISSIONS } from "../../../constants";
-import { IAirport } from "../../../interfaces";
-import { airportService } from "../../../services/airport-service";
+import { IAirport, Page } from "../../../interfaces";
 import { formatTimestamp } from "../../../utils";
 import Access from "../../auth/Access";
 import DeleteAirport from "./DeleteAirport";
@@ -14,7 +12,15 @@ interface TableParams {
   pagination: TablePaginationConfig;
 }
 
-const AirportTable: React.FC = () => {
+interface AirportTableProps {
+  airportPage?: Page<IAirport>;
+  isLoading: boolean;
+}
+
+const AirportTable: React.FC<AirportTableProps> = ({
+  airportPage,
+  isLoading,
+}) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
@@ -25,28 +31,18 @@ const AirportTable: React.FC = () => {
     },
   }));
 
-  const pagination = {
-    page: Number(searchParams.get("page")) || 1,
-    pageSize: Number(searchParams.get("pageSize")) || 10,
-  };
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["airports", pagination],
-    queryFn: () => airportService.getAirports(pagination),
-  });
-
   useEffect(() => {
-    if (data) {
+    if (airportPage) {
       setTableParams((prev) => ({
         ...prev,
         pagination: {
           ...prev.pagination,
-          total: data?.payload?.meta?.total || 0,
+          total: airportPage.meta?.total || 0,
           showTotal: (total) => `Tổng ${total} sân bay`,
         },
       }));
     }
-  }, [data]);
+  }, [airportPage]);
 
   const handleTableChange: TableProps<IAirport>["onChange"] = (
     pagination,
@@ -134,7 +130,7 @@ const AirportTable: React.FC = () => {
       columns={columns}
       rowKey={(record: IAirport) => record.airportId}
       pagination={tableParams.pagination}
-      dataSource={data?.payload?.content}
+      dataSource={airportPage?.content || []}
       loading={{
         spinning: isLoading,
         tip: "Đang tải dữ liệu...",
