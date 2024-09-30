@@ -2,30 +2,30 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Popconfirm, Tooltip } from "antd";
 import toast from "react-hot-toast";
-import { airportService } from "../../../services/airport-service";
+import { airplaneService } from "../../../services/airplane-service";
 
-interface DeleteAirportProps {
-  airportId: number;
+interface DeleteAirplaneProps {
+  airplaneId: number;
 }
 
-const DeleteAirport: React.FC<DeleteAirportProps> = ({ airportId }) => {
+const DeleteAirplane: React.FC<DeleteAirplaneProps> = ({ airplaneId }) => {
   const queryClient = useQueryClient();
-  const { mutate: deleteAirport, isPending: isDeleting } = useMutation({
-    mutationFn: airportService.delete,
+  const { mutate: deleteAirplane, isPending: isDeleting } = useMutation({
+    mutationFn: airplaneService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey.includes("airports"),
+        predicate: (query) => query.queryKey.includes("airplanes"),
       });
     },
   });
 
   function handleConfirmDelete(): void {
-    deleteAirport(airportId, {
+    deleteAirplane(airplaneId, {
       onSuccess: () => {
-        toast.success("Xóa sân bay thành công");
+        toast.success("Xóa máy bay thành công");
       },
       onError: () => {
-        toast.error("Xóa sân bay thất bại");
+        toast.error("Xóa máy bay thất bại");
       },
     });
   }
@@ -33,7 +33,7 @@ const DeleteAirport: React.FC<DeleteAirportProps> = ({ airportId }) => {
   return (
     <Popconfirm
       title="Xóa sân bay này?"
-      description="Bạn có chắc muốn xóa sân bay này không?"
+      description="Bạn có chắc muốn xóa máy bay này không?"
       okText="Xóa"
       cancelText="Hủy"
       okButtonProps={{ danger: true, loading: isDeleting }}
@@ -46,4 +46,4 @@ const DeleteAirport: React.FC<DeleteAirportProps> = ({ airportId }) => {
   );
 };
 
-export default DeleteAirport;
+export default DeleteAirplane;

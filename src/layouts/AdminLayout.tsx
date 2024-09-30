@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, theme } from "antd";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
-import { CiAirportSign1 } from "react-icons/ci";
 import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
-import { MdDashboard } from "react-icons/md";
+import { FaLocationArrow } from "react-icons/fa6";
+import { MdDashboard, MdFlight } from "react-icons/md";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import Loading from "../common/Loading";
@@ -13,7 +13,6 @@ import { ALL_PERMISSIONS } from "../constants";
 import { useAvatarUrl } from "../features/auth/hooks/useAvatarUrl";
 import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
 import { authService } from "../services";
-import { FaLocationArrow } from "react-icons/fa6";
 
 const { Header, Sider } = Layout;
 
@@ -79,6 +78,11 @@ const AdminLayout: React.FC = () => {
           item.apiPath === ALL_PERMISSIONS.AIRPORTS.GET_PAGINATION.apiPath &&
           item.method === ALL_PERMISSIONS.AIRPORTS.GET_PAGINATION.method,
       );
+      const viewAirplanes = permissions.find(
+        (item) =>
+          item.apiPath === ALL_PERMISSIONS.AIRPLANES.GET_PAGINATION.apiPath &&
+          item.method === ALL_PERMISSIONS.AIRPLANES.GET_PAGINATION.method,
+      );
 
       const menuItems = [
         {
@@ -123,6 +127,15 @@ const AdminLayout: React.FC = () => {
                 label: <NavLink to="/airports">Sân bay</NavLink>,
                 key: "airports",
                 icon: <FaLocationArrow />,
+              },
+            ]
+          : []),
+        ...(viewAirplanes
+          ? [
+              {
+                label: <NavLink to="/airplanes">Máy bay</NavLink>,
+                key: "airplanes",
+                icon: <MdFlight size={18} />,
               },
             ]
           : []),
