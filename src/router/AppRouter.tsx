@@ -7,7 +7,8 @@ import Home from "../pages/Home";
 import Permissions from "../pages/Permissions";
 import Login from "../pages/Login";
 import ProtectedRoute from "../features/auth/ProtectedRoute";
-import Airport from "../pages/Airports";
+import Airports from "../pages/Airports";
+import Airplanes from "../pages/Airplanes";
 
 const router = createBrowserRouter([
   {
@@ -41,7 +42,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/airports",
-        element: <Airport />,
+        element: <Airports />,
+      },
+      {
+        path: "/airplanes",
+        element: <Airplanes />,
       },
     ],
   },

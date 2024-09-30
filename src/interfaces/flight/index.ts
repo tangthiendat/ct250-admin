@@ -12,3 +12,21 @@ export interface IAirport {
     createdBy?: string;
     updatedBy?: string;
 }
+
+export interface IAirplane {
+    airplaneId: number;
+    modelName: string;
+    manufacturer: string;
+    maxDistance: number;
+    velocity: number;
+    numberOfSeats: number;
+    overallLength: number;
+    wingspan: number;
+    height: number;
+    inUse: boolean;
+    status: 'active' | 'maintenance' | 'retired';
+    createdAt: string;
+    updatedAt: string;
+    createdBy?: string;
+    updatedBy?: string;
+}

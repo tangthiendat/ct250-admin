@@ -28,9 +28,16 @@ export const ALL_PERMISSIONS = {
     UPDATE: { method: "PUT", apiPath: "/api/v1/airports/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/airports/{id}" },
   },
+  AIRPLANES: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/airplanes" },
+    GET_BY_ID: { method: "GET", apiPath: "/api/v1/airplanes/{id}" },
+    CREATE: { method: "POST", apiPath: "/api/v1/airplanes" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/airplanes/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/airplanes/{id}" },
+  },
 };
 
-export const ALL_MODULES = ["USERS", "ROLES", "PERMISSIONS", "AIRPORTS"];
+export const ALL_MODULES = ["USERS", "ROLES", "PERMISSIONS", "AIRPORTS", "AIRPLANES"];
 
 export const ALL_METHODS = ["GET", "POST", "PUT", "DELETE"];
 

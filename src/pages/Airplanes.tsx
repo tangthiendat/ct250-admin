@@ -1,14 +1,15 @@
-import { Input } from "antd";
+import { useQuery } from "@tanstack/react-query";
+import { SearchProps } from "antd/es/input";
+import { Input } from "antd/lib";
+import React from "react";
+import { useSearchParams } from "react-router-dom";
 import { ALL_PERMISSIONS } from "../constants";
 import Access from "../features/auth/Access";
-import AddAirport from "../features/flight/airport/AddAirport";
-import AirportTable from "../features/flight/airport/AirportTable";
-import { useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { airportService } from "../services/airport-service";
-import { SearchProps } from "antd/es/input";
+import AddAirplane from "../features/flight/airplane/AddAirplane";
+import AirplaneTable from "../features/flight/airplane/AirplaneTable";
+import { airplaneService } from "../services/airplane-service";
 
-const Airports: React.FC = () => {
+const Airplanes: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("query") || "";
 
@@ -19,7 +20,7 @@ const Airports: React.FC = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["airports", pagination, query],
-    queryFn: () => airportService.getAirports(pagination, query),
+    queryFn: () => airplaneService.getAirplanes(pagination, query),
   });
 
   const handleSearch: SearchProps["onSearch"] = (value) => {
@@ -33,15 +34,15 @@ const Airports: React.FC = () => {
   };
 
   return (
-    <Access permission={ALL_PERMISSIONS.AIRPORTS.GET_PAGINATION}>
+    <Access permission={ALL_PERMISSIONS.AIRPLANES.GET_PAGINATION}>
       <div className="card">
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Sân bay</h2>
+          <h2 className="text-xl font-semibold">Máy bay</h2>
 
           <div className="w-[60%]">
             <div className="flex gap-3">
               <Input.Search
-                placeholder="Nhập tên hoặc mã của Sân bay & Thành phố để tìm kiếm..."
+                placeholder="Nhập tên model máy bay để tìm kiếm..."
                 defaultValue={query}
                 enterButton
                 allowClear
@@ -49,13 +50,13 @@ const Airports: React.FC = () => {
               />
             </div>
           </div>
-          <Access permission={ALL_PERMISSIONS.AIRPORTS.CREATE} hideChildren>
-            <AddAirport />
+          <Access permission={ALL_PERMISSIONS.AIRPLANES.CREATE} hideChildren>
+            <AddAirplane />
           </Access>
         </div>
-        <AirportTable airportPage={data?.payload} isLoading={isLoading} />
+        <AirplaneTable airplanePage={data?.payload} isLoading={isLoading} />
       </div>
     </Access>
   );
 };
-export default Airports;
+export default Airplanes;
