@@ -101,15 +101,15 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
         let text = "";
 
         switch (status) {
-          case "active":
-            color = "blue";
-            text = "READY";
+          case "ACTIVE":
+            color = "green";
+            text = "ACTIVE";
             break;
-          case "maintenance":
+          case "MAINTENANCE":
             color = "gold";
             text = "MAINTENANCE";
             break;
-          case "retired":
+          case "RETIRED":
             color = "red";
             text = "RETIRED";
             break;

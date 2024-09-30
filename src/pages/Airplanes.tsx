@@ -19,7 +19,7 @@ const Airplanes: React.FC = () => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["airports", pagination, query],
+    queryKey: ["airplanes", pagination, query],
     queryFn: () => airplaneService.getAirplanes(pagination, query),
   });
 
