@@ -5,14 +5,19 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
 import { Method, Module } from "../../../common/enums";
-import { IPermission, PaginationParams } from "../../../interfaces";
+import {
+  IPermission,
+  PaginationParams,
+  PermissionFilterCriteria,
+  SortParams,
+} from "../../../interfaces";
 import { permissionsService } from "../../../services";
 import {
   colorMethod,
   formatTimestamp,
   getDefaultFilterValue,
   getDefaultSortOrder,
-  getDirection,
+  getSortDirection,
 } from "../../../utils";
 import Access from "../Access";
 import UpdatePermission from "./UpdatePermission";
@@ -39,33 +44,24 @@ const PermissionTable: React.FC = () => {
     page: Number(searchParams.get("page")) || 1,
     pageSize: Number(searchParams.get("pageSize")) || 10,
   };
+  const filter: PermissionFilterCriteria = {
+    method: searchParams.get("method") || undefined,
+    module: searchParams.get("module") || undefined,
+  };
+  const sort: SortParams = {
+    sortBy: searchParams.get("sortBy") || "",
+    direction: searchParams.get("direction") || "",
+  };
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      "permissions",
-      pagination,
-      {
-        method: searchParams.get("method") || undefined,
-        module: searchParams.get("module") || undefined,
-      },
-      {
-        sortBy: searchParams.get("sortBy") || "",
-        direction: searchParams.get("direction") || "",
-      },
-    ].filter((key) => Boolean(key)),
-
-    queryFn: () =>
-      permissionsService.getPermissions(
-        pagination,
-        {
-          method: searchParams.get("method") || undefined,
-          module: searchParams.get("module") || undefined,
-        },
-        {
-          sortBy: searchParams.get("sortBy") || "",
-          direction: searchParams.get("direction") || "",
-        },
-      ),
+    queryKey: ["permissions", pagination, filter, sort].filter((key) => {
+      if (key instanceof Object) {
+        return Object.values(key).some(
+          (value) => value !== undefined && value !== "",
+        );
+      }
+    }),
+    queryFn: () => permissionsService.getPermissions(pagination, filter, sort),
   });
 
   useEffect(() => {
@@ -116,10 +112,10 @@ const PermissionTable: React.FC = () => {
     if (sorter) {
       if (Array.isArray(sorter)) {
         sortBy = sorter[0].field as string;
-        direction = getDirection(sorter[0].order as string);
+        direction = getSortDirection(sorter[0].order as string);
       } else {
         sortBy = sorter.field as string;
-        direction = getDirection(sorter.order as string);
+        direction = getSortDirection(sorter.order as string);
       }
     }
 
