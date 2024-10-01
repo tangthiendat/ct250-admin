@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import { useLoggedInUser } from "./hooks/useLoggedInUser";
 import NotPermitted from "./NotPermitted";
-import Loading from "../../common/Loading";
+import Loading from "../../common/components/Loading";
 
 const RoleBasedRoute: React.FC<PropsWithChildren> = ({ children }) => {
   const { user, isLoading } = useLoggedInUser();

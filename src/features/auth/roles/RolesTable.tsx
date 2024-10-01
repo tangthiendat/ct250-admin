@@ -2,13 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ALL_PERMISSIONS } from "../../../constants";
+import { PERMISSIONS } from "../../../common/constants";
 import { IRole } from "../../../interfaces";
 import { roleService } from "../../../services/role-service";
 import { formatTimestamp } from "../../../utils";
 import Access from "../Access";
 import UpdateRole from "./UpdateRole";
 import ViewRole from "./ViewRole";
+import { Module } from "../../../common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -117,7 +118,7 @@ const RolesTable: React.FC = () => {
       render: (record: IRole) => (
         <Space size="middle">
           <ViewRole role={record} />
-          <Access permission={ALL_PERMISSIONS.ROLES.UPDATE} hideChildren>
+          <Access permission={PERMISSIONS[Module.ROLES].UPDATE} hideChildren>
             <UpdateRole role={record} />
           </Access>
           {/* <DeleteRole roleId={record.roleId} /> */}

@@ -3,15 +3,21 @@ import { GetProp, Space, Table, TablePaginationConfig, TableProps } from "antd";
 import { SorterResult } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ALL_METHODS, ALL_MODULES, ALL_PERMISSIONS } from "../../../constants";
-import { IPermission, PaginationParams } from "../../../interfaces";
+import { PERMISSIONS } from "../../../common/constants";
+import { Method, Module } from "../../../common/enums";
+import {
+  IPermission,
+  PaginationParams,
+  PermissionFilterCriteria,
+  SortParams,
+} from "../../../interfaces";
 import { permissionsService } from "../../../services";
 import {
   colorMethod,
-  createSortParams,
   formatTimestamp,
   getDefaultFilterValue,
   getDefaultSortOrder,
+  getSortDirection,
 } from "../../../utils";
 import Access from "../Access";
 import UpdatePermission from "./UpdatePermission";
@@ -38,27 +44,24 @@ const PermissionTable: React.FC = () => {
     page: Number(searchParams.get("page")) || 1,
     pageSize: Number(searchParams.get("pageSize")) || 10,
   };
+  const filter: PermissionFilterCriteria = {
+    method: searchParams.get("method") || undefined,
+    module: searchParams.get("module") || undefined,
+  };
+  const sort: SortParams = {
+    sortBy: searchParams.get("sortBy") || "",
+    direction: searchParams.get("direction") || "",
+  };
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      "permissions",
-      pagination,
-      {
-        method: searchParams.get("method") || undefined,
-        module: searchParams.get("module") || undefined,
-      },
-      searchParams.get("sort") || "",
-    ].filter((key) => Boolean(key)),
-
-    queryFn: () =>
-      permissionsService.getPermissions(
-        pagination,
-        {
-          method: searchParams.get("method") || undefined,
-          module: searchParams.get("module") || undefined,
-        },
-        searchParams.get("sort") || "",
-      ),
+    queryKey: ["permissions", pagination, filter, sort].filter((key) => {
+      if (key instanceof Object) {
+        return Object.values(key).some(
+          (value) => value !== undefined && value !== "",
+        );
+      }
+    }),
+    queryFn: () => permissionsService.getPermissions(pagination, filter, sort),
   });
 
   useEffect(() => {
@@ -79,8 +82,6 @@ const PermissionTable: React.FC = () => {
     filters,
     sorter,
   ) => {
-    const sortParams = createSortParams<IPermission>(sorter);
-
     setTableParams((prev) => ({
       ...prev,
       pagination,
@@ -105,10 +106,25 @@ const PermissionTable: React.FC = () => {
       });
     }
 
-    if (sortParams) {
-      searchParams.set("sort", sortParams);
+    let sortBy;
+    let direction;
+
+    if (sorter) {
+      if (Array.isArray(sorter)) {
+        sortBy = sorter[0].field as string;
+        direction = getSortDirection(sorter[0].order as string);
+      } else {
+        sortBy = sorter.field as string;
+        direction = getSortDirection(sorter.order as string);
+      }
+    }
+
+    if (sortBy && direction) {
+      searchParams.set("sortBy", sortBy);
+      searchParams.set("direction", direction);
     } else {
-      searchParams.delete("sort");
+      searchParams.delete("direction");
+      searchParams.delete("sortBy");
     }
 
     setSearchParams(searchParams);
@@ -149,7 +165,7 @@ const PermissionTable: React.FC = () => {
           </p>
         );
       },
-      filters: ALL_METHODS.map((method: string) => ({
+      filters: Object.values(Method).map((method: string) => ({
         text: method,
         value: method,
       })),
@@ -159,7 +175,7 @@ const PermissionTable: React.FC = () => {
       title: "Module",
       dataIndex: "module",
       key: "module",
-      filters: ALL_MODULES.map((module: string) => ({
+      filters: Object.values(Module).map((module: string) => ({
         text: module,
         value: module,
       })),
@@ -192,7 +208,10 @@ const PermissionTable: React.FC = () => {
       align: "center",
       render: (record: IPermission) => (
         <Space size="middle">
-          <Access permission={ALL_PERMISSIONS.PERMISSIONS.UPDATE} hideChildren>
+          <Access
+            permission={PERMISSIONS[Module.PERMISSIONS].UPDATE}
+            hideChildren
+          >
             <UpdatePermission permission={record} />
           </Access>
           {/* <DeletePermission permissionId={record.permissionId} />O */}

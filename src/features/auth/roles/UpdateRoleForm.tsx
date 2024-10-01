@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import Loading from "../../../common/Loading";
+import Loading from "../../../common/components/Loading";
 import { IRole } from "../../../interfaces";
 import { permissionsService, roleService } from "../../../services";
 import RolePermissions from "./RolePermissions";

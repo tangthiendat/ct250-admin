@@ -31,7 +31,7 @@ const UpdateAirplane: React.FC<UpdateAirplaneProps> = ({ airplane }) => {
       </Tooltip>
       <Modal
         open={isOpenModal}
-        width="30%"
+        width="50%"
         title={<span className="text-lg">Chỉnh sửa máy bay</span>}
         destroyOnClose
         onCancel={handleCloseModal}

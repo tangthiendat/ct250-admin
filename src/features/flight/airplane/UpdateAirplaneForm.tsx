@@ -11,9 +11,10 @@ import {
 } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import Loading from "../../../common/Loading";
+import Loading from "../../../common/components/Loading";
 import { IAirplane } from "../../../interfaces";
 import { airplaneService } from "../../../services/airplane-service";
+import { AirplaneStatus } from "../../../common/enums";
 
 interface UpdateAirplaneFormProps {
   form: FormInstance<IAirplane>;
@@ -27,11 +28,10 @@ interface UpdateAirplaneArgs {
   updatedAirplane: IAirplane;
 }
 
-const statusOptions = [
-  { value: "active", label: "Đang hoạt động" },
-  { value: "maintenance", label: "Bảo trì" },
-  { value: "retired", label: "Ngừng hoạt động" },
-];
+const statusOptions = Object.values(AirplaneStatus).map((status: string) => ({
+  label: status,
+  value: status,
+}));
 
 const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
   form,

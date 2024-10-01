@@ -11,7 +11,7 @@ import {
 } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import Loading from "../../../common/Loading";
+import Loading from "../../../common/components/Loading";
 import { IAirport } from "../../../interfaces";
 import { countryService } from "../../../services";
 import { airportService } from "../../../services/airport-service";

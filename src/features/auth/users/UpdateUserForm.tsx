@@ -14,7 +14,7 @@ import {
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import Loading from "../../../common/Loading";
+import Loading from "../../../common/components/Loading";
 import { IUser } from "../../../interfaces";
 import { countryService, roleService, userService } from "../../../services";
 

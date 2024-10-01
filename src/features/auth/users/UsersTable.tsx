@@ -2,13 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ALL_PERMISSIONS } from "../../../constants";
+import { PERMISSIONS } from "../../../common/constants";
 import { IUser } from "../../../interfaces";
 import { userService } from "../../../services/user-service";
 import { formatTimestamp } from "../../../utils";
 import Access from "../Access";
 import UpdateUser from "./UpdateUser";
 import ViewUser from "./ViewUser";
+import { Module } from "../../../common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -110,7 +111,7 @@ const UsersTable: React.FC = () => {
       render: (record: IUser) => (
         <Space>
           <ViewUser user={record} />
-          <Access permission={ALL_PERMISSIONS.USERS.UPDATE} hideChildren>
+          <Access permission={PERMISSIONS[Module.USERS].UPDATE} hideChildren>
             <UpdateUser user={record} />
           </Access>
           {/* <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>

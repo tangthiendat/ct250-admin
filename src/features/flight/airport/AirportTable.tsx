@@ -1,12 +1,13 @@
 import { Space, Table, TablePaginationConfig, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ALL_PERMISSIONS } from "../../../constants";
+import { PERMISSIONS } from "../../../common/constants";
 import { IAirport, Page } from "../../../interfaces";
 import { formatTimestamp } from "../../../utils";
 import Access from "../../auth/Access";
 import DeleteAirport from "./DeleteAirport";
 import UpdateAirport from "./UpdateAirport";
+import { Module } from "../../../common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -113,10 +114,10 @@ const AirportTable: React.FC<AirportTableProps> = ({
 
       render: (record: IAirport) => (
         <Space>
-          <Access permission={ALL_PERMISSIONS.AIRPORTS.UPDATE} hideChildren>
+          <Access permission={PERMISSIONS[Module.AIRPORTS].UPDATE} hideChildren>
             <UpdateAirport airport={record} />
           </Access>
-          <Access permission={ALL_PERMISSIONS.USERS.DELETE} hideChildren>
+          <Access permission={PERMISSIONS[Module.AIRPORTS].DELETE} hideChildren>
             <DeleteAirport airportId={record.airportId} />
           </Access>
         </Space>

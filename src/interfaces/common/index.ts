@@ -22,6 +22,11 @@ export interface Page<T> {
   meta: PaginationMeta;
 }
 
+export interface SortParams {
+  sortBy: string;
+  direction: string;
+}
+
 export interface ICountry {
   countryId: number;
   countryName: string;

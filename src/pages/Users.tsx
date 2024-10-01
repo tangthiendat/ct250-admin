@@ -1,12 +1,13 @@
 import { Input } from "antd";
 import Access from "../features/auth/Access";
-import { ALL_PERMISSIONS } from "../constants";
+import { PERMISSIONS } from "../common/constants";
 import UsersTable from "../features/auth/users/UsersTable";
 import AddUser from "../features/auth/users/AddUser";
+import { Module } from "../common/enums";
 
 const Users: React.FC = () => {
   return (
-    <Access permission={ALL_PERMISSIONS.USERS.GET_PAGINATION}>
+    <Access permission={PERMISSIONS[Module.USERS].GET_PAGINATION}>
       <div className="card">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Danh sách người dùng</h2>
@@ -21,7 +22,7 @@ const Users: React.FC = () => {
             </div>
           </div>
 
-          <Access permission={ALL_PERMISSIONS.USERS.CREATE} hideChildren>
+          <Access permission={PERMISSIONS[Module.USERS].CREATE} hideChildren>
             <AddUser />
           </Access>
         </div>
