@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
 import { IAirplane, Page } from "../../../interfaces";
-import { formatTimestamp } from "../../../utils";
+import {
+  formatTimestamp,
+  getDefaultFilterValue,
+  getDefaultSortOrder,
+  getSortDirection,
+} from "../../../utils";
 import Access from "../../auth/Access";
 import DeleteAirplane from "./DeleteAirplane";
 import UpdateAirplane from "./UpdateAirplane";
@@ -60,6 +65,42 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
     }));
     searchParams.set("page", String(pagination.current));
     searchParams.set("pageSize", String(pagination.pageSize));
+
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          searchParams.set(key, value.join(","));
+        } else {
+          if (value) {
+            searchParams.set(key, `${value}`);
+          } else {
+            searchParams.delete(key);
+          }
+        }
+      });
+    }
+
+    let sortBy;
+    let direction;
+
+    if (sorter) {
+      if (Array.isArray(sorter)) {
+        sortBy = sorter[0].field as string;
+        direction = getSortDirection(sorter[0].order as string);
+      } else {
+        sortBy = sorter.field as string;
+        direction = getSortDirection(sorter.order as string);
+      }
+    }
+
+    if (sortBy && direction) {
+      searchParams.set("sortBy", sortBy);
+      searchParams.set("direction", direction);
+    } else {
+      searchParams.delete("direction");
+      searchParams.delete("sortBy");
+    }
+
     setSearchParams(searchParams);
   };
 
@@ -81,6 +122,8 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
       key: "numberOfSeats",
       dataIndex: "numberOfSeats",
       width: "10%",
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "numberOfSeats"),
     },
     {
       title: "Tình trạng sử dụng",
@@ -101,6 +144,17 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
           </p>
         );
       },
+      filters: [
+        {
+          text: "Đang sử dụng",
+          value: true,
+        },
+        {
+          text: "Không sử dụng",
+          value: false,
+        },
+      ],
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "inUse"),
     },
     {
       title: "Trạng thái",
@@ -124,15 +178,22 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
 
         return <Tag color={color}>{status}</Tag>;
       },
+      filters: Object.values(AirplaneStatus).map((status: string) => ({
+        text: status,
+        value: status,
+      })),
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
     },
 
     {
-      key: "updatedAt",
+      key: "createdAt",
       title: "Ngày tạo",
-      dataIndex: "updatedAt",
+      dataIndex: "createdAt",
       width: "15%",
-      render: (updatedAt: string) =>
-        updatedAt ? formatTimestamp(updatedAt) : "",
+      render: (createdAt: string) =>
+        createdAt ? formatTimestamp(createdAt) : "",
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
     },
 
     {
@@ -142,6 +203,8 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
       width: "15%",
       render: (updatedAt: string) =>
         updatedAt ? formatTimestamp(updatedAt) : "",
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
     },
     {
       title: "Hành động",

@@ -55,7 +55,9 @@ const PermissionTable: React.FC = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["permissions", pagination, filter, sort].filter((key) => {
-      if (key instanceof Object) {
+      if (typeof key === "string") {
+        return key !== "";
+      } else if (key instanceof Object) {
         return Object.values(key).some(
           (value) => value !== undefined && value !== "",
         );
