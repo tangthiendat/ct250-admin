@@ -3,7 +3,8 @@ import { GetProp, Space, Table, TablePaginationConfig, TableProps } from "antd";
 import { SorterResult } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ALL_METHODS, ALL_MODULES, ALL_PERMISSIONS } from "../../../constants";
+import { PERMISSIONS } from "../../../common/constants";
+import { Method, Module } from "../../../common/enums";
 import { IPermission, PaginationParams } from "../../../interfaces";
 import { permissionsService } from "../../../services";
 import {
@@ -168,7 +169,7 @@ const PermissionTable: React.FC = () => {
           </p>
         );
       },
-      filters: ALL_METHODS.map((method: string) => ({
+      filters: Object.values(Method).map((method: string) => ({
         text: method,
         value: method,
       })),
@@ -178,7 +179,7 @@ const PermissionTable: React.FC = () => {
       title: "Module",
       dataIndex: "module",
       key: "module",
-      filters: ALL_MODULES.map((module: string) => ({
+      filters: Object.values(Module).map((module: string) => ({
         text: module,
         value: module,
       })),
@@ -211,7 +212,10 @@ const PermissionTable: React.FC = () => {
       align: "center",
       render: (record: IPermission) => (
         <Space size="middle">
-          <Access permission={ALL_PERMISSIONS.PERMISSIONS.UPDATE} hideChildren>
+          <Access
+            permission={PERMISSIONS[Module.PERMISSIONS].UPDATE}
+            hideChildren
+          >
             <UpdatePermission permission={record} />
           </Access>
           {/* <DeletePermission permissionId={record.permissionId} />O */}

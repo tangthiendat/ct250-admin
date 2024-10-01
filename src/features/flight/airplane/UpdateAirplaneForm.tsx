@@ -11,10 +11,10 @@ import {
 } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import Loading from "../../../common/Loading";
+import Loading from "../../../common/components/Loading";
 import { IAirplane } from "../../../interfaces";
 import { airplaneService } from "../../../services/airplane-service";
-import { AIRPLANE_STATUS } from "../../../constants";
+import { AirplaneStatus } from "../../../common/enums";
 
 interface UpdateAirplaneFormProps {
   form: FormInstance<IAirplane>;
@@ -28,7 +28,7 @@ interface UpdateAirplaneArgs {
   updatedAirplane: IAirplane;
 }
 
-const statusOptions = AIRPLANE_STATUS.map((status) => ({
+const statusOptions = Object.values(AirplaneStatus).map((status: string) => ({
   label: status,
   value: status,
 }));

@@ -1,13 +1,15 @@
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
+import { volcano, blue } from "@ant-design/colors";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ALL_PERMISSIONS } from "../../../constants";
+import { PERMISSIONS } from "../../../common/constants";
 import { IAirplane, Page } from "../../../interfaces";
 import { formatTimestamp } from "../../../utils";
 import Access from "../../auth/Access";
 import DeleteAirplane from "./DeleteAirplane";
 import UpdateAirplane from "./UpdateAirplane";
 import ViewAirplane from "./ViewAirplane";
+import { AirplaneStatus, Module } from "../../../common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -85,37 +87,42 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
       key: "inUse",
       dataIndex: "inUse",
       width: "15%",
-      render: (inUse: boolean) => (
-        <Tag color={inUse ? "green" : "red"}>
-          {inUse ? "IN USE" : "NOT IN USE"}
-        </Tag>
-      ),
+      render: (inUse: boolean) => {
+        const color = inUse ? blue[6] : volcano[6];
+        const text = inUse ? "Đang sử dụng" : "Không sử dụng";
+        return (
+          <p
+            style={{
+              color: color,
+              fontWeight: 600,
+            }}
+          >
+            {text}
+          </p>
+        );
+      },
     },
     {
       title: "Trạng thái",
       key: "status",
       dataIndex: "status",
       width: "13%",
-      render: (status: string) => {
+      render: (status: IAirplane["status"]) => {
         let color = "";
-        let text = "";
 
         switch (status) {
-          case "ACTIVE":
+          case AirplaneStatus.ACTIVE:
             color = "green";
-            text = "ACTIVE";
             break;
-          case "MAINTENANCE":
-            color = "gold";
-            text = "MAINTENANCE";
+          case AirplaneStatus.MAINTENANCE:
+            color = "orange";
             break;
-          case "RETIRED":
+          case AirplaneStatus.RETIRED:
             color = "red";
-            text = "RETIRED";
             break;
         }
 
-        return <Tag color={color}>{text}</Tag>;
+        return <Tag color={color}>{status}</Tag>;
       },
     },
 
@@ -143,10 +150,16 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
       render: (record: IAirplane) => (
         <Space>
           <ViewAirplane airplane={record} />
-          <Access permission={ALL_PERMISSIONS.AIRPLANES.UPDATE} hideChildren>
+          <Access
+            permission={PERMISSIONS[Module.AIRPLANES].UPDATE}
+            hideChildren
+          >
             <UpdateAirplane airplane={record} />
           </Access>
-          <Access permission={ALL_PERMISSIONS.AIRPLANES.DELETE} hideChildren>
+          <Access
+            permission={PERMISSIONS[Module.AIRPLANES].DELETE}
+            hideChildren
+          >
             <DeleteAirplane airplaneId={record.airplaneId} />
           </Access>
         </Space>

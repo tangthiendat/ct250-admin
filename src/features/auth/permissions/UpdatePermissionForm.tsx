@@ -11,7 +11,7 @@ import {
 } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { ALL_METHODS, ALL_MODULES } from "../../../constants";
+import { Method, Module } from "../../../common/enums";
 import { IPermission } from "../../../interfaces";
 import { permissionsService } from "../../../services";
 
@@ -21,12 +21,12 @@ interface UpdatePermissionFormProps {
   onCancel: () => void;
 }
 
-const methodOptions = ALL_METHODS.map((method: string) => ({
+const methodOptions = Object.values(Method).map((method: string) => ({
   value: method,
   label: method,
 }));
 
-const moduleOptions = ALL_MODULES.map((module: string) => ({
+const moduleOptions = Object.values(Module).map((module: string) => ({
   value: module,
   label: module,
 }));

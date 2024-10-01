@@ -3,11 +3,12 @@ import { SearchProps } from "antd/es/input";
 import { Input } from "antd/lib";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import { ALL_PERMISSIONS } from "../constants";
+import { PERMISSIONS } from "../common/constants";
 import Access from "../features/auth/Access";
 import AddAirplane from "../features/flight/airplane/AddAirplane";
 import AirplaneTable from "../features/flight/airplane/AirplaneTable";
 import { airplaneService } from "../services/airplane-service";
+import { Module } from "../common/enums";
 
 const Airplanes: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,7 +35,7 @@ const Airplanes: React.FC = () => {
   };
 
   return (
-    <Access permission={ALL_PERMISSIONS.AIRPLANES.GET_PAGINATION}>
+    <Access permission={PERMISSIONS[Module.AIRPLANES].GET_PAGINATION}>
       <div className="card">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Máy bay</h2>
@@ -50,7 +51,10 @@ const Airplanes: React.FC = () => {
               />
             </div>
           </div>
-          <Access permission={ALL_PERMISSIONS.AIRPLANES.CREATE} hideChildren>
+          <Access
+            permission={PERMISSIONS[Module.AIRPLANES].CREATE}
+            hideChildren
+          >
             <AddAirplane />
           </Access>
         </div>

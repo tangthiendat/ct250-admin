@@ -8,11 +8,12 @@ import { FaLocationArrow } from "react-icons/fa6";
 import { MdDashboard, MdFlight } from "react-icons/md";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
-import Loading from "../common/Loading";
-import { ALL_PERMISSIONS } from "../constants";
+import Loading from "../common/components/Loading";
+import { PERMISSIONS } from "../common/constants";
 import { useAvatarUrl } from "../features/auth/hooks/useAvatarUrl";
 import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
 import { authService } from "../services";
+import { Module } from "../common/enums";
 
 const { Header, Sider } = Layout;
 
@@ -58,30 +59,33 @@ const AdminLayout: React.FC = () => {
 
       const viewUsers = permissions.find(
         (item) =>
-          item.apiPath === ALL_PERMISSIONS.USERS.GET_PAGINATION.apiPath &&
-          item.method === ALL_PERMISSIONS.USERS.GET_PAGINATION.method,
+          item.apiPath === PERMISSIONS[Module.USERS].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.USERS].GET_PAGINATION.method,
       );
       const viewRoles = permissions.find(
         (item) =>
-          item.apiPath === ALL_PERMISSIONS.ROLES.GET_PAGINATION.apiPath &&
-          item.method === ALL_PERMISSIONS.ROLES.GET_PAGINATION.method,
+          item.apiPath === PERMISSIONS[Module.ROLES].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.ROLES].GET_PAGINATION.method,
       );
 
       const viewPermissions = permissions.find(
         (item) =>
-          item.apiPath === ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATION.apiPath &&
-          item.method === ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATION.method,
+          item.apiPath ===
+            PERMISSIONS[Module.PERMISSIONS].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.PERMISSIONS].GET_PAGINATION.method,
       );
 
       const viewAirports = permissions.find(
         (item) =>
-          item.apiPath === ALL_PERMISSIONS.AIRPORTS.GET_PAGINATION.apiPath &&
-          item.method === ALL_PERMISSIONS.AIRPORTS.GET_PAGINATION.method,
+          item.apiPath ===
+            PERMISSIONS[Module.AIRPORTS].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.AIRPORTS].GET_PAGINATION.method,
       );
       const viewAirplanes = permissions.find(
         (item) =>
-          item.apiPath === ALL_PERMISSIONS.AIRPLANES.GET_PAGINATION.apiPath &&
-          item.method === ALL_PERMISSIONS.AIRPLANES.GET_PAGINATION.method,
+          item.apiPath ===
+            PERMISSIONS[Module.AIRPLANES].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.AIRPLANES].GET_PAGINATION.method,
       );
 
       const menuItems = [
