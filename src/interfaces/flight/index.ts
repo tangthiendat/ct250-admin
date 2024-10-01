@@ -31,3 +31,9 @@ export interface IAirplane {
   createdBy?: string;
   updatedBy?: string;
 }
+
+export interface AirplaneFilterCriteria {
+  query?: string;
+  inUse?: boolean;
+  status?: AirplaneStatus;
+}

@@ -51,7 +51,7 @@ export function getDefaultSortOrder(
   return undefined;
 }
 
-export function getDirection(sortOrder: string): string | undefined {
+export function getSortDirection(sortOrder: string): string | undefined {
   return sortOrder === "ascend"
     ? "asc"
     : sortOrder === "descend"

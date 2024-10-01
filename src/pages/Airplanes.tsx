@@ -8,20 +8,48 @@ import Access from "../features/auth/Access";
 import AddAirplane from "../features/flight/airplane/AddAirplane";
 import AirplaneTable from "../features/flight/airplane/AirplaneTable";
 import { airplaneService } from "../services/airplane-service";
-import { Module } from "../common/enums";
+import { AirplaneStatus, Module } from "../common/enums";
+import {
+  AirplaneFilterCriteria,
+  PaginationParams,
+  SortParams,
+} from "../interfaces";
 
 const Airplanes: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get("query") || "";
 
-  const pagination = {
+  const pagination: PaginationParams = {
     page: Number(searchParams.get("page")) || 1,
     pageSize: Number(searchParams.get("pageSize")) || 10,
   };
 
+  const filter: AirplaneFilterCriteria = {
+    query: searchParams.get("query") || undefined,
+    inUse:
+      searchParams.get("inUse") === "true"
+        ? true
+        : searchParams.get("inUse") === "false"
+          ? false
+          : undefined,
+    status: (searchParams.get("status") as AirplaneStatus) || undefined,
+  };
+
+  const sort: SortParams = {
+    sortBy: searchParams.get("sortBy") || "",
+    direction: searchParams.get("direction") || "",
+  };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["airplanes", pagination, query],
-    queryFn: () => airplaneService.getAirplanes(pagination, query),
+    queryKey: ["airplanes", pagination, filter, sort].filter((key) => {
+      if (typeof key === "string") {
+        return key !== "";
+      } else if (key instanceof Object) {
+        return Object.values(key).some(
+          (value) => value !== undefined && value !== "",
+        );
+      }
+    }),
+    queryFn: () => airplaneService.getAirplanes(pagination, filter, sort),
   });
 
   const handleSearch: SearchProps["onSearch"] = (value) => {
@@ -43,8 +71,8 @@ const Airplanes: React.FC = () => {
           <div className="w-[60%]">
             <div className="flex gap-3">
               <Input.Search
-                placeholder="Nhập tên model máy bay để tìm kiếm..."
-                defaultValue={query}
+                placeholder="Nhập tên mô hình máy bay để tìm kiếm..."
+                defaultValue={searchParams.get("query") || ""}
                 enterButton
                 allowClear
                 onSearch={handleSearch}
