@@ -4,6 +4,7 @@ import {
   Page,
   PaginationParams,
   PermissionFilterCriteria,
+  SortParams,
 } from "../interfaces";
 import { createApiClient } from "./api-client";
 
@@ -11,7 +12,7 @@ interface IPermissionsService {
   getPermissions(
     pagination: PaginationParams,
     filter?: PermissionFilterCriteria,
-    sort?: string,
+    sort?: SortParams,
   ): Promise<ApiResponse<Page<IPermission>>>;
 
   getAllPermissions(): Promise<ApiResponse<IPermission[]>>;
@@ -26,7 +27,7 @@ class PermissionsService implements IPermissionsService {
   async getPermissions(
     pagination: PaginationParams,
     filter?: PermissionFilterCriteria,
-    sort?: string,
+    sort?: SortParams,
   ): Promise<ApiResponse<Page<IPermission>>> {
     return (
       await apiClient.get("", {
@@ -34,7 +35,8 @@ class PermissionsService implements IPermissionsService {
           ...pagination,
           method: filter?.method,
           module: filter?.module,
-          sort: sort !== "" ? sort : undefined,
+          sortBy: sort?.sortBy !== "" ? sort?.sortBy : undefined,
+          direction: sort?.direction !== "" ? sort?.direction : undefined,
         },
       })
     ).data;

@@ -8,10 +8,10 @@ import { IPermission, PaginationParams } from "../../../interfaces";
 import { permissionsService } from "../../../services";
 import {
   colorMethod,
-  createSortParams,
   formatTimestamp,
   getDefaultFilterValue,
   getDefaultSortOrder,
+  getDirection,
 } from "../../../utils";
 import Access from "../Access";
 import UpdatePermission from "./UpdatePermission";
@@ -47,7 +47,10 @@ const PermissionTable: React.FC = () => {
         method: searchParams.get("method") || undefined,
         module: searchParams.get("module") || undefined,
       },
-      searchParams.get("sort") || "",
+      {
+        sortBy: searchParams.get("sortBy") || "",
+        direction: searchParams.get("direction") || "",
+      },
     ].filter((key) => Boolean(key)),
 
     queryFn: () =>
@@ -57,7 +60,10 @@ const PermissionTable: React.FC = () => {
           method: searchParams.get("method") || undefined,
           module: searchParams.get("module") || undefined,
         },
-        searchParams.get("sort") || "",
+        {
+          sortBy: searchParams.get("sortBy") || "",
+          direction: searchParams.get("direction") || "",
+        },
       ),
   });
 
@@ -79,8 +85,6 @@ const PermissionTable: React.FC = () => {
     filters,
     sorter,
   ) => {
-    const sortParams = createSortParams<IPermission>(sorter);
-
     setTableParams((prev) => ({
       ...prev,
       pagination,
@@ -105,10 +109,25 @@ const PermissionTable: React.FC = () => {
       });
     }
 
-    if (sortParams) {
-      searchParams.set("sort", sortParams);
+    let sortBy;
+    let direction;
+
+    if (sorter) {
+      if (Array.isArray(sorter)) {
+        sortBy = sorter[0].field as string;
+        direction = getDirection(sorter[0].order as string);
+      } else {
+        sortBy = sorter.field as string;
+        direction = getDirection(sorter.order as string);
+      }
+    }
+
+    if (sortBy && direction) {
+      searchParams.set("sortBy", sortBy);
+      searchParams.set("direction", direction);
     } else {
-      searchParams.delete("sort");
+      searchParams.delete("direction");
+      searchParams.delete("sortBy");
     }
 
     setSearchParams(searchParams);
