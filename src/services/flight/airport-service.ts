@@ -1,6 +1,11 @@
 import { AxiosInstance } from "axios";
-import { ApiResponse, PaginationParams, Page, IAirport } from "../interfaces";
-import { createApiClient } from "./api-client";
+import {
+  ApiResponse,
+  PaginationParams,
+  Page,
+  IAirport,
+} from "../../interfaces";
+import { createApiClient } from "../api-client";
 interface IAirportService {
   getAirports(
     pagination: PaginationParams,

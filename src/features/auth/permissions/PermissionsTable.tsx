@@ -11,7 +11,7 @@ import {
   PermissionFilterCriteria,
   SortParams,
 } from "../../../interfaces";
-import { permissionsService } from "../../../services";
+import { permissionService } from "../../../services";
 import {
   colorMethod,
   formatTimestamp,
@@ -63,7 +63,7 @@ const PermissionTable: React.FC = () => {
         );
       }
     }),
-    queryFn: () => permissionsService.getPermissions(pagination, filter, sort),
+    queryFn: () => permissionService.getPermissions(pagination, filter, sort),
   });
 
   useEffect(() => {

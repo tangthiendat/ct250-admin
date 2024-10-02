@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
 import { IUser } from "../../../interfaces";
-import { userService } from "../../../services/user-service";
+import { userService } from "../../../services";
 import { formatTimestamp } from "../../../utils";
 import Access from "../Access";
 import UpdateUser from "./UpdateUser";

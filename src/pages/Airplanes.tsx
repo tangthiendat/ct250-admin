@@ -7,7 +7,7 @@ import { PERMISSIONS } from "../common/constants";
 import Access from "../features/auth/Access";
 import AddAirplane from "../features/flight/airplane/AddAirplane";
 import AirplaneTable from "../features/flight/airplane/AirplaneTable";
-import { airplaneService } from "../services/airplane-service";
+import { airplaneService } from "../services/flight/airplane-service";
 import { AirplaneStatus, Module } from "../common/enums";
 import {
   AirplaneFilterCriteria,

@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios";
-import { ApiResponse, ICountry } from "../interfaces";
-import { createApiClient } from "./api-client";
+import { ApiResponse, ICountry } from "../../interfaces";
+import { createApiClient } from "../api-client";
 
 interface ICountryService {
   getAllCountries(): Promise<ApiResponse<ICountry[]>>;

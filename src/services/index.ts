@@ -1,5 +1,10 @@
-export * from "./auth-service.ts";
-export * from "./permissions-service.ts";
-export * from "./role-service.ts";
-export * from "./user-service.ts";
-export * from "./country-service.ts";
+//AUTH
+export * from "./auth/auth-service.ts";
+export * from "./auth/user-service.ts";
+export * from "./auth/role-service.ts";
+export * from "./auth/permission-service.ts";
+
+//FLIGHT
+export * from "./flight/country-service.ts";
+export * from "./flight/airport-service.ts";
+export * from "./flight/airplane-service.ts";

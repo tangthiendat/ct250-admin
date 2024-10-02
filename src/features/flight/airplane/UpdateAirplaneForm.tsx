@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
 import { IAirplane } from "../../../interfaces";
-import { airplaneService } from "../../../services/airplane-service";
+import { airplaneService } from "../../../services";
 import { AirplaneStatus } from "../../../common/enums";
 
 interface UpdateAirplaneFormProps {
