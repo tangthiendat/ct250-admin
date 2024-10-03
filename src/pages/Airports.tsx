@@ -5,7 +5,7 @@ import AddAirport from "../features/flight/airport/AddAirport";
 import AirportTable from "../features/flight/airport/AirportTable";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { airportService } from "../services/airport-service";
+import { airportService } from "../services";
 import { SearchProps } from "antd/es/input";
 import { Module } from "../common/enums";
 

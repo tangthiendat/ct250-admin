@@ -11,6 +11,7 @@ interface IAirportService {
     pagination: PaginationParams,
     query: string,
   ): Promise<ApiResponse<Page<IAirport>>>;
+  getAll(): Promise<ApiResponse<IAirport[]>>;
   create(
     newAirport: Omit<IAirport, "airportId">,
   ): Promise<ApiResponse<IAirport>>;
@@ -37,6 +38,11 @@ class AirportService implements IAirportService {
       })
     ).data;
   }
+
+  async getAll(): Promise<ApiResponse<IAirport[]>> {
+    return (await apiClient.get("/all")).data;
+  }
+
   async create(
     newAirport: Omit<IAirport, "airportId">,
   ): Promise<ApiResponse<IAirport>> {

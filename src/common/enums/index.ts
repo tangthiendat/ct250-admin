@@ -21,3 +21,9 @@ export enum AirplaneStatus {
   MAINTENANCE = "MAINTENANCE",
   RETIRED = "RETIRED",
 }
+
+//ROUTE
+export enum RouteType {
+  DOMESTIC = "DOMESTIC",
+  INTERNATIONAL = "INTERNATIONAL",
+}

@@ -1,4 +1,4 @@
-import { AirplaneStatus } from "../../common/enums";
+import { AirplaneStatus, RouteType } from "../../common/enums";
 import { ICountry } from "../common";
 
 export interface IAirport {
@@ -36,4 +36,13 @@ export interface AirplaneFilterCriteria {
   query?: string;
   inUse?: boolean;
   status?: AirplaneStatus;
+}
+
+export interface IRoute {
+  routeId: number;
+  departureAirport: IAirport;
+  arrivalAirport: IAirport;
+  routeType: RouteType;
+  createdAt: string;
+  updatedAt: string;
 }
