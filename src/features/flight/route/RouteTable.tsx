@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { IRoute, Page } from "../../../interfaces";
 import { useEffect, useState } from "react";
-import { Space, Table, TablePaginationConfig } from "antd";
+import { Space, Table, TablePaginationConfig, Tag } from "antd";
 import { TableProps } from "antd/lib";
 import {
   formatTimestamp,
@@ -11,6 +11,7 @@ import {
 import Access from "../../auth/Access";
 import { PERMISSIONS } from "../../../common/constants";
 import { Module } from "../../../common/enums";
+import UpdateRoute from "./UpdateRoute";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -57,16 +58,24 @@ const RouteTable: React.FC<RouteTableProps> = ({ routePage, isLoading }) => {
       key: "departureAirport",
       dataIndex: "departureAirport",
       width: "25%",
-      render: (departureAirport: IRoute["departureAirport"]) =>
-        `${departureAirport.airportCode} - ${departureAirport.airportName}`,
+      render: (departureAirport: IRoute["departureAirport"]) => (
+        <>
+          <Tag color="blue">{departureAirport.airportCode}</Tag>
+          {departureAirport.airportName}
+        </>
+      ),
     },
     {
       title: "Sân bay đến",
       key: "arrivalAirport",
       dataIndex: "arrivalAirport",
       width: "25%",
-      render: (arrivalAirport: IRoute["arrivalAirport"]) =>
-        `${arrivalAirport.airportCode} - ${arrivalAirport.airportName}`,
+      render: (arrivalAirport: IRoute["arrivalAirport"]) => (
+        <>
+          <Tag color="volcano">{arrivalAirport.airportCode}</Tag>
+          {arrivalAirport.airportName}
+        </>
+      ),
     },
     {
       key: "createdAt",
@@ -94,7 +103,7 @@ const RouteTable: React.FC<RouteTableProps> = ({ routePage, isLoading }) => {
       render: (record: IRoute) => (
         <Space>
           <Access permission={PERMISSIONS[Module.ROUTES].UPDATE} hideChildren>
-            {/* <UpdateAirport airport={record} /> */}
+            <UpdateRoute route={record} />
           </Access>
           <Access permission={PERMISSIONS[Module.ROUTES].DELETE} hideChildren>
             {/* <DeleteAirport airportId={record.airportId} /> */}
