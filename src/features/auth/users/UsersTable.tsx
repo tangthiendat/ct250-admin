@@ -3,13 +3,13 @@ import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
+import { Module } from "../../../common/enums";
 import { IUser } from "../../../interfaces";
 import { userService } from "../../../services/user-service";
 import { formatTimestamp } from "../../../utils";
 import Access from "../Access";
 import UpdateUser from "./UpdateUser";
 import ViewUser from "./ViewUser";
-import { Module } from "../../../common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;

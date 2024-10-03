@@ -21,3 +21,5 @@ export enum AirplaneStatus {
   MAINTENANCE = "MAINTENANCE",
   RETIRED = "RETIRED",
 }
+
+

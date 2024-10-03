@@ -125,37 +125,37 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "numberOfSeats"),
     },
-    {
-      title: "Tình trạng sử dụng",
-      key: "inUse",
-      dataIndex: "inUse",
-      width: "15%",
-      render: (inUse: boolean) => {
-        const color = inUse ? blue[6] : volcano[6];
-        const text = inUse ? "Đang sử dụng" : "Không sử dụng";
-        return (
-          <p
-            style={{
-              color: color,
-              fontWeight: 600,
-            }}
-          >
-            {text}
-          </p>
-        );
-      },
-      filters: [
-        {
-          text: "Đang sử dụng",
-          value: true,
-        },
-        {
-          text: "Không sử dụng",
-          value: false,
-        },
-      ],
-      defaultFilteredValue: getDefaultFilterValue(searchParams, "inUse"),
-    },
+    // {
+    //   title: "Tình trạng sử dụng",
+    //   key: "inUse",
+    //   dataIndex: "inUse",
+    //   width: "15%",
+    //   render: (inUse: boolean) => {
+    //     const color = inUse ? blue[6] : volcano[6];
+    //     const text = inUse ? "Đang sử dụng" : "Không sử dụng";
+    //     return (
+    //       <p
+    //         style={{
+    //           color: color,
+    //           fontWeight: 600,
+    //         }}
+    //       >
+    //         {text}
+    //       </p>
+    //     );
+    //   },
+    //   filters: [
+    //     {
+    //       text: "Đang sử dụng",
+    //       value: true,
+    //     },
+    //     {
+    //       text: "Không sử dụng",
+    //       value: false,
+    //     },
+    //   ],
+    //   defaultFilteredValue: getDefaultFilterValue(searchParams, "inUse"),
+    // },
     {
       title: "Trạng thái",
       key: "status",
