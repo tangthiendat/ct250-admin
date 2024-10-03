@@ -34,6 +34,5 @@ export interface IAirplane {
 
 export interface AirplaneFilterCriteria {
   query?: string;
-  inUse?: boolean;
   status?: AirplaneStatus;
 }
