@@ -24,7 +24,6 @@ export interface IAirplane {
   overallLength: number;
   wingspan: number;
   height: number;
-  inUse: boolean;
   status: AirplaneStatus;
   createdAt: string;
   updatedAt: string;
