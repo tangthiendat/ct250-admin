@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { Button, Col, Form, FormInstance, Row, Select, Space } from "antd";
-import { IRoute } from "../../../interfaces";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, Col, Form, FormInstance, Row, Select, Space } from "antd";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { airportService, routeService } from "../../../services";
 import Loading from "../../../common/components/Loading";
+import { IRoute } from "../../../interfaces";
+import { airportService, routeService } from "../../../services";
 
 interface UpdateRouteFormProps {
   form: FormInstance<IRoute>;
@@ -44,6 +44,7 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
         <div>{airport.airportCode}</div>
       </div>
     ),
+    searchLabel: `${airport.airportName} ${airport.airportCode}`,
   }));
 
   const { mutate: createRoute, isPending: isCreating } = useMutation({
@@ -123,10 +124,21 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
             ]}
           >
             <Select
-              // disabled={viewOnly}
+              showSearch
               allowClear
               placeholder="Chọn sân bay đi"
               options={airportOptions}
+              optionFilterProp="searchLabel"
+              filterOption={(input, option) =>
+                option?.searchLabel
+                  .toLowerCase()
+                  .includes(input.toLowerCase()) ?? false
+              }
+              filterSort={(optionA, optionB) =>
+                optionA?.searchLabel
+                  .toLowerCase()
+                  .localeCompare(optionB?.searchLabel.toLowerCase())
+              }
             />
           </Form.Item>
         </Col>
@@ -156,10 +168,21 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
             ]}
           >
             <Select
-              // disabled={viewOnly}
+              showSearch
               allowClear
-              placeholder="Chọn sân bay đi"
+              placeholder="Chọn sân bay đến"
               options={airportOptions}
+              optionFilterProp="searchLabel"
+              filterOption={(input, option) =>
+                option?.searchLabel
+                  .toLowerCase()
+                  .includes(input.toLowerCase()) ?? false
+              }
+              filterSort={(optionA, optionB) =>
+                optionA?.searchLabel
+                  .toLowerCase()
+                  .localeCompare(optionB?.searchLabel.toLowerCase())
+              }
             />
           </Form.Item>
         </Col>

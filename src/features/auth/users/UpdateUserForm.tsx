@@ -54,7 +54,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
 
   const { data: countriesData, isLoading: isCountriesLoading } = useQuery({
     queryKey: ["countries"],
-    queryFn: countryService.getAllCountries,
+    queryFn: countryService.getAll,
   });
 
   const { data: rolesData, isLoading: isRolesLoading } = useQuery({
@@ -267,9 +267,18 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
           ]}
         >
           <Select
-            disabled={viewOnly}
-            placeholder="Chọn quốc gia"
+            showSearch
+            placeholder="Vui lòng chọn quốc tịch"
             options={countryOptions}
+            optionFilterProp="label"
+            filterOption={(input, option) =>
+              option?.label.toLowerCase().includes(input.toLowerCase()) ?? false
+            }
+            filterSort={(optionA, optionB) =>
+              (optionA?.label ?? "")
+                .toLowerCase()
+                .localeCompare((optionB?.label ?? "").toLowerCase())
+            }
           />
         </Form.Item>
       </div>
