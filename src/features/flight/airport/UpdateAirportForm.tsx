@@ -13,8 +13,7 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
 import { IAirport } from "../../../interfaces";
-import { countryService } from "../../../services";
-import { airportService } from "../../../services";
+import { airportService, countryService } from "../../../services";
 
 interface UpdateAirportFormProps {
   form: FormInstance<IAirport>;
@@ -174,9 +173,19 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
             ]}
           >
             <Select
-              disabled={viewOnly}
-              placeholder="Chọn quốc gia"
+              showSearch
+              placeholder="Vui lòng chọn quốc tịch"
               options={countryOptions}
+              optionFilterProp="label"
+              filterOption={(input, option) =>
+                option?.label.toLowerCase().includes(input.toLowerCase()) ??
+                false
+              }
+              filterSort={(optionA, optionB) =>
+                (optionA?.label ?? "")
+                  .toLowerCase()
+                  .localeCompare((optionB?.label ?? "").toLowerCase())
+              }
             />
           </Form.Item>
         </Col>
