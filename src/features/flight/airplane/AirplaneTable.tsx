@@ -1,8 +1,8 @@
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
-import { volcano, blue } from "@ant-design/colors";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
+import { AirplaneStatus, Module } from "../../../common/enums";
 import { IAirplane, Page } from "../../../interfaces";
 import {
   formatTimestamp,
@@ -11,10 +11,8 @@ import {
   getSortDirection,
 } from "../../../utils";
 import Access from "../../auth/Access";
-import DeleteAirplane from "./DeleteAirplane";
 import UpdateAirplane from "./UpdateAirplane";
 import ViewAirplane from "./ViewAirplane";
-import { AirplaneStatus, Module } from "../../../common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -115,52 +113,52 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
       title: "Mô hình máy bay",
       key: "modelName",
       dataIndex: "modelName",
-      width: "20%",
+      width: "25%",
     },
     {
       title: "Tổng số ghế",
       key: "numberOfSeats",
       dataIndex: "numberOfSeats",
-      width: "10%",
+      width: "15%",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "numberOfSeats"),
     },
-    {
-      title: "Tình trạng sử dụng",
-      key: "inUse",
-      dataIndex: "inUse",
-      width: "15%",
-      render: (inUse: boolean) => {
-        const color = inUse ? blue[6] : volcano[6];
-        const text = inUse ? "Đang sử dụng" : "Không sử dụng";
-        return (
-          <p
-            style={{
-              color: color,
-              fontWeight: 600,
-            }}
-          >
-            {text}
-          </p>
-        );
-      },
-      filters: [
-        {
-          text: "Đang sử dụng",
-          value: true,
-        },
-        {
-          text: "Không sử dụng",
-          value: false,
-        },
-      ],
-      defaultFilteredValue: getDefaultFilterValue(searchParams, "inUse"),
-    },
+    // {
+    //   title: "Tình trạng sử dụng",
+    //   key: "inUse",
+    //   dataIndex: "inUse",
+    //   width: "15%",
+    //   render: (inUse: boolean) => {
+    //     const color = inUse ? blue[6] : volcano[6];
+    //     const text = inUse ? "Đang sử dụng" : "Không sử dụng";
+    //     return (
+    //       <p
+    //         style={{
+    //           color: color,
+    //           fontWeight: 600,
+    //         }}
+    //       >
+    //         {text}
+    //       </p>
+    //     );
+    //   },
+    //   filters: [
+    //     {
+    //       text: "Đang sử dụng",
+    //       value: true,
+    //     },
+    //     {
+    //       text: "Không sử dụng",
+    //       value: false,
+    //     },
+    //   ],
+    //   defaultFilteredValue: getDefaultFilterValue(searchParams, "inUse"),
+    // },
     {
       title: "Trạng thái",
       key: "status",
       dataIndex: "status",
-      width: "13%",
+      width: "15%",
       render: (status: IAirplane["status"]) => {
         let color = "";
 
@@ -223,7 +221,7 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
             permission={PERMISSIONS[Module.AIRPLANES].DELETE}
             hideChildren
           >
-            <DeleteAirplane airplaneId={record.airplaneId} />
+            {/* <DeleteAirplane airplaneId={record.airplaneId} />X */}
           </Access>
         </Space>
       ),
