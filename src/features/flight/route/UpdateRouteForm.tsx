@@ -9,7 +9,7 @@ import {
   SelectProps,
   Space,
 } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
 import { IAirport, IRoute } from "../../../interfaces";
@@ -32,28 +32,22 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
   routeToUpdate,
   onCancel,
 }) => {
-  useEffect(() => {
-    if (routeToUpdate) {
-      form.setFieldsValue({
-        ...routeToUpdate,
-      });
-    }
-  }, [routeToUpdate, form]);
+  const [arrivalOptions, setArrivalOptions] = useState<SelectProps["options"]>(
+    [],
+  );
 
   const queryClient = useQueryClient();
-  // const [selectedAirport, setSelectedAirport] = useState<number>(-1);
+
   const { data: airportsData, isLoading: isAirportsLoading } = useQuery({
     queryKey: ["airports"],
     queryFn: airportService.getAll,
   });
 
-  const airportOptions = airportsData?.payload
-    // ?.filter((airport) => airport.airportId !== selectedAirport)
-    ?.map((airport) => ({
-      value: airport.airportId,
-      label: <AirportOption airport={airport} />,
-      searchLabel: `${airport.airportName} (${airport.airportCode})`,
-    }));
+  const airportOptions = airportsData?.payload?.map((airport) => ({
+    value: airport.airportId,
+    label: <AirportOption airport={airport} />,
+    searchLabel: `${airport.airportName} (${airport.airportCode})`,
+  }));
 
   const labelRender: SelectProps["labelRender"] = (props) => {
     const { label } = props;
@@ -64,14 +58,40 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
     }
   };
 
+  useEffect(() => {
+    const departureAirportId = form.getFieldValue([
+      "departureAirport",
+      "airportId",
+    ]);
+    if (departureAirportId) {
+      const filteredAirports = airportOptions?.filter(
+        (airport) => airport.value !== departureAirportId,
+      );
+      setArrivalOptions(filteredAirports);
+    } else {
+      setArrivalOptions(airportOptions);
+    }
+  }, [form, airportOptions]);
+
+  useEffect(() => {
+    if (routeToUpdate) {
+      form.setFieldsValue({
+        ...routeToUpdate,
+      });
+    }
+  }, [routeToUpdate, form]);
+
   const { mutate: createRoute, isPending: isCreating } = useMutation({
     mutationFn: routeService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("routes");
-        },
+        predicate: (query) => query.queryKey.includes("routes"),
       });
+      toast.success("Thêm mới tuyến bay thành công");
+      onCancel();
+    },
+    onError: () => {
+      toast.error("Thêm mới tuyến bay thất bại");
     },
   });
 
@@ -81,10 +101,13 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("routes");
-        },
+        predicate: (query) => query.queryKey.includes("routes"),
       });
+      toast.success("Cập nhật tuyến bay thành công");
+      onCancel();
+    },
+    onError: () => {
+      toast.error("Cập nhật tuyến bay thất bại");
     },
   });
 
@@ -95,36 +118,23 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
         ...values,
       };
       updateRoute(
-        { routeId: routeToUpdate.routeId, updatedRoute: updatedRoute },
+        { routeId: routeToUpdate.routeId, updatedRoute },
         {
-          onSuccess: () => {
-            toast.success("Cập nhật tuyến bay thành công");
-            onCancel();
-          },
           onError: () => {
             toast.error("Cập nhật tuyến bay thất bại");
           },
         },
       );
     } else {
-      const newRoute = {
-        ...values,
-      };
-      createRoute(newRoute, {
-        onSuccess: () => {
-          toast.success("Thêm mới tuyến bay thành công");
-          onCancel();
-        },
-        onError: () => {
-          toast.error("Thêm mới tuyến bay thất bại");
-        },
-      });
+      const newRoute = { ...values };
+      createRoute(newRoute);
     }
   }
 
   if (isAirportsLoading) {
     return <Loading />;
   }
+
   return (
     <Form onFinish={handleFinish} form={form} layout="vertical">
       <Row>
@@ -142,11 +152,9 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
             <Select
               showSearch
               allowClear
-              // onClear={() => setSelectedAirport(-1)}
               placeholder="Chọn sân bay đi"
               options={airportOptions}
               labelRender={labelRender}
-              // onChange={(value) => setSelectedAirport(value)}
               optionFilterProp="searchLabel"
               filterOption={(input, option) =>
                 option?.searchLabel
@@ -158,9 +166,20 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
                   .toLowerCase()
                   .localeCompare(optionB?.searchLabel.toLowerCase())
               }
+              onChange={() => {
+                const departureAirportId = form.getFieldValue([
+                  "departureAirport",
+                  "airportId",
+                ]);
+                const filteredAirports = airportOptions?.filter(
+                  (airport) => airport.value !== departureAirportId,
+                );
+                setArrivalOptions(filteredAirports);
+              }}
             />
           </Form.Item>
         </Col>
+
         <Col span={24}>
           <Form.Item
             label="Sân bay đến"
@@ -189,12 +208,10 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
             <Select
               showSearch
               allowClear
-              // onClear={() => setSelectedAirport(-1)}
               placeholder="Chọn sân bay đến"
-              options={airportOptions}
-              optionFilterProp="searchLabel"
+              options={arrivalOptions}
               labelRender={labelRender}
-              // onChange={(value) => setSelectedAirport(value)}
+              optionFilterProp="searchLabel"
               filterOption={(input, option) =>
                 option?.searchLabel
                   .toLowerCase()
@@ -209,6 +226,7 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
           </Form.Item>
         </Col>
       </Row>
+
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
           <Button onClick={onCancel}>Hủy</Button>
