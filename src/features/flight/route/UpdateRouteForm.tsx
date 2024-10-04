@@ -9,7 +9,7 @@ import {
   SelectProps,
   Space,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
 import { IAirport, IRoute } from "../../../interfaces";
@@ -32,52 +32,52 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
   routeToUpdate,
   onCancel,
 }) => {
-  const [arrivalOptions, setArrivalOptions] = useState<SelectProps["options"]>(
-    [],
-  );
+  const [selectedDepartureAirport, setSelectedDepartureAirport] = useState<
+    number | undefined
+  >(undefined);
+  const [selectedArrivalAirport, setSelectedArrivalAirport] = useState<
+    number | undefined
+  >(undefined);
 
   const queryClient = useQueryClient();
-
   const { data: airportsData, isLoading: isAirportsLoading } = useQuery({
     queryKey: ["airports"],
     queryFn: airportService.getAll,
   });
 
-  const airportOptions = airportsData?.payload?.map((airport) => ({
-    value: airport.airportId,
-    label: <AirportOption airport={airport} />,
-    searchLabel: `${airport.airportName} (${airport.airportCode})`,
-  }));
+  const airportOptions = useMemo(
+    () =>
+      airportsData?.payload?.map((airport) => ({
+        value: airport.airportId,
+        label: <AirportOption airport={airport} />,
+        searchLabel: `${airport.airportName} (${airport.airportCode})`,
+      })) || [],
+    [airportsData],
+  );
 
-  const labelRender: SelectProps["labelRender"] = (props) => {
-    const { label } = props;
-    if (label) {
-      const selectedAirport = (label as React.JSX.Element).props
-        .airport as IAirport;
-      return `${selectedAirport?.airportName} (${selectedAirport?.airportCode})`;
-    }
-  };
+  const filteredDepartureOptions = useMemo(
+    () =>
+      airportOptions.filter(
+        (airport) => airport.value !== selectedArrivalAirport,
+      ),
+    [airportOptions, selectedArrivalAirport],
+  );
 
-  useEffect(() => {
-    const departureAirportId = form.getFieldValue([
-      "departureAirport",
-      "airportId",
-    ]);
-    if (departureAirportId) {
-      const filteredAirports = airportOptions?.filter(
-        (airport) => airport.value !== departureAirportId,
-      );
-      setArrivalOptions(filteredAirports);
-    } else {
-      setArrivalOptions(airportOptions);
-    }
-  }, [form, airportOptions]);
+  const filteredArrivalOptions = useMemo(
+    () =>
+      airportOptions.filter(
+        (airport) => airport.value !== selectedDepartureAirport,
+      ),
+    [airportOptions, selectedDepartureAirport],
+  );
 
   useEffect(() => {
     if (routeToUpdate) {
       form.setFieldsValue({
         ...routeToUpdate,
       });
+      setSelectedDepartureAirport(routeToUpdate.departureAirport.airportId);
+      setSelectedArrivalAirport(routeToUpdate.arrivalAirport.airportId);
     }
   }, [routeToUpdate, form]);
 
@@ -131,6 +131,16 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
     }
   }
 
+  const labelRender: SelectProps["labelRender"] = (props) => {
+    const { label } = props;
+    if (label) {
+      const selectedAirport = (label as React.JSX.Element).props
+        .airport as IAirport;
+      return `${selectedAirport?.airportName} (${selectedAirport?.airportCode})`;
+    }
+    return null;
+  };
+
   if (isAirportsLoading) {
     return <Loading />;
   }
@@ -153,8 +163,9 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
               showSearch
               allowClear
               placeholder="Chọn sân bay đi"
-              options={airportOptions}
+              options={filteredDepartureOptions}
               labelRender={labelRender}
+              onChange={setSelectedDepartureAirport}
               optionFilterProp="searchLabel"
               filterOption={(input, option) =>
                 option?.searchLabel
@@ -166,16 +177,6 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
                   .toLowerCase()
                   .localeCompare(optionB?.searchLabel.toLowerCase())
               }
-              onChange={() => {
-                const departureAirportId = form.getFieldValue([
-                  "departureAirport",
-                  "airportId",
-                ]);
-                const filteredAirports = airportOptions?.filter(
-                  (airport) => airport.value !== departureAirportId,
-                );
-                setArrivalOptions(filteredAirports);
-              }}
             />
           </Form.Item>
         </Col>
@@ -209,8 +210,9 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
               showSearch
               allowClear
               placeholder="Chọn sân bay đến"
-              options={arrivalOptions}
+              options={filteredArrivalOptions}
               labelRender={labelRender}
+              onChange={setSelectedArrivalAirport}
               optionFilterProp="searchLabel"
               filterOption={(input, option) =>
                 option?.searchLabel
