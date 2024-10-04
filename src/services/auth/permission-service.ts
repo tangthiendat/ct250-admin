@@ -1,3 +1,4 @@
+import { AxiosInstance } from "axios";
 import {
   ApiResponse,
   IPermission,
@@ -5,10 +6,10 @@ import {
   PaginationParams,
   PermissionFilterCriteria,
   SortParams,
-} from "../interfaces";
-import { createApiClient } from "./api-client";
+} from "../../interfaces";
+import { createApiClient } from "../api-client";
 
-interface IPermissionsService {
+interface IPermissionService {
   getPermissions(
     pagination: PaginationParams,
     filter?: PermissionFilterCriteria,
@@ -22,8 +23,8 @@ interface IPermissionsService {
   update(permission: IPermission): Promise<ApiResponse<IPermission>>;
 }
 
-const apiClient = createApiClient("permissions");
-class PermissionsService implements IPermissionsService {
+const apiClient: AxiosInstance = createApiClient("permissions");
+class PermissionService implements IPermissionService {
   async getPermissions(
     pagination: PaginationParams,
     filter?: PermissionFilterCriteria,
@@ -57,4 +58,4 @@ class PermissionsService implements IPermissionsService {
   }
 }
 
-export const permissionsService = new PermissionsService();
+export const permissionService = new PermissionService();

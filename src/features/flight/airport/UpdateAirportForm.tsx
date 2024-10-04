@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
 import { IAirport } from "../../../interfaces";
 import { countryService } from "../../../services";
-import { airportService } from "../../../services/airport-service";
+import { airportService } from "../../../services";
 
 interface UpdateAirportFormProps {
   form: FormInstance<IAirport>;
@@ -46,8 +46,13 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
 
   const { data: countriesData, isLoading: isCountriesLoading } = useQuery({
     queryKey: ["countries"],
-    queryFn: countryService.getAllCountries,
+    queryFn: countryService.getAll,
   });
+
+  const countryOptions = countriesData?.payload?.map((country) => ({
+    value: country.countryId,
+    label: country.countryName,
+  }));
 
   const { mutate: createAirport, isPending: isCreating } = useMutation({
     mutationFn: airportService.create,
@@ -73,43 +78,35 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
     },
   });
 
-  const countryOptions = countriesData?.payload?.map((country) => ({
-    value: country.countryId,
-    label: country.countryName,
-  }));
-
   function handleFinish(values: IAirport) {
     if (airportToUpdate) {
       const updatedAirport = {
         ...airportToUpdate,
         ...values,
-        // Name: values.firstName.toUpperCase(),
       };
       updateAirport(
         { airportId: airportToUpdate.airportId, updatedAirport },
         {
           onSuccess: () => {
-            toast.success("Cập nhật người dùng thành công");
+            toast.success("Cập nhật sân bay thành công");
             onCancel();
           },
           onError: () => {
-            toast.error("Cập nhật người dùng thất bại");
+            toast.error("Cập nhật sân bay thất bại");
           },
         },
       );
     } else {
       const newAirport = {
         ...values,
-        // firstName: values.firstName.toUpperCase(),
-        // lastName: values.lastName.toUpperCase(),
       };
       createAirport(newAirport, {
         onSuccess: () => {
-          toast.success("Thêm mới người dùng thành công");
+          toast.success("Thêm mới sân bay thành công");
           onCancel();
         },
         onError: () => {
-          toast.error("Thêm mới người dùng thất bại");
+          toast.error("Thêm mới sân bay thất bại");
         },
       });
     }

@@ -1,37 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
-import { SearchProps } from "antd/es/input";
-import { Input } from "antd/lib";
-import React from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../common/constants";
-import { AirplaneStatus, Module } from "../common/enums";
+import { Module } from "../common/enums";
 import Access from "../features/auth/Access";
-import AddAirplane from "../features/flight/airplane/AddAirplane";
-import AirplaneTable from "../features/flight/airplane/AirplaneTable";
-import {
-  AirplaneFilterCriteria,
-  PaginationParams,
-  SortParams,
-} from "../interfaces";
-import { airplaneService } from "../services/flight/airplane-service";
+import { PaginationParams, SortParams } from "../interfaces";
+import { routeService } from "../services/flight/route-service";
+import RouteTable from "../features/flight/route/RouteTable";
+import AddRoute from "../features/flight/route/AddRoute";
+import { SearchProps } from "antd/es/input";
+import { Input } from "antd/lib";
 
-const Airplanes: React.FC = () => {
+const Routes: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("query") || "";
 
   const pagination: PaginationParams = {
     page: Number(searchParams.get("page")) || 1,
     pageSize: Number(searchParams.get("pageSize")) || 10,
-  };
-
-  const filter: AirplaneFilterCriteria = {
-    query: searchParams.get("query") || undefined,
-    // inUse:
-    //   searchParams.get("inUse") === "true"
-    //     ? true
-    //     : searchParams.get("inUse") === "false"
-    //       ? false
-    //       : undefined,
-    status: (searchParams.get("status") as AirplaneStatus) || undefined,
   };
 
   const sort: SortParams = {
@@ -40,7 +25,7 @@ const Airplanes: React.FC = () => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["airplanes", pagination, filter, sort].filter((key) => {
+    queryKey: ["routes", pagination, sort, query].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {
@@ -49,11 +34,10 @@ const Airplanes: React.FC = () => {
         );
       }
     }),
-    queryFn: () => airplaneService.getAirplanes(pagination, filter, sort),
+    queryFn: () => routeService.getRoutes(pagination, sort, query),
   });
 
   const handleSearch: SearchProps["onSearch"] = (value) => {
-    console.log(value);
     if (value) {
       searchParams.set("query", value);
     } else {
@@ -63,7 +47,7 @@ const Airplanes: React.FC = () => {
   };
 
   return (
-    <Access permission={PERMISSIONS[Module.AIRPLANES].GET_PAGINATION}>
+    <Access permission={PERMISSIONS[Module.ROUTES].GET_PAGINATION}>
       <div className="card">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Máy bay</h2>
@@ -71,24 +55,22 @@ const Airplanes: React.FC = () => {
           <div className="w-[60%]">
             <div className="flex gap-3">
               <Input.Search
-                placeholder="Nhập tên mô hình máy bay để tìm kiếm..."
-                defaultValue={searchParams.get("query") || ""}
+                placeholder="Nhập tên hoặc mã sân bay đến, sân bay đi để tìm kiếm..."
+                defaultValue={query}
                 enterButton
                 allowClear
                 onSearch={handleSearch}
               />
             </div>
           </div>
-          <Access
-            permission={PERMISSIONS[Module.AIRPLANES].CREATE}
-            hideChildren
-          >
-            <AddAirplane />
+          <Access permission={PERMISSIONS[Module.ROUTES].CREATE} hideChildren>
+            <AddRoute />
           </Access>
         </div>
-        <AirplaneTable airplanePage={data?.payload} isLoading={isLoading} />
+        <RouteTable routePage={data?.payload} isLoading={isLoading} />
       </div>
     </Access>
   );
 };
-export default Airplanes;
+
+export default Routes;

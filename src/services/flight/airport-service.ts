@@ -1,11 +1,17 @@
 import { AxiosInstance } from "axios";
-import { ApiResponse, PaginationParams, Page, IAirport } from "../interfaces";
-import { createApiClient } from "./api-client";
+import {
+  ApiResponse,
+  PaginationParams,
+  Page,
+  IAirport,
+} from "../../interfaces";
+import { createApiClient } from "../api-client";
 interface IAirportService {
   getAirports(
     pagination: PaginationParams,
     query: string,
   ): Promise<ApiResponse<Page<IAirport>>>;
+  getAll(): Promise<ApiResponse<IAirport[]>>;
   create(
     newAirport: Omit<IAirport, "airportId">,
   ): Promise<ApiResponse<IAirport>>;
@@ -32,6 +38,11 @@ class AirportService implements IAirportService {
       })
     ).data;
   }
+
+  async getAll(): Promise<ApiResponse<IAirport[]>> {
+    return (await apiClient.get("/all")).data;
+  }
+
   async create(
     newAirport: Omit<IAirport, "airportId">,
   ): Promise<ApiResponse<IAirport>> {

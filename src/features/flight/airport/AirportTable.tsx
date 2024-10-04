@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
 import { IAirport, Page } from "../../../interfaces";
-import { formatTimestamp } from "../../../utils";
+import {
+  formatTimestamp,
+  getDefaultSortOrder,
+  getSortDirection,
+} from "../../../utils";
 import Access from "../../auth/Access";
 import DeleteAirport from "./DeleteAirport";
 import UpdateAirport from "./UpdateAirport";
@@ -58,6 +62,27 @@ const AirportTable: React.FC<AirportTableProps> = ({
     }));
     searchParams.set("page", String(pagination.current));
     searchParams.set("pageSize", String(pagination.pageSize));
+
+    let sortBy;
+    let direction;
+
+    if (sorter) {
+      if (Array.isArray(sorter)) {
+        sortBy = sorter[0].field as string;
+        direction = getSortDirection(sorter[0].order as string);
+      } else {
+        sortBy = sorter.field as string;
+        direction = getSortDirection(sorter.order as string);
+      }
+    }
+
+    if (sortBy && direction) {
+      searchParams.set("sortBy", sortBy);
+      searchParams.set("direction", direction);
+    } else {
+      searchParams.delete("direction");
+      searchParams.delete("sortBy");
+    }
     setSearchParams(searchParams);
   };
 
@@ -99,6 +124,8 @@ const AirportTable: React.FC<AirportTableProps> = ({
       width: "15%",
       render: (createdAt: string) =>
         createdAt ? formatTimestamp(createdAt) : "",
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
     },
     {
       key: "updatedAt",
@@ -107,6 +134,8 @@ const AirportTable: React.FC<AirportTableProps> = ({
       width: "15%",
       render: (updatedAt: string) =>
         updatedAt ? formatTimestamp(updatedAt) : "",
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
     },
     {
       title: "Hành động",

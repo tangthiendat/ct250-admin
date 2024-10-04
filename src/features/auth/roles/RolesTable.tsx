@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
 import { IRole } from "../../../interfaces";
-import { roleService } from "../../../services/role-service";
+import { roleService } from "../../../services/auth/role-service";
 import { formatTimestamp } from "../../../utils";
 import Access from "../Access";
 import UpdateRole from "./UpdateRole";

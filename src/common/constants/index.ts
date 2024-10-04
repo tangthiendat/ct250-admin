@@ -37,6 +37,13 @@ export const PERMISSIONS = {
     UPDATE: { method: "PUT", apiPath: "/api/v1/airplanes/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/airplanes/{id}" },
   },
+  [Module.ROUTES]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/routes" },
+    GET_BY_ID: { method: "GET", apiPath: "/api/v1/routes/{id}" },
+    CREATE: { method: "POST", apiPath: "/api/v1/routes" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/routes/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/routes/{id}" },
+  },
 };
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";

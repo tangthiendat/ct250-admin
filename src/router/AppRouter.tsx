@@ -9,6 +9,7 @@ import Login from "../pages/Login";
 import ProtectedRoute from "../features/auth/ProtectedRoute";
 import Airports from "../pages/Airports";
 import Airplanes from "../pages/Airplanes";
+import Routes from "../pages/Routes";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: "/airplanes",
         element: <Airplanes />,
+      },
+      {
+        path: "/routes",
+        element: <Routes />,
       },
     ],
   },
