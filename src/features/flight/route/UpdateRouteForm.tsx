@@ -1,10 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Col, Form, FormInstance, Row, Select, Space } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  FormInstance,
+  Row,
+  Select,
+  SelectProps,
+  Space,
+} from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
-import { IRoute } from "../../../interfaces";
+import { IAirport, IRoute } from "../../../interfaces";
 import { airportService, routeService } from "../../../services";
+import AirportOption from "../airport/AirportOption";
 
 interface UpdateRouteFormProps {
   form: FormInstance<IRoute>;
@@ -31,21 +41,28 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
   }, [routeToUpdate, form]);
 
   const queryClient = useQueryClient();
+  // const [selectedAirport, setSelectedAirport] = useState<number>(-1);
   const { data: airportsData, isLoading: isAirportsLoading } = useQuery({
     queryKey: ["airports"],
     queryFn: airportService.getAll,
   });
 
-  const airportOptions = airportsData?.payload?.map((airport) => ({
-    value: airport.airportId,
-    label: (
-      <div className="flex items-center justify-between">
-        <div>{airport.airportName}</div>
-        <div>{airport.airportCode}</div>
-      </div>
-    ),
-    searchLabel: `${airport.airportName} ${airport.airportCode}`,
-  }));
+  const airportOptions = airportsData?.payload
+    // ?.filter((airport) => airport.airportId !== selectedAirport)
+    ?.map((airport) => ({
+      value: airport.airportId,
+      label: <AirportOption airport={airport} />,
+      searchLabel: `${airport.airportName} (${airport.airportCode})`,
+    }));
+
+  const labelRender: SelectProps["labelRender"] = (props) => {
+    const { label } = props;
+    if (label) {
+      const selectedAirport = (label as React.JSX.Element).props
+        .airport as IAirport;
+      return `${selectedAirport?.airportName} (${selectedAirport?.airportCode})`;
+    }
+  };
 
   const { mutate: createRoute, isPending: isCreating } = useMutation({
     mutationFn: routeService.create,
@@ -102,7 +119,6 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
           toast.error("Thêm mới tuyến bay thất bại");
         },
       });
-      console.log(newRoute);
     }
   }
 
@@ -126,8 +142,11 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
             <Select
               showSearch
               allowClear
+              // onClear={() => setSelectedAirport(-1)}
               placeholder="Chọn sân bay đi"
               options={airportOptions}
+              labelRender={labelRender}
+              // onChange={(value) => setSelectedAirport(value)}
               optionFilterProp="searchLabel"
               filterOption={(input, option) =>
                 option?.searchLabel
@@ -170,9 +189,12 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
             <Select
               showSearch
               allowClear
+              // onClear={() => setSelectedAirport(-1)}
               placeholder="Chọn sân bay đến"
               options={airportOptions}
               optionFilterProp="searchLabel"
+              labelRender={labelRender}
+              // onChange={(value) => setSelectedAirport(value)}
               filterOption={(input, option) =>
                 option?.searchLabel
                   .toLowerCase()
