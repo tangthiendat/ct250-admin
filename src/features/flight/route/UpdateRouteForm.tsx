@@ -9,7 +9,7 @@ import {
   SelectProps,
   Space,
 } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
 import { IAirport, IRoute } from "../../../interfaces";
@@ -45,30 +45,19 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
     queryFn: airportService.getAll,
   });
 
-  const airportOptions = useMemo(
-    () =>
-      airportsData?.payload?.map((airport) => ({
-        value: airport.airportId,
-        label: <AirportOption airport={airport} />,
-        searchLabel: `${airport.airportName} (${airport.airportCode})`,
-      })) || [],
-    [airportsData],
+  const airportOptions =
+    airportsData?.payload?.map((airport) => ({
+      value: airport.airportId,
+      label: <AirportOption airport={airport} />,
+      searchLabel: `${airport.airportName} (${airport.airportCode})`,
+    })) || [];
+
+  const filteredDepartureOptions = airportOptions.filter(
+    (airport) => airport.value !== selectedArrivalAirport,
   );
 
-  const filteredDepartureOptions = useMemo(
-    () =>
-      airportOptions.filter(
-        (airport) => airport.value !== selectedArrivalAirport,
-      ),
-    [airportOptions, selectedArrivalAirport],
-  );
-
-  const filteredArrivalOptions = useMemo(
-    () =>
-      airportOptions.filter(
-        (airport) => airport.value !== selectedDepartureAirport,
-      ),
-    [airportOptions, selectedDepartureAirport],
+  const filteredArrivalOptions = airportOptions.filter(
+    (airport) => airport.value !== selectedDepartureAirport,
   );
 
   useEffect(() => {
