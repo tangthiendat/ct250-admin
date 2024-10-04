@@ -6,15 +6,14 @@ import {
   InputNumber,
   Radio,
   Space,
-  Switch,
   type FormInstance,
 } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
+import { AirplaneStatus } from "../../../common/enums";
 import { IAirplane } from "../../../interfaces";
 import { airplaneService } from "../../../services";
-import { AirplaneStatus } from "../../../common/enums";
 
 interface UpdateAirplaneFormProps {
   form: FormInstance<IAirplane>;
@@ -245,7 +244,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
           <InputNumber readOnly={viewOnly} />
         </Form.Item>
       </div>
-      <div className="flex gap-8">
+      {/* <div className="flex gap-8">
         <Form.Item
           className="flex-1"
           label="Tình trạng sử dụng"
@@ -258,7 +257,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
             unCheckedChildren="NOT IN USE"
           />
         </Form.Item>
-      </div>
+      </div> */}
       <div className="flex gap-8">
         <Form.Item
           className="flex-1"
