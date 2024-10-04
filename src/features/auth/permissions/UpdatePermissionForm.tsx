@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { Method, Module } from "../../../common/enums";
 import { IPermission } from "../../../interfaces";
-import { permissionsService } from "../../../services";
+import { permissionService } from "../../../services";
 
 interface UpdatePermissionFormProps {
   form: FormInstance<IPermission>;
@@ -39,7 +39,7 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
   const queryClient = useQueryClient();
 
   const { mutate: createPermission, isPending: isCreating } = useMutation({
-    mutationFn: permissionsService.create,
+    mutationFn: permissionService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query) => {
@@ -50,7 +50,7 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
   });
 
   const { mutate: updatePermission, isPending: isUpdating } = useMutation({
-    mutationFn: permissionsService.update,
+    mutationFn: permissionService.update,
     onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query) => {

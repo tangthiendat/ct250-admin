@@ -6,8 +6,8 @@ import {
   Page,
   PaginationParams,
   SortParams,
-} from "../interfaces";
-import { createApiClient } from "./api-client";
+} from "../../interfaces";
+import { createApiClient } from "../api-client";
 interface IAirplaneService {
   getAirplanes(
     pagination: PaginationParams,

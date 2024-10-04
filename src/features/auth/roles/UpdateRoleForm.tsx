@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
 import { IRole } from "../../../interfaces";
-import { permissionsService, roleService } from "../../../services";
+import { permissionService, roleService } from "../../../services";
 import RolePermissions from "./RolePermissions";
 
 interface UpdateRoleFormProps {
@@ -39,7 +39,7 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
 
   const { data, isLoading } = useQuery({
     queryKey: ["permissions"],
-    queryFn: permissionsService.getAllPermissions,
+    queryFn: permissionService.getAllPermissions,
   });
 
   const { mutate: createRole, isPending: isCreating } = useMutation({

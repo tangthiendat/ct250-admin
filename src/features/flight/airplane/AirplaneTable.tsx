@@ -11,7 +11,6 @@ import {
   getSortDirection,
 } from "../../../utils";
 import Access from "../../auth/Access";
-import DeleteAirplane from "./DeleteAirplane";
 import UpdateAirplane from "./UpdateAirplane";
 import ViewAirplane from "./ViewAirplane";
 
@@ -114,22 +113,21 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
       title: "Mô hình máy bay",
       key: "modelName",
       dataIndex: "modelName",
-      width: "20%",
+      width: "25%",
     },
     {
       title: "Tổng số ghế",
       key: "numberOfSeats",
       dataIndex: "numberOfSeats",
-      width: "10%",
+      width: "15%",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "numberOfSeats"),
     },
-
     {
       title: "Trạng thái",
       key: "status",
       dataIndex: "status",
-      width: "13%",
+      width: "15%",
       render: (status: IAirplane["status"]) => {
         let color = "";
 
@@ -192,7 +190,7 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
             permission={PERMISSIONS[Module.AIRPLANES].DELETE}
             hideChildren
           >
-            <DeleteAirplane airplaneId={record.airplaneId} />
+            {/* <DeleteAirplane airplaneId={record.airplaneId} />X */}
           </Access>
         </Space>
       ),

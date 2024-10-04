@@ -14,6 +14,7 @@ import { useAvatarUrl } from "../features/auth/hooks/useAvatarUrl";
 import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
 import { authService } from "../services";
 import { Module } from "../common/enums";
+import { TbRouteSquare } from "react-icons/tb";
 
 const { Header, Sider } = Layout;
 
@@ -88,6 +89,12 @@ const AdminLayout: React.FC = () => {
           item.method === PERMISSIONS[Module.AIRPLANES].GET_PAGINATION.method,
       );
 
+      const viewRoutes = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.ROUTES].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.ROUTES].GET_PAGINATION.method,
+      );
+
       const menuItems = [
         {
           label: (
@@ -140,6 +147,15 @@ const AdminLayout: React.FC = () => {
                 label: <NavLink to="/airplanes">Máy bay</NavLink>,
                 key: "airplanes",
                 icon: <MdFlight size={18} />,
+              },
+            ]
+          : []),
+        ...(viewRoutes
+          ? [
+              {
+                label: <NavLink to="/routes">Tuyến bay</NavLink>,
+                key: "routes",
+                icon: <TbRouteSquare />,
               },
             ]
           : []),

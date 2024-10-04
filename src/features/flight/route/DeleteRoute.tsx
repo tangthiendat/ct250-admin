@@ -1,17 +1,17 @@
-import { DeleteOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { DeleteOutlined } from "@ant-design/icons";
 import { Popconfirm, Tooltip } from "antd";
+import { routeService } from "../../../services";
 import toast from "react-hot-toast";
-import { airportService } from "../../../services";
 
-interface DeleteAirportProps {
-  airportId: number;
+interface DeleteRouteProps {
+  routeId: number;
 }
 
-const DeleteAirport: React.FC<DeleteAirportProps> = ({ airportId }) => {
+const DeleteRoute: React.FC<DeleteRouteProps> = ({ routeId }) => {
   const queryClient = useQueryClient();
-  const { mutate: deleteAirport, isPending: isDeleting } = useMutation({
-    mutationFn: airportService.delete,
+  const { mutate: deleteRoute, isPending: isDeleting } = useMutation({
+    mutationFn: routeService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey.includes("airports"),
@@ -20,20 +20,20 @@ const DeleteAirport: React.FC<DeleteAirportProps> = ({ airportId }) => {
   });
 
   function handleConfirmDelete(): void {
-    deleteAirport(airportId, {
+    deleteRoute(routeId, {
       onSuccess: () => {
-        toast.success("Xóa sân bay thành công");
+        toast.success("Xóa tuyến bay thành công");
       },
       onError: () => {
-        toast.error("Xóa sân bay thất bại");
+        toast.error("Xóa tuyến bay thất bại");
       },
     });
   }
 
   return (
     <Popconfirm
-      title="Xóa sân bay này?"
-      description="Bạn có chắc muốn xóa sân bay này không?"
+      title="Xóa tuyến bay"
+      description="Bạn có chắc muốn xóa tuyến bay này không?"
       okText="Xóa"
       cancelText="Hủy"
       okButtonProps={{ danger: true, loading: isDeleting }}
@@ -46,4 +46,4 @@ const DeleteAirport: React.FC<DeleteAirportProps> = ({ airportId }) => {
   );
 };
 
-export default DeleteAirport;
+export default DeleteRoute;

@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
 import { Module } from "../../../common/enums";
 import { IUser } from "../../../interfaces";
-import { userService } from "../../../services/user-service";
+import { userService } from "../../../services";
 import { formatTimestamp } from "../../../utils";
 import Access from "../Access";
 import UpdateUser from "./UpdateUser";

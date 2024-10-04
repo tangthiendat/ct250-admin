@@ -1,5 +1,5 @@
-import { ApiResponse, IRole, Page, PaginationParams } from "../interfaces";
-import { createApiClient } from "./api-client";
+import { ApiResponse, IRole, Page, PaginationParams } from "../../interfaces";
+import { createApiClient } from "../api-client";
 
 interface IRoleService {
   getRoles(pagination: PaginationParams): Promise<ApiResponse<Page<IRole>>>;

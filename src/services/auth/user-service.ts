@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios";
-import { ApiResponse, IUser, Page, PaginationParams } from "../interfaces";
-import { createApiClient } from "./api-client";
+import { ApiResponse, IUser, Page, PaginationParams } from "../../interfaces";
+import { createApiClient } from "../api-client";
 
 interface IUserService {
   getLoggedInUser(): Promise<ApiResponse<IUser>>;

@@ -2,7 +2,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Popconfirm, Tooltip } from "antd";
 import toast from "react-hot-toast";
-import { airplaneService } from "../../../services/airplane-service";
+import { airplaneService } from "../../../services";
 
 interface DeleteAirplaneProps {
   airplaneId: number;
