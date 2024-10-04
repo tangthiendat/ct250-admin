@@ -57,7 +57,7 @@ const RouteTable: React.FC<RouteTableProps> = ({ routePage, isLoading }) => {
       title: "Sân bay đi",
       key: "departureAirport",
       dataIndex: "departureAirport",
-      width: "25%",
+      width: "27%",
       render: (departureAirport: IRoute["departureAirport"]) => (
         <>
           <Tag color="blue">{departureAirport.airportCode}</Tag>
@@ -69,7 +69,7 @@ const RouteTable: React.FC<RouteTableProps> = ({ routePage, isLoading }) => {
       title: "Sân bay đến",
       key: "arrivalAirport",
       dataIndex: "arrivalAirport",
-      width: "25%",
+      width: "27%",
       render: (arrivalAirport: IRoute["arrivalAirport"]) => (
         <>
           <Tag color="volcano">{arrivalAirport.airportCode}</Tag>

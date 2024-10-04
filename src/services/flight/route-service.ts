@@ -11,7 +11,8 @@ import { createApiClient } from "../api-client";
 interface IRouteService {
   getRoutes(
     pagination: PaginationParams,
-    sort: SortParams,
+    sort?: SortParams,
+    query?: string,
   ): Promise<ApiResponse<Page<IRoute>>>;
 
   create(route: Omit<IRoute, "routeId">): Promise<ApiResponse<IRoute>>;
@@ -23,13 +24,16 @@ const apiClient: AxiosInstance = createApiClient("routes");
 class RouteService implements IRouteService {
   async getRoutes(
     pagination: PaginationParams,
-    sort: SortParams,
+    sort?: SortParams,
+    query?: string,
   ): Promise<ApiResponse<Page<IRoute>>> {
     return (
       await apiClient.get("", {
         params: {
           ...pagination,
-          ...sort,
+          sortBy: sort?.sortBy !== "" ? sort?.sortBy : undefined,
+          direction: sort?.direction !== "" ? sort?.direction : undefined,
+          query,
         },
       })
     ).data;

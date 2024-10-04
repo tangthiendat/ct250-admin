@@ -24,7 +24,6 @@ const Airports: React.FC = () => {
   });
 
   const handleSearch: SearchProps["onSearch"] = (value) => {
-    console.log(value);
     if (value) {
       searchParams.set("query", value);
     } else {

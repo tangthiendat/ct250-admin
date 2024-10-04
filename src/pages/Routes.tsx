@@ -7,9 +7,12 @@ import { PaginationParams, SortParams } from "../interfaces";
 import { routeService } from "../services/flight/route-service";
 import RouteTable from "../features/flight/route/RouteTable";
 import AddRoute from "../features/flight/route/AddRoute";
+import { SearchProps } from "antd/es/input";
+import { Input } from "antd/lib";
 
 const Routes: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("query") || "";
 
   const pagination: PaginationParams = {
     page: Number(searchParams.get("page")) || 1,
@@ -22,7 +25,7 @@ const Routes: React.FC = () => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["routes", pagination, sort].filter((key) => {
+    queryKey: ["routes", pagination, sort, query].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {
@@ -31,18 +34,17 @@ const Routes: React.FC = () => {
         );
       }
     }),
-    queryFn: () => routeService.getRoutes(pagination, sort),
+    queryFn: () => routeService.getRoutes(pagination, sort, query),
   });
 
-  // const handleSearch: SearchProps["onSearch"] = (value) => {
-  //   console.log(value);
-  //   if (value) {
-  //     searchParams.set("query", value);
-  //   } else {
-  //     searchParams.delete("query");
-  //   }
-  //   setSearchParams(searchParams);
-  // };
+  const handleSearch: SearchProps["onSearch"] = (value) => {
+    if (value) {
+      searchParams.set("query", value);
+    } else {
+      searchParams.delete("query");
+    }
+    setSearchParams(searchParams);
+  };
 
   return (
     <Access permission={PERMISSIONS[Module.ROUTES].GET_PAGINATION}>
@@ -50,17 +52,17 @@ const Routes: React.FC = () => {
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Máy bay</h2>
 
-          {/* <div className="w-[60%]">
+          <div className="w-[60%]">
             <div className="flex gap-3">
               <Input.Search
-                placeholder="Nhập tên mô hình máy bay để tìm kiếm..."
-                defaultValue={searchParams.get("query") || ""}
+                placeholder="Nhập tên hoặc mã sân bay đến, sân bay đi để tìm kiếm..."
+                defaultValue={query}
                 enterButton
                 allowClear
                 onSearch={handleSearch}
               />
             </div>
-          </div> */}
+          </div>
           <Access permission={PERMISSIONS[Module.ROUTES].CREATE} hideChildren>
             <AddRoute />
           </Access>
