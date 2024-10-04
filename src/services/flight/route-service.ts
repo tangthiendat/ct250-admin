@@ -16,6 +16,7 @@ interface IRouteService {
 
   create(route: Omit<IRoute, "routeId">): Promise<ApiResponse<IRoute>>;
   update(routeId: number, updatedRoute: IRoute): Promise<ApiResponse<IRoute>>;
+  delete(routeId: number): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("routes");
@@ -42,6 +43,10 @@ class RouteService implements IRouteService {
     updatedRoute: IRoute,
   ): Promise<ApiResponse<IRoute>> {
     return (await apiClient.put(`/${routeId}`, updatedRoute)).data;
+  }
+
+  async delete(routeId: number): Promise<ApiResponse<void>> {
+    return (await apiClient.delete(`/${routeId}`)).data;
   }
 }
 

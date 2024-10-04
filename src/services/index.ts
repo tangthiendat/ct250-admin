@@ -8,3 +8,4 @@ export * from "./auth/permission-service.ts";
 export * from "./flight/country-service.ts";
 export * from "./flight/airport-service.ts";
 export * from "./flight/airplane-service.ts";
+export * from "./flight/route-service.ts";

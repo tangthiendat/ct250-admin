@@ -1,11 +1,10 @@
+import { useEffect } from "react";
 import { Button, Col, Form, FormInstance, Row, Select, Space } from "antd";
 import { IRoute } from "../../../interfaces";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { airportService } from "../../../services";
-import { routeService } from "../../../services/flight/route-service";
-import Loading from "../../../common/components/Loading";
 import toast from "react-hot-toast";
+import { airportService, routeService } from "../../../services";
+import Loading from "../../../common/components/Loading";
 
 interface UpdateRouteFormProps {
   form: FormInstance<IRoute>;

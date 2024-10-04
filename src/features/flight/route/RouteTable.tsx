@@ -1,16 +1,16 @@
-import { useSearchParams } from "react-router-dom";
-import { IRoute, Page } from "../../../interfaces";
-import { useEffect, useState } from "react";
 import { Space, Table, TablePaginationConfig, Tag } from "antd";
 import { TableProps } from "antd/lib";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { PERMISSIONS } from "../../../common/constants";
+import { Module } from "../../../common/enums";
+import { IRoute, Page } from "../../../interfaces";
 import {
   formatTimestamp,
   getDefaultSortOrder,
   getSortDirection,
 } from "../../../utils";
 import Access from "../../auth/Access";
-import { PERMISSIONS } from "../../../common/constants";
-import { Module } from "../../../common/enums";
 import UpdateRoute from "./UpdateRoute";
 
 interface TableParams {
@@ -106,7 +106,7 @@ const RouteTable: React.FC<RouteTableProps> = ({ routePage, isLoading }) => {
             <UpdateRoute route={record} />
           </Access>
           <Access permission={PERMISSIONS[Module.ROUTES].DELETE} hideChildren>
-            {/* <DeleteAirport airportId={record.airportId} /> */}
+            {/* <DeleteRoute routeId={record.routeId} /> */}
           </Access>
         </Space>
       ),
