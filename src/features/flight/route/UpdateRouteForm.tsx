@@ -9,7 +9,7 @@ import {
   SelectProps,
   Space,
 } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
 import { IAirport, IRoute } from "../../../interfaces";
@@ -38,6 +38,12 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
     queryKey: ["airports"],
     queryFn: airportService.getAll,
   });
+  const [selectedDepartureAirport, setSelectedDepartureAirport] = useState<
+    number | undefined
+  >(undefined);
+  const [selectedArrivalAirport, setSelectedArrivalAirport] = useState<
+    number | undefined
+  >(undefined);
 
   const airportsByCountry: Map<string, IAirport[]> = groupBy(
     airportsData?.payload || [],
@@ -58,16 +64,14 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
   const filteredDepartureOptions = airportOptions.map((group) => ({
     ...group,
     options: group.options.filter(
-      (airport) =>
-        airport.value !== form.getFieldValue("arrivalAirport")?.airportId,
+      (airport) => airport.value !== selectedArrivalAirport,
     ),
   }));
 
   const filteredArrivalOptions = airportOptions.map((group) => ({
     ...group,
     options: group.options.filter(
-      (airport) =>
-        airport.value !== form.getFieldValue("departureAirport")?.airportId,
+      (airport) => airport.value !== selectedDepartureAirport,
     ),
   }));
 
@@ -164,6 +168,7 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
               allowClear
               placeholder="Chọn sân bay đi"
               options={filteredDepartureOptions}
+              onChange={(value) => setSelectedDepartureAirport(value)}
               labelRender={labelRender}
               filterOption={(input, option) => {
                 if (option && option.options) {
@@ -201,6 +206,7 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
               allowClear
               placeholder="Chọn sân bay đến"
               options={filteredArrivalOptions}
+              onChange={(value) => setSelectedArrivalAirport(value)}
               labelRender={labelRender}
               filterOption={(input, option) => {
                 if (option && option.options) {
