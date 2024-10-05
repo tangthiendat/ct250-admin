@@ -7,7 +7,7 @@ export const PERMISSIONS = {
     GET_BY_ID: { method: "GET", apiPath: "/api/v1/users/{id}" },
     CREATE: { method: "POST", apiPath: "/api/v1/users" },
     UPDATE: { method: "PUT", apiPath: "/api/v1/users/{id}" },
-    DELETE: { method: "DELETE", apiPath: "/api/v1/users/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/users/{id}" }, CHANGE_PASSWORD: { method: "PUT", apiPath: "/api/v1/users/{id}/change-password" },
   },
   [Module.ROLES]: {
     GET_PAGINATION: { method: "GET", apiPath: "/api/v1/roles" },
