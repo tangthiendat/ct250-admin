@@ -15,6 +15,7 @@ import Loading from "../../../common/components/Loading";
 import { IAirport, IRoute } from "../../../interfaces";
 import { airportService, routeService } from "../../../services";
 import AirportOption from "../airport/AirportOption";
+import { groupBy } from "../../../utils";
 
 interface UpdateRouteFormProps {
   form: FormInstance<IRoute>;
@@ -45,20 +46,35 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
     queryFn: airportService.getAll,
   });
 
-  const airportOptions =
-    airportsData?.payload?.map((airport) => ({
-      value: airport.airportId,
-      label: <AirportOption airport={airport} />,
-      searchLabel: `${airport.airportName} (${airport.airportCode})`,
-    })) || [];
-
-  const filteredDepartureOptions = airportOptions.filter(
-    (airport) => airport.value !== selectedArrivalAirport,
+  const airportsByCountry: Map<string, IAirport[]> = groupBy(
+    airportsData?.payload || [],
+    (airport) => airport.country.countryName,
   );
 
-  const filteredArrivalOptions = airportOptions.filter(
-    (airport) => airport.value !== selectedDepartureAirport,
+  const airportOptions = Array.from(airportsByCountry.entries()).map(
+    ([countryName, airports]) => ({
+      label: <span className="text-sm">{countryName}</span>,
+      options: airports.map((airport) => ({
+        value: airport.airportId,
+        label: <AirportOption airport={airport} />,
+        searchLabel: `${airport.airportName} (${airport.airportCode})`,
+      })),
+    }),
   );
+
+  const filteredDepartureOptions = airportOptions.map((group) => ({
+    ...group,
+    options: group.options.filter(
+      (airport) => airport.value !== selectedArrivalAirport,
+    ),
+  }));
+
+  const filteredArrivalOptions = airportOptions.map((group) => ({
+    ...group,
+    options: group.options.filter(
+      (airport) => airport.value !== selectedDepartureAirport,
+    ),
+  }));
 
   useEffect(() => {
     if (routeToUpdate) {
@@ -76,11 +92,6 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey.includes("routes"),
       });
-      toast.success("Thêm mới tuyến bay thành công");
-      onCancel();
-    },
-    onError: () => {
-      toast.error("Thêm mới tuyến bay thất bại");
     },
   });
 
@@ -92,11 +103,6 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey.includes("routes"),
       });
-      toast.success("Cập nhật tuyến bay thành công");
-      onCancel();
-    },
-    onError: () => {
-      toast.error("Cập nhật tuyến bay thất bại");
     },
   });
 
@@ -109,6 +115,10 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
       updateRoute(
         { routeId: routeToUpdate.routeId, updatedRoute },
         {
+          onSuccess: () => {
+            toast.success("Cập nhật tuyến bay thành công");
+            onCancel();
+          },
           onError: () => {
             toast.error("Cập nhật tuyến bay thất bại");
           },
@@ -116,7 +126,15 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
       );
     } else {
       const newRoute = { ...values };
-      createRoute(newRoute);
+      createRoute(newRoute, {
+        onSuccess: () => {
+          toast.success("Thêm mới tuyến bay thành công");
+          onCancel();
+        },
+        onError: () => {
+          toast.error("Thêm mới tuyến bay thất bại");
+        },
+      });
     }
   }
 
@@ -155,17 +173,21 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
               options={filteredDepartureOptions}
               labelRender={labelRender}
               onChange={setSelectedDepartureAirport}
-              optionFilterProp="searchLabel"
-              filterOption={(input, option) =>
-                option?.searchLabel
-                  .toLowerCase()
-                  .includes(input.toLowerCase()) ?? false
-              }
-              filterSort={(optionA, optionB) =>
-                optionA?.searchLabel
-                  .toLowerCase()
-                  .localeCompare(optionB?.searchLabel.toLowerCase())
-              }
+              filterOption={(input, option) => {
+                if (option && option.options) {
+                  return false; //ignore group label
+                }
+                const airport = option?.label.props.airport as IAirport;
+                return (
+                  airport.airportName
+                    .toLowerCase()
+                    .includes(input.toLowerCase()) ||
+                  airport.airportCode
+                    .toLowerCase()
+                    .includes(input.toLowerCase()) ||
+                  airport.cityName.toLowerCase().includes(input.toLowerCase())
+                );
+              }}
             />
           </Form.Item>
         </Col>
@@ -189,17 +211,21 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
               options={filteredArrivalOptions}
               labelRender={labelRender}
               onChange={setSelectedArrivalAirport}
-              optionFilterProp="searchLabel"
-              filterOption={(input, option) =>
-                option?.searchLabel
-                  .toLowerCase()
-                  .includes(input.toLowerCase()) ?? false
-              }
-              filterSort={(optionA, optionB) =>
-                optionA?.searchLabel
-                  .toLowerCase()
-                  .localeCompare(optionB?.searchLabel.toLowerCase())
-              }
+              filterOption={(input, option) => {
+                if (option && option.options) {
+                  return false; //ignore group label
+                }
+                const airport = option?.label.props.airport as IAirport;
+                return (
+                  airport.airportName
+                    .toLowerCase()
+                    .includes(input.toLowerCase()) ||
+                  airport.airportCode
+                    .toLowerCase()
+                    .includes(input.toLowerCase()) ||
+                  airport.cityName.toLowerCase().includes(input.toLowerCase())
+                );
+              }}
             />
           </Form.Item>
         </Col>
