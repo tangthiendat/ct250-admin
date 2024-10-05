@@ -9,13 +9,13 @@ import {
   SelectProps,
   Space,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
 import { IAirport, IRoute } from "../../../interfaces";
 import { airportService, routeService } from "../../../services";
-import AirportOption from "../airport/AirportOption";
 import { groupBy } from "../../../utils";
+import AirportOption from "../airport/AirportOption";
 
 interface UpdateRouteFormProps {
   form: FormInstance<IRoute>;
@@ -33,13 +33,6 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
   routeToUpdate,
   onCancel,
 }) => {
-  const [selectedDepartureAirport, setSelectedDepartureAirport] = useState<
-    number | undefined
-  >(undefined);
-  const [selectedArrivalAirport, setSelectedArrivalAirport] = useState<
-    number | undefined
-  >(undefined);
-
   const queryClient = useQueryClient();
   const { data: airportsData, isLoading: isAirportsLoading } = useQuery({
     queryKey: ["airports"],
@@ -65,14 +58,16 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
   const filteredDepartureOptions = airportOptions.map((group) => ({
     ...group,
     options: group.options.filter(
-      (airport) => airport.value !== selectedArrivalAirport,
+      (airport) =>
+        airport.value !== form.getFieldValue("arrivalAirport")?.airportId,
     ),
   }));
 
   const filteredArrivalOptions = airportOptions.map((group) => ({
     ...group,
     options: group.options.filter(
-      (airport) => airport.value !== selectedDepartureAirport,
+      (airport) =>
+        airport.value !== form.getFieldValue("departureAirport")?.airportId,
     ),
   }));
 
@@ -81,8 +76,6 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
       form.setFieldsValue({
         ...routeToUpdate,
       });
-      setSelectedDepartureAirport(routeToUpdate.departureAirport.airportId);
-      setSelectedArrivalAirport(routeToUpdate.arrivalAirport.airportId);
     }
   }, [routeToUpdate, form]);
 
@@ -172,7 +165,6 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
               placeholder="Chọn sân bay đi"
               options={filteredDepartureOptions}
               labelRender={labelRender}
-              onChange={setSelectedDepartureAirport}
               filterOption={(input, option) => {
                 if (option && option.options) {
                   return false; //ignore group label
@@ -210,7 +202,6 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
               placeholder="Chọn sân bay đến"
               options={filteredArrivalOptions}
               labelRender={labelRender}
-              onChange={setSelectedArrivalAirport}
               filterOption={(input, option) => {
                 if (option && option.options) {
                   return false; //ignore group label
