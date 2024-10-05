@@ -180,19 +180,6 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
                 required: true,
                 message: "Vui lòng chọn sân bay đến",
               },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (
-                    value &&
-                    getFieldValue(["departureAirport", "airportId"]) === value
-                  ) {
-                    return Promise.reject(
-                      new Error("Sân bay đến không được trùng với sân bay đi"),
-                    );
-                  }
-                  return Promise.resolve();
-                },
-              }),
             ]}
           >
             <Select
