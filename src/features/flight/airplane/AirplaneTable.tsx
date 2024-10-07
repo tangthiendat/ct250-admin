@@ -110,18 +110,16 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
       width: "5%",
     },
     {
+      title: "Số hiệu đăng ký",
+      key: "registrationNumber",
+      dataIndex: "registrationNumber",
+      width: "25%",
+    },
+    {
       title: "Mô hình máy bay",
       key: "modelName",
       dataIndex: "modelName",
       width: "25%",
-    },
-    {
-      title: "Tổng số ghế",
-      key: "numberOfSeats",
-      dataIndex: "numberOfSeats",
-      width: "15%",
-      sorter: true,
-      defaultSortOrder: getDefaultSortOrder(searchParams, "numberOfSeats"),
     },
     {
       title: "Trạng thái",

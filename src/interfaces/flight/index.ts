@@ -25,6 +25,7 @@ export interface IAirplane {
   wingspan: number;
   height: number;
   status: AirplaneStatus;
+  registrationNumber: string;
   createdAt: string;
   updatedAt: string;
   createdBy?: string;

@@ -71,7 +71,7 @@ const Airplanes: React.FC = () => {
           <div className="w-[60%]">
             <div className="flex gap-3">
               <Input.Search
-                placeholder="Nhập tên mô hình máy bay để tìm kiếm..."
+                placeholder="Nhập số hiệu đăng ký hoặc tên mô hình máy bay để tìm kiếm..."
                 defaultValue={searchParams.get("query") || ""}
                 enterButton
                 allowClear

@@ -38,6 +38,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
   onCancel,
   viewOnly = false,
 }) => {
+  const isUpdateSession: boolean = !!airplaneToUpdate;
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -130,6 +131,21 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
       <div className="flex gap-8">
         <Form.Item
           className="flex-1"
+          label="Số hiệu đăng ký"
+          name="registrationNumber"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập số hiệu đăng ký",
+            },
+          ]}
+        >
+          <Input readOnly={viewOnly || isUpdateSession} />
+        </Form.Item>
+      </div>
+      <div className="flex gap-8">
+        <Form.Item
+          className="flex-1"
           label="Mô hình máy bay"
           name="modelName"
           rules={[
@@ -139,7 +155,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
             },
           ]}
         >
-          <Input readOnly={viewOnly} />
+          <Input readOnly={viewOnly || isUpdateSession} />
         </Form.Item>
       </div>
       <div className="flex gap-8">
@@ -154,7 +170,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
             },
           ]}
         >
-          <Input readOnly={viewOnly} />
+          <Input readOnly={viewOnly || isUpdateSession} />
         </Form.Item>
       </div>
       <div className="flex gap-8">
@@ -169,7 +185,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
             },
           ]}
         >
-          <InputNumber readOnly={viewOnly} addonAfter="Km" />
+          <Input readOnly={viewOnly || isUpdateSession} addonAfter="Km" />
         </Form.Item>
 
         <Form.Item
@@ -183,7 +199,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
             },
           ]}
         >
-          <InputNumber readOnly={viewOnly} addonAfter="Km/h" />
+          <Input readOnly={viewOnly || isUpdateSession} addonAfter="Km/h" />
         </Form.Item>
       </div>
       <div className="flex gap-8">
@@ -198,7 +214,11 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
             },
           ]}
         >
-          <InputNumber readOnly={viewOnly} addonAfter="m" stringMode />
+          <InputNumber
+            readOnly={viewOnly || isUpdateSession}
+            addonAfter="m"
+            stringMode
+          />
         </Form.Item>
 
         <Form.Item
@@ -212,7 +232,11 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
             },
           ]}
         >
-          <InputNumber readOnly={viewOnly} addonAfter="m" stringMode />
+          <InputNumber
+            readOnly={viewOnly || isUpdateSession}
+            addonAfter="m"
+            stringMode
+          />
         </Form.Item>
       </div>
       <div className="flex gap-8">
@@ -227,7 +251,11 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
             },
           ]}
         >
-          <InputNumber readOnly={viewOnly} addonAfter="tấn" stringMode />
+          <InputNumber
+            readOnly={viewOnly || isUpdateSession}
+            addonAfter="tấn"
+            stringMode
+          />
         </Form.Item>
 
         <Form.Item
@@ -241,7 +269,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
             },
           ]}
         >
-          <InputNumber readOnly={viewOnly} />
+          <InputNumber readOnly={viewOnly || isUpdateSession} />
         </Form.Item>
       </div>
       <div className="flex gap-8">
