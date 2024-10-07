@@ -15,6 +15,8 @@ import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
 import { authService } from "../services";
 import { Module } from "../common/enums";
 import { TbRouteSquare } from "react-icons/tb";
+import { IoShieldCheckmark } from "react-icons/io5";
+import { GiCommercialAirplane } from "react-icons/gi";
 
 const { Header, Sider } = Layout;
 
@@ -76,6 +78,10 @@ const AdminLayout: React.FC = () => {
           item.method === PERMISSIONS[Module.PERMISSIONS].GET_PAGINATION.method,
       );
 
+      const hasAuthChildren: boolean = Boolean(
+        viewUsers || viewRoles || viewPermissions,
+      );
+
       const viewAirports = permissions.find(
         (item) =>
           item.apiPath ===
@@ -95,6 +101,10 @@ const AdminLayout: React.FC = () => {
           item.method === PERMISSIONS[Module.ROUTES].GET_PAGINATION.method,
       );
 
+      const hasFlightChildren: boolean = Boolean(
+        viewAirports || viewAirplanes || viewRoutes,
+      );
+
       const menuItems = [
         {
           label: (
@@ -105,57 +115,79 @@ const AdminLayout: React.FC = () => {
           key: "dashboard",
           icon: <MdDashboard />,
         },
-        ...(viewUsers
+        ...(hasAuthChildren
           ? [
               {
-                label: <NavLink to="/users">Người dùng</NavLink>,
-                key: "users",
-                icon: <FaUsers />,
+                label: "Xác thực",
+                key: "auth",
+                icon: <IoShieldCheckmark />,
+                children: [
+                  ...(viewUsers
+                    ? [
+                        {
+                          label: <NavLink to="/users">Người dùng</NavLink>,
+                          key: "users",
+                          icon: <FaUsers />,
+                        },
+                      ]
+                    : []),
+                  ...(viewRoles
+                    ? [
+                        {
+                          label: <NavLink to="/roles">Vai trò</NavLink>,
+                          key: "roles",
+                          icon: <FaUserCog />,
+                        },
+                      ]
+                    : []),
+                  ...(viewPermissions
+                    ? [
+                        {
+                          label: <NavLink to="/permissions">Quyền hạn</NavLink>,
+                          key: "permissions",
+                          icon: <FaKey />,
+                        },
+                      ]
+                    : []),
+                ],
               },
             ]
           : []),
-        ...(viewRoles
+        ...(hasFlightChildren
           ? [
               {
-                label: <NavLink to="/roles">Vai trò</NavLink>,
-                key: "roles",
-                icon: <FaUserCog />,
-              },
-            ]
-          : []),
-        ...(viewPermissions
-          ? [
-              {
-                label: <NavLink to="/permissions">Quyền hạn</NavLink>,
-                key: "permissions",
-                icon: <FaKey />,
-              },
-            ]
-          : []),
-        ...(viewAirports
-          ? [
-              {
-                label: <NavLink to="/airports">Sân bay</NavLink>,
-                key: "airports",
-                icon: <FaLocationArrow />,
-              },
-            ]
-          : []),
-        ...(viewAirplanes
-          ? [
-              {
-                label: <NavLink to="/airplanes">Máy bay</NavLink>,
-                key: "airplanes",
-                icon: <MdFlight size={18} />,
-              },
-            ]
-          : []),
-        ...(viewRoutes
-          ? [
-              {
-                label: <NavLink to="/routes">Tuyến bay</NavLink>,
-                key: "routes",
-                icon: <TbRouteSquare />,
+                label: "Chuyến bay",
+                key: "flight-management",
+                icon: <GiCommercialAirplane />,
+                children: [
+                  ...(viewAirports
+                    ? [
+                        {
+                          label: <NavLink to="/airports">Sân bay</NavLink>,
+                          key: "airports",
+                          icon: <FaLocationArrow />,
+                        },
+                      ]
+                    : []),
+                  ...(viewAirplanes
+                    ? [
+                        {
+                          label: <NavLink to="/airplanes">Máy bay</NavLink>,
+                          key: "airplanes",
+                          icon: <MdFlight size={18} />,
+                        },
+                      ]
+                    : []),
+                  ...(viewRoutes
+                    ? [
+                        {
+                          label: <NavLink to="/routes">Tuyến bay</NavLink>,
+                          key: "routes",
+                          icon: <TbRouteSquare />,
+                        },
+                      ]
+                    : []),
+                ],
               },
             ]
           : []),
