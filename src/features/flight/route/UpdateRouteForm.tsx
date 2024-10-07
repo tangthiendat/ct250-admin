@@ -40,10 +40,10 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
   });
   const [selectedDepartureAirport, setSelectedDepartureAirport] = useState<
     number | undefined
-  >(undefined);
+  >(routeToUpdate?.departureAirport.airportId);
   const [selectedArrivalAirport, setSelectedArrivalAirport] = useState<
     number | undefined
-  >(undefined);
+  >(routeToUpdate?.arrivalAirport.airportId);
 
   const airportsByCountry: Map<string, IAirport[]> = groupBy(
     airportsData?.payload || [],
