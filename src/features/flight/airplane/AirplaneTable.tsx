@@ -13,6 +13,7 @@ import {
 import Access from "../../auth/Access";
 import UpdateAirplane from "./UpdateAirplane";
 import ViewAirplane from "./ViewAirplane";
+import DeleteAirplane from "./DeleteAirplane";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -117,9 +118,10 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
     },
     {
       title: "Mô hình máy bay",
-      key: "modelName",
-      dataIndex: "modelName",
+      key: "model",
+      dataIndex: "model",
       width: "25%",
+      render: (model: IAirplane["model"]) => model?.modelName,
     },
     {
       title: "Trạng thái",
@@ -188,7 +190,7 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
             permission={PERMISSIONS[Module.AIRPLANES].DELETE}
             hideChildren
           >
-            {/* <DeleteAirplane airplaneId={record.airplaneId} />X */}
+            <DeleteAirplane airplaneId={record.airplaneId} />
           </Access>
         </Space>
       ),

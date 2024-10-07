@@ -16,7 +16,7 @@ export interface IAirport {
 
 export interface IAirplane {
   airplaneId: number;
-  modelName: string;
+  model: IModel;
   manufacturer: string;
   maxDistance: number;
   velocity: number;
@@ -30,6 +30,11 @@ export interface IAirplane {
   updatedAt: string;
   createdBy?: string;
   updatedBy?: string;
+}
+
+export interface IModel {
+  modelId: number;
+  modelName: string;
 }
 
 export interface AirplaneFilterCriteria {

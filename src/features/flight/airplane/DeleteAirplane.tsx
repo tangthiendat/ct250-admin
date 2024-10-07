@@ -14,7 +14,9 @@ const DeleteAirplane: React.FC<DeleteAirplaneProps> = ({ airplaneId }) => {
     mutationFn: airplaneService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey.includes("airplanes"),
+        predicate: (query) =>
+          query.queryKey.includes("airplanes") ||
+          query.queryKey.includes("models"),
       });
     },
   });
