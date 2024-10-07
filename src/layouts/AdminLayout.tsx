@@ -5,18 +5,19 @@ import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, theme } from "antd";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
 import { FaLocationArrow } from "react-icons/fa6";
+import { GiCommercialAirplane } from "react-icons/gi";
+import { IoShieldCheckmark } from "react-icons/io5";
 import { MdDashboard, MdFlight } from "react-icons/md";
+import { RiCalendarScheduleLine } from "react-icons/ri";
+import { TbRouteSquare } from "react-icons/tb";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import Loading from "../common/components/Loading";
 import { PERMISSIONS } from "../common/constants";
+import { Module } from "../common/enums";
 import { useAvatarUrl } from "../features/auth/hooks/useAvatarUrl";
 import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
 import { authService } from "../services";
-import { Module } from "../common/enums";
-import { TbRouteSquare } from "react-icons/tb";
-import { IoShieldCheckmark } from "react-icons/io5";
-import { GiCommercialAirplane } from "react-icons/gi";
 
 const { Header, Sider } = Layout;
 
@@ -101,8 +102,14 @@ const AdminLayout: React.FC = () => {
           item.method === PERMISSIONS[Module.ROUTES].GET_PAGINATION.method,
       );
 
+      const viewFlightSchedules = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.FLIGHTS].GET_ALL.apiPath &&
+          item.method === PERMISSIONS[Module.FLIGHTS].GET_ALL.method,
+      );
+
       const hasFlightChildren: boolean = Boolean(
-        viewAirports || viewAirplanes || viewRoutes,
+        viewAirports || viewAirplanes || viewRoutes || viewFlightSchedules,
       );
 
       const menuItems = [
@@ -184,6 +191,15 @@ const AdminLayout: React.FC = () => {
                           label: <NavLink to="/routes">Tuyến bay</NavLink>,
                           key: "routes",
                           icon: <TbRouteSquare />,
+                        },
+                      ]
+                    : []),
+                  ...(viewFlightSchedules
+                    ? [
+                        {
+                          label: <NavLink to="/schedule">Lịch bay</NavLink>,
+                          key: "schedule",
+                          icon: <RiCalendarScheduleLine />,
                         },
                       ]
                     : []),

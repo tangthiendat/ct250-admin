@@ -1,15 +1,16 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProtectedRoute from "../features/auth/ProtectedRoute";
 import AdminLayout from "../layouts/AdminLayout";
-import Users from "../pages/Users";
-import Roles from "../pages/Roles";
+import Airplanes from "../pages/Airplanes";
+import Airports from "../pages/Airports";
 import ErrorIndicator from "../pages/ErrorPage";
 import Home from "../pages/Home";
-import Permissions from "../pages/Permissions";
 import Login from "../pages/Login";
-import ProtectedRoute from "../features/auth/ProtectedRoute";
-import Airports from "../pages/Airports";
-import Airplanes from "../pages/Airplanes";
+import Permissions from "../pages/Permissions";
+import Roles from "../pages/Roles";
 import Routes from "../pages/Routes";
+import Schedule from "../pages/Schedule";
+import Users from "../pages/Users";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: "/routes",
         element: <Routes />,
+      },
+      {
+        path: "/schedule",
+        element: <Schedule />,
       },
     ],
   },

@@ -13,6 +13,7 @@ export enum Module {
   AIRPORTS = "AIRPORTS",
   AIRPLANES = "AIRPLANES",
   ROUTES = "ROUTES",
+  FLIGHTS = "FLIGHTS",
 }
 
 //AIRPLANES
