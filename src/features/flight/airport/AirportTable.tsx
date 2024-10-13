@@ -11,7 +11,7 @@ import {
 import Access from "../../auth/Access";
 import DeleteAirport from "./DeleteAirport";
 import UpdateAirport from "./UpdateAirport";
-import { Module } from "../../../common/enums";
+import { Module } from "../../../interfaces/common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;

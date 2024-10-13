@@ -3,7 +3,7 @@ import Access from "../features/auth/Access";
 import { PERMISSIONS } from "../common/constants";
 import UsersTable from "../features/auth/users/UsersTable";
 import AddUser from "../features/auth/users/AddUser";
-import { Module } from "../common/enums";
+import { Module } from "../interfaces/common/enums";
 
 const Users: React.FC = () => {
   return (

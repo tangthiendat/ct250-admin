@@ -14,7 +14,7 @@ import { Outlet, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import Loading from "../common/components/Loading";
 import { PERMISSIONS } from "../common/constants";
-import { Module } from "../common/enums";
+import { Module } from "../interfaces/common/enums";
 import { useAvatarUrl } from "../features/auth/hooks/useAvatarUrl";
 import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
 import { authService } from "../services";

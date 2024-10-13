@@ -2,7 +2,7 @@ import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
-import { AirplaneStatus, Module } from "../../../common/enums";
+import { AirplaneStatus, Module } from "../../../interfaces/common/enums";
 import { IAirplane, Page } from "../../../interfaces";
 import {
   formatTimestamp,

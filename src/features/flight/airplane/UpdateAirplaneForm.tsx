@@ -15,7 +15,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
-import { AirplaneStatus } from "../../../common/enums";
+import { AirplaneStatus } from "../../../interfaces/common/enums";
 import { IAirplane, IModel } from "../../../interfaces";
 import { airplaneService, modelService } from "../../../services";
 

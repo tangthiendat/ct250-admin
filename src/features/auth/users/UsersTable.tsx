@@ -3,7 +3,7 @@ import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
-import { Module } from "../../../common/enums";
+import { Module } from "../../../interfaces/common/enums";
 import { IUser } from "../../../interfaces";
 import { userService } from "../../../services";
 import { formatTimestamp } from "../../../utils";

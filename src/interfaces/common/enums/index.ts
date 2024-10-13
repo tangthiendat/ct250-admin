@@ -28,3 +28,9 @@ export enum RouteType {
   DOMESTIC = "DOMESTIC",
   INTERNATIONAL = "INTERNATIONAL",
 }
+
+//FLIGHTS
+export enum TicketClass {
+  ECONOMY = "ECONOMY",
+  BUSINESS = "BUSINESS",
+}

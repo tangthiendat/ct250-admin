@@ -9,7 +9,7 @@ import { formatTimestamp } from "../../../utils";
 import Access from "../Access";
 import UpdateRole from "./UpdateRole";
 import ViewRole from "./ViewRole";
-import { Module } from "../../../common/enums";
+import { Module } from "../../../interfaces/common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;

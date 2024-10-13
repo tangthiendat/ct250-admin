@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { airportService } from "../services";
 import { SearchProps } from "antd/es/input";
-import { Module } from "../common/enums";
+import { Module } from "../interfaces/common/enums";
 
 const Airports: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();

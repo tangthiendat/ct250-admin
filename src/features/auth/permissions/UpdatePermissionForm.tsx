@@ -11,7 +11,7 @@ import {
 } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { Method, Module } from "../../../common/enums";
+import { Method, Module } from "../../../interfaces/common/enums";
 import { IPermission } from "../../../interfaces";
 import { permissionService } from "../../../services";
 

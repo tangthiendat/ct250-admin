@@ -3,7 +3,7 @@ import { TableProps } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
-import { Module } from "../../../common/enums";
+import { Module } from "../../../interfaces/common/enums";
 import { IRoute, Page } from "../../../interfaces";
 import {
   formatTimestamp,

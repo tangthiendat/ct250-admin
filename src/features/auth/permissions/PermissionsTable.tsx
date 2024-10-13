@@ -4,7 +4,7 @@ import { SorterResult } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PERMISSIONS } from "../../../common/constants";
-import { Method, Module } from "../../../common/enums";
+import { Method, Module } from "../../../interfaces/common/enums";
 import {
   IPermission,
   PaginationParams,
