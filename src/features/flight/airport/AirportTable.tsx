@@ -1,7 +1,7 @@
 import { Space, Table, TablePaginationConfig, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../../../common/constants";
+import { PERMISSIONS } from "../../../interfaces/common/constants";
 import { IAirport, Page } from "../../../interfaces";
 import {
   formatTimestamp,

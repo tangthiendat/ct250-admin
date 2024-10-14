@@ -10,3 +10,4 @@ export * from "./flight/airport-service.ts";
 export * from "./flight/airplane-service.ts";
 export * from "./flight/route-service.ts";
 export * from "./flight/model-service.ts";
+export * from "./flight/flight-schedule-service.ts";

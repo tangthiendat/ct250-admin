@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast";
 import AppRouter from "./router/AppRouter";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { VIETNAM_TIMEZONE } from "./common/constants";
+import { VIETNAM_TIMEZONE } from "./interfaces/common/constants";
 
 dayjs.locale("vi");
 dayjs.extend(utc);

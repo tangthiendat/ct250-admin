@@ -1,4 +1,4 @@
-import { Module } from "../../interfaces/common/enums";
+import { Module } from "../enums";
 
 export const PERMISSIONS = {
   [Module.USERS]: {

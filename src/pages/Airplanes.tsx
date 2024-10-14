@@ -3,7 +3,7 @@ import { SearchProps } from "antd/es/input";
 import { Input } from "antd/lib";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../common/constants";
+import { PERMISSIONS } from "../interfaces/common/constants";
 import { AirplaneStatus, Module } from "../interfaces/common/enums";
 import Access from "../features/auth/Access";
 import AddAirplane from "../features/flight/airplane/AddAirplane";

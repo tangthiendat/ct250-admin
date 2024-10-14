@@ -1,5 +1,5 @@
 import { Input } from "antd";
-import { PERMISSIONS } from "../common/constants";
+import { PERMISSIONS } from "../interfaces/common/constants";
 import Access from "../features/auth/Access";
 import AddAirport from "../features/flight/airport/AddAirport";
 import AirportTable from "../features/flight/airport/AirportTable";

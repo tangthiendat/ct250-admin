@@ -2,7 +2,7 @@ import { Space, Table, TablePaginationConfig, Tag } from "antd";
 import { TableProps } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../../../common/constants";
+import { PERMISSIONS } from "../../../interfaces/common/constants";
 import { Module } from "../../../interfaces/common/enums";
 import { IRoute, Page } from "../../../interfaces";
 import {

@@ -3,7 +3,7 @@ import { GetProp, Space, Table, TablePaginationConfig, TableProps } from "antd";
 import { SorterResult } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../../../common/constants";
+import { PERMISSIONS } from "../../../interfaces/common/constants";
 import { Method, Module } from "../../../interfaces/common/enums";
 import {
   IPermission,

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../../../common/constants";
+import { PERMISSIONS } from "../../../interfaces/common/constants";
 import { Module } from "../../../interfaces/common/enums";
 import { IUser } from "../../../interfaces";
 import { userService } from "../../../services";

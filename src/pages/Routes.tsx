@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../common/constants";
+import { PERMISSIONS } from "../interfaces/common/constants";
 import { Module } from "../interfaces/common/enums";
 import Access from "../features/auth/Access";
 import { PaginationParams, SortParams } from "../interfaces";

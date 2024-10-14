@@ -1,4 +1,4 @@
-import { PERMISSIONS } from "../common/constants";
+import { PERMISSIONS } from "../interfaces/common/constants";
 import { Module } from "../interfaces/common/enums";
 import Access from "../features/auth/Access";
 import AddRole from "../features/auth/roles/AddRole";

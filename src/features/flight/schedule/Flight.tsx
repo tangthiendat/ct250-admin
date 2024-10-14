@@ -36,7 +36,7 @@ const Flight: React.FC<FlightProps> = ({ flight }) => {
             />
           </div>
 
-          <div className="flex basis-[87%] items-center justify-between gap-1">
+          <div className="flex basis-[87%] items-center justify-between gap-2">
             <div className="px-4 text-center">
               <div className="text-lg font-semibold">
                 {dayjs(flight.departureDateTime).format("DD/MM/YYYY HH:mm")}
@@ -46,7 +46,7 @@ const Flight: React.FC<FlightProps> = ({ flight }) => {
               </div>
             </div>
 
-            <div className="flex w-[52%] flex-col items-center">
+            <div className="flex w-[60%] flex-col items-center">
               <div className="flex w-full items-center justify-between">
                 <div className="basis-[15%] text-center text-sm text-gray-500">
                   {flight.route.departureAirport.airportCode}
