@@ -217,6 +217,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
                       type="text"
                       icon={<PlusOutlined />}
                       onClick={addNewModel}
+                      loading={isCreatingModel}
                     >
                       Thêm mới mô hình
                     </Button>
@@ -364,7 +365,9 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
         {!viewOnly && (
           <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
             <Space>
-              <Button onClick={onCancel}>Hủy</Button>
+              <Button onClick={onCancel} loading={isCreating || isUpdating}>
+                Hủy
+              </Button>
               <Button
                 type="primary"
                 htmlType="submit"

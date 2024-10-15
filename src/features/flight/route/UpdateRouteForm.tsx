@@ -230,7 +230,9 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
 
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
-          <Button onClick={onCancel}>Hủy</Button>
+          <Button onClick={onCancel} loading={isCreating || isUpdating}>
+            Hủy
+          </Button>
           <Button
             type="primary"
             htmlType="submit"
