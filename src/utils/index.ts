@@ -1,6 +1,7 @@
 import { blue, green, grey, orange, red } from "@ant-design/colors";
 import { SortOrder } from "antd/es/table/interface";
 import dayjs from "dayjs";
+import { FileType } from "../interfaces";
 
 export function colorMethod(method: "GET" | "POST" | "PUT" | "DELETE") {
   switch (method) {
@@ -69,4 +70,13 @@ export function getDefaultFilterValue(
 
 export function formatTimestamp(timestamp: string) {
   return dayjs(timestamp).format("DD-MM-YYYY HH:mm:ss");
+}
+
+export async function getBase64(file: FileType): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
 }

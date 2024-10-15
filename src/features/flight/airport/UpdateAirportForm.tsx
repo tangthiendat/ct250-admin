@@ -1,19 +1,26 @@
+import { PlusOutlined } from "@ant-design/icons";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Col,
   Form,
+  Image,
   Input,
   Row,
   Select,
   Space,
+  Upload,
+  UploadFile,
   type FormInstance,
 } from "antd";
-import { useEffect } from "react";
+import { UploadProps } from "antd/lib";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
-import { IAirport } from "../../../interfaces";
+import { FileType, IAirport } from "../../../interfaces";
 import { airportService, countryService } from "../../../services";
+import { getBase64 } from "../../../utils";
 
 interface UpdateAirportFormProps {
   form: FormInstance<IAirport>;
@@ -27,12 +34,20 @@ interface UpdateAirportArgs {
   updatedAirport: IAirport;
 }
 
+interface UpdateAirportFormValues extends IAirport {
+  cityImg?: File;
+}
+
 const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
   form,
   airportToUpdate,
   onCancel,
   viewOnly = false,
 }) => {
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [previewOpen, setPreviewOpen] = useState<boolean>(false);
+  const [previewImage, setPreviewImage] = useState<string>("");
+
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -40,6 +55,19 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
       form.setFieldsValue({
         ...airportToUpdate,
       });
+      setPreviewImage(airportToUpdate.imgUrl ?? "");
+      setFileList(
+        airportToUpdate.imgUrl
+          ? [
+              {
+                uid: "-1",
+                name: airportToUpdate.airportCode,
+                status: "done",
+                url: airportToUpdate.imgUrl,
+              },
+            ]
+          : [],
+      );
     }
   }, [airportToUpdate, form]);
 
@@ -77,7 +105,19 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
     },
   });
 
-  function handleFinish(values: IAirport) {
+  async function handlePreview(file: UploadFile) {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType);
+    }
+    setPreviewImage(file.url || file.preview || "");
+    setPreviewOpen(true);
+  }
+
+  const handleUploadChange: UploadProps["onChange"] = ({ fileList }) => {
+    setFileList(fileList);
+  };
+
+  function handleFinish(values: UpdateAirportFormValues) {
     if (airportToUpdate) {
       const updatedAirport = {
         ...airportToUpdate,
@@ -96,10 +136,28 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
         },
       );
     } else {
+      const formData = new FormData();
       const newAirport = {
         ...values,
+        airportCode: values.airportCode.toUpperCase(),
+        cityCode: values.cityCode.toUpperCase(),
       };
-      createAirport(newAirport, {
+      Object.keys(newAirport)
+        .filter((key) => key !== "cityImg" && key !== "createdAt")
+        .forEach((key) => {
+          const value = newAirport[key];
+          if (typeof value === "object" && key === "country") {
+            formData.append("country.countryId", value?.countryId);
+          } else {
+            formData.append(key, value);
+          }
+        });
+
+      if (fileList.length > 0) {
+        formData.append("cityImg", fileList[0].originFileObj as File);
+      }
+
+      createAirport(formData, {
         onSuccess: () => {
           toast.success("Thêm mới sân bay thành công");
           onCancel();
@@ -174,7 +232,7 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
           >
             <Select
               showSearch
-              placeholder="Vui lòng chọn quốc tịch"
+              placeholder="Vui lòng chọn quốc gia"
               options={countryOptions}
               optionFilterProp="label"
               filterOption={(input, option) =>
@@ -187,6 +245,69 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
                   .localeCompare((optionB?.label ?? "").toLowerCase())
               }
             />
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item
+            name="cityImg"
+            label="Ảnh thành phố"
+            valuePropName="fileList"
+            rules={[
+              {
+                validator: (_, value) => {
+                  if (fileList.length < 1 && !value) {
+                    return Promise.reject(
+                      new Error("Vui lòng chọn ảnh thành phố"),
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
+            getValueFromEvent={(e) => (Array.isArray(e) ? e : e && e.fileList)}
+          >
+            <Upload
+              maxCount={1}
+              listType="picture-card"
+              fileList={fileList}
+              beforeUpload={() => false} // Prevent automatic upload
+              onPreview={handlePreview}
+              onChange={handleUploadChange}
+              // itemRender={(originNode, file, currFileList, actions) => {
+              //   return (
+              //     <div>
+              //       {originNode}
+              //       {viewOnly ? null : (
+              //         <button
+              //           type="button"
+              //           onClick={() => actions.remove()}
+              //           style={{ display: "none" }}
+              //         >
+              //           Delete
+              //         </button>
+              //       )}
+              //     </div>
+              //   );
+              // }}
+            >
+              {fileList.length < 1 && (
+                <button style={{ border: 0, background: "none" }} type="button">
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Tải ảnh lên</div>
+                </button>
+              )}
+            </Upload>
+            {previewImage && (
+              <Image
+                wrapperStyle={{ display: "none" }}
+                preview={{
+                  visible: previewOpen,
+                  onVisibleChange: (visible) => setPreviewOpen(visible),
+                  afterOpenChange: (visible) => !visible && setPreviewImage(""),
+                }}
+                src={previewImage}
+              />
+            )}
           </Form.Item>
         </Col>
       </Row>

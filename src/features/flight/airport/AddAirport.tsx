@@ -24,7 +24,7 @@ const AddAirport: React.FC = () => {
       </Button>
       <Modal
         open={isOpenModal}
-        width="30%"
+        width="40%"
         title={<span className="text-lg">Thêm sân bay</span>}
         destroyOnClose
         onCancel={handleCloseModal}

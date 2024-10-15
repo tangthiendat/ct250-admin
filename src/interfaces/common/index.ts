@@ -1,3 +1,6 @@
+import { GetProp } from "antd";
+import { UploadProps } from "antd/lib";
+
 export * from "./enums";
 export * from "./constants";
 export interface ApiResponse<T> {
@@ -41,3 +44,5 @@ export interface ICountry {
   iso2Code: string;
   iso3Code: string;
 }
+
+export type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];

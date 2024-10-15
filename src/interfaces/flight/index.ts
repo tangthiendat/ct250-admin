@@ -7,6 +7,7 @@ export interface IAirport {
   airportCode: string;
   cityName: string;
   cityCode: string;
+  imgUrl: string;
   country: ICountry;
   createdAt: string;
   updatedAt?: string;

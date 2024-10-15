@@ -14,9 +14,7 @@ interface IAirportService {
     sort?: SortParams,
   ): Promise<ApiResponse<Page<IAirport>>>;
   getAll(): Promise<ApiResponse<IAirport[]>>;
-  create(
-    newAirport: Omit<IAirport, "airportId">,
-  ): Promise<ApiResponse<IAirport>>;
+  create(newAirport: FormData): Promise<ApiResponse<IAirport>>;
   update(
     airportId: number,
     updatedAirport: IAirport,
@@ -48,9 +46,7 @@ class AirportService implements IAirportService {
     return (await apiClient.get("/all")).data;
   }
 
-  async create(
-    newAirport: Omit<IAirport, "airportId">,
-  ): Promise<ApiResponse<IAirport>> {
+  async create(newAirport: FormData): Promise<ApiResponse<IAirport>> {
     return (await apiClient.post("", newAirport)).data;
   }
 
