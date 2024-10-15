@@ -29,6 +29,11 @@ export interface SortParams {
   direction: string;
 }
 
+export interface ElasticSortParams {
+  sort: string;
+  order: string;
+}
+
 export interface ICountry {
   countryId: number;
   countryName: string;

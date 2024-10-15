@@ -4,12 +4,14 @@ import {
   PaginationParams,
   Page,
   IAirport,
+  ElasticSortParams,
 } from "../../interfaces";
 import { createApiClient } from "../api-client";
 interface IAirportService {
   getAirports(
     pagination: PaginationParams,
     query: string,
+    sort?: ElasticSortParams,
   ): Promise<ApiResponse<Page<IAirport>>>;
   getAll(): Promise<ApiResponse<IAirport[]>>;
   create(
@@ -28,12 +30,15 @@ class AirportService implements IAirportService {
   async getAirports(
     pagination: PaginationParams,
     query: string,
+    sort?: ElasticSortParams,
   ): Promise<ApiResponse<Page<IAirport>>> {
     return (
       await apiClient.get("", {
         params: {
           ...pagination,
           query,
+          sort: sort?.sort !== "" ? sort?.sort : undefined,
+          order: sort?.order !== "" ? sort?.order : undefined,
         },
       })
     ).data;

@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../interfaces/common/constants";
-import { Module } from "../interfaces/common/enums";
-import Access from "../features/auth/Access";
-import { PaginationParams, SortParams } from "../interfaces";
-import { routeService } from "../services/flight/route-service";
-import RouteTable from "../features/flight/route/RouteTable";
-import AddRoute from "../features/flight/route/AddRoute";
 import { SearchProps } from "antd/es/input";
 import { Input } from "antd/lib";
+import { useSearchParams } from "react-router-dom";
+import Access from "../features/auth/Access";
+import AddRoute from "../features/flight/route/AddRoute";
+import RouteTable from "../features/flight/route/RouteTable";
+import { PaginationParams, SortParams } from "../interfaces";
+import { PERMISSIONS } from "../interfaces/common/constants";
+import { Module } from "../interfaces/common/enums";
+import { routeService } from "../services/flight/route-service";
 
 const Routes: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,7 +25,7 @@ const Routes: React.FC = () => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["routes", pagination, sort, query].filter((key) => {
+    queryKey: ["routes", pagination, query, sort].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {

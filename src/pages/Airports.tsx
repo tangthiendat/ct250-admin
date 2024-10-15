@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { airportService } from "../services";
 import { SearchProps } from "antd/es/input";
 import { Module } from "../interfaces/common/enums";
+import { ElasticSortParams } from "../interfaces";
 
 const Airports: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,9 +19,22 @@ const Airports: React.FC = () => {
     pageSize: Number(searchParams.get("pageSize")) || 10,
   };
 
+  const sort: ElasticSortParams = {
+    sort: searchParams.get("sortBy") || "",
+    order: searchParams.get("direction") || "",
+  };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["airports", pagination, query],
-    queryFn: () => airportService.getAirports(pagination, query),
+    queryKey: ["airports", pagination, query, sort].filter((key) => {
+      if (typeof key === "string") {
+        return key !== "";
+      } else if (key instanceof Object) {
+        return Object.values(key).some(
+          (value) => value !== undefined && value !== "",
+        );
+      }
+    }),
+    queryFn: () => airportService.getAirports(pagination, query, sort),
   });
 
   const handleSearch: SearchProps["onSearch"] = (value) => {
