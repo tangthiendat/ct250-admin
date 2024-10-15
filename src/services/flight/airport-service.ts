@@ -1,17 +1,17 @@
 import { AxiosInstance } from "axios";
 import {
   ApiResponse,
-  PaginationParams,
-  Page,
   IAirport,
-  ElasticSortParams,
+  Page,
+  PaginationParams,
+  SortParams,
 } from "../../interfaces";
 import { createApiClient } from "../api-client";
 interface IAirportService {
   getAirports(
     pagination: PaginationParams,
     query: string,
-    sort?: ElasticSortParams,
+    sort?: SortParams,
   ): Promise<ApiResponse<Page<IAirport>>>;
   getAll(): Promise<ApiResponse<IAirport[]>>;
   create(
@@ -30,15 +30,15 @@ class AirportService implements IAirportService {
   async getAirports(
     pagination: PaginationParams,
     query: string,
-    sort?: ElasticSortParams,
+    sort?: SortParams,
   ): Promise<ApiResponse<Page<IAirport>>> {
     return (
       await apiClient.get("", {
         params: {
           ...pagination,
           query,
-          sort: sort?.sort !== "" ? sort?.sort : undefined,
-          order: sort?.order !== "" ? sort?.order : undefined,
+          sortBy: sort?.sortBy !== "" ? sort?.sortBy : undefined,
+          order: sort?.direction !== "" ? sort?.direction : undefined,
         },
       })
     ).data;

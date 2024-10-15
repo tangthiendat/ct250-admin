@@ -1,14 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import { Input } from "antd";
-import { PERMISSIONS } from "../interfaces/common/constants";
+import { SearchProps } from "antd/es/input";
+import { useSearchParams } from "react-router-dom";
 import Access from "../features/auth/Access";
 import AddAirport from "../features/flight/airport/AddAirport";
 import AirportTable from "../features/flight/airport/AirportTable";
-import { useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { airportService } from "../services";
-import { SearchProps } from "antd/es/input";
+import { SortParams } from "../interfaces";
+import { PERMISSIONS } from "../interfaces/common/constants";
 import { Module } from "../interfaces/common/enums";
-import { ElasticSortParams } from "../interfaces";
+import { airportService } from "../services";
 
 const Airports: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,9 +19,9 @@ const Airports: React.FC = () => {
     pageSize: Number(searchParams.get("pageSize")) || 10,
   };
 
-  const sort: ElasticSortParams = {
-    sort: searchParams.get("sortBy") || "",
-    order: searchParams.get("direction") || "",
+  const sort: SortParams = {
+    sortBy: searchParams.get("sortBy") || "",
+    direction: searchParams.get("direction") || "",
   };
 
   const { data, isLoading } = useQuery({
