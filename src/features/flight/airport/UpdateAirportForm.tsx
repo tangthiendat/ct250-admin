@@ -31,7 +31,7 @@ interface UpdateAirportFormProps {
 
 interface UpdateAirportArgs {
   airportId: number;
-  updatedAirport: IAirport;
+  updatedAirport: FormData;
 }
 
 interface UpdateAirportFormValues extends IAirport {
@@ -123,8 +123,31 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
         ...airportToUpdate,
         ...values,
       };
+      const formData = new FormData();
+
+      Object.keys(updatedAirport)
+        .filter((key) => !["cityImg"].includes(key))
+        .forEach((key) => {
+          const value = updatedAirport[key];
+          if (typeof value === "object" && key === "country") {
+            formData.append("country.countryId", value?.countryId);
+          } else {
+            formData.append(key, value);
+          }
+        });
+
+      if (fileList.length > 0) {
+        formData.append("cityImg", fileList[0].originFileObj as File);
+      }
+
+      console.log(fileList);
+
+      formData.forEach((value, key) => {
+        console.log(key, value);
+      });
+
       updateAirport(
-        { airportId: airportToUpdate.airportId, updatedAirport },
+        { airportId: airportToUpdate.airportId, updatedAirport: formData },
         {
           onSuccess: () => {
             toast.success("Cập nhật sân bay thành công");
@@ -143,7 +166,7 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
         cityCode: values.cityCode.toUpperCase(),
       };
       Object.keys(newAirport)
-        .filter((key) => key !== "cityImg" && key !== "createdAt")
+        .filter((key) => ["cityImg", "createdAt"].includes(key))
         .forEach((key) => {
           const value = newAirport[key];
           if (typeof value === "object" && key === "country") {
@@ -273,22 +296,6 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
               beforeUpload={() => false} // Prevent automatic upload
               onPreview={handlePreview}
               onChange={handleUploadChange}
-              // itemRender={(originNode, file, currFileList, actions) => {
-              //   return (
-              //     <div>
-              //       {originNode}
-              //       {viewOnly ? null : (
-              //         <button
-              //           type="button"
-              //           onClick={() => actions.remove()}
-              //           style={{ display: "none" }}
-              //         >
-              //           Delete
-              //         </button>
-              //       )}
-              //     </div>
-              //   );
-              // }}
             >
               {fileList.length < 1 && (
                 <button style={{ border: 0, background: "none" }} type="button">

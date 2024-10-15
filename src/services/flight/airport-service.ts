@@ -17,7 +17,7 @@ interface IAirportService {
   create(newAirport: FormData): Promise<ApiResponse<IAirport>>;
   update(
     airportId: number,
-    updatedAirport: IAirport,
+    updatedAirport: FormData,
   ): Promise<ApiResponse<IAirport>>;
   delete(airportId: number): Promise<ApiResponse<void>>;
 }
@@ -36,7 +36,7 @@ class AirportService implements IAirportService {
           ...pagination,
           query,
           sortBy: sort?.sortBy !== "" ? sort?.sortBy : undefined,
-          order: sort?.direction !== "" ? sort?.direction : undefined,
+          direction: sort?.direction !== "" ? sort?.direction : undefined,
         },
       })
     ).data;
@@ -52,7 +52,7 @@ class AirportService implements IAirportService {
 
   async update(
     airportId: number,
-    updatedAirport: IAirport,
+    updatedAirport: FormData,
   ): Promise<ApiResponse<IAirport>> {
     return (await apiClient.put(`/${airportId}`, updatedAirport)).data;
   }
