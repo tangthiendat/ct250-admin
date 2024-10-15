@@ -12,6 +12,7 @@ import Access from "../../auth/Access";
 import DeleteAirport from "./DeleteAirport";
 import UpdateAirport from "./UpdateAirport";
 import { Module } from "../../../interfaces/common/enums";
+import ViewAirport from "./ViewAirport";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -143,6 +144,7 @@ const AirportTable: React.FC<AirportTableProps> = ({
 
       render: (record: IAirport) => (
         <Space>
+          <ViewAirport airport={record} />
           <Access permission={PERMISSIONS[Module.AIRPORTS].UPDATE} hideChildren>
             <UpdateAirport airport={record} />
           </Access>

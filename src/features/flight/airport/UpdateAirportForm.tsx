@@ -296,6 +296,9 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
               beforeUpload={() => false} // Prevent automatic upload
               onPreview={handlePreview}
               onChange={handleUploadChange}
+              showUploadList={{
+                showRemoveIcon: !viewOnly,
+              }}
             >
               {fileList.length < 1 && (
                 <button style={{ border: 0, background: "none" }} type="button">
