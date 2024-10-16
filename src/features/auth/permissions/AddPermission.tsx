@@ -1,12 +1,10 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Modal } from "antd";
+import { Button, Modal } from "antd";
 import { useState } from "react";
-import { IPermission } from "../../../interfaces";
 import UpdatePermissionForm from "./UpdatePermissionForm";
 
 const AddPermission: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [addPermissionForm] = Form.useForm<IPermission>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -14,7 +12,6 @@ const AddPermission: React.FC = () => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    addPermissionForm.resetFields();
   };
 
   return (
@@ -30,10 +27,7 @@ const AddPermission: React.FC = () => {
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdatePermissionForm
-          form={addPermissionForm}
-          onCancel={handleCloseModal}
-        />
+        <UpdatePermissionForm onCancel={handleCloseModal} />
       </Modal>
     </>
   );
