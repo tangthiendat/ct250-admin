@@ -4,7 +4,6 @@ import {
   DatePicker,
   DatePickerProps,
   Form,
-  FormInstance,
   Input,
   Radio,
   Select,
@@ -19,7 +18,6 @@ import { IUser } from "../../../interfaces";
 import { countryService, roleService, userService } from "../../../services";
 
 interface UpdateUserFormProps {
-  form: FormInstance<IUser>;
   userToUpdate?: IUser;
   onCancel: () => void;
   viewOnly?: boolean;
@@ -37,11 +35,11 @@ interface UpdateUserArgs {
 }
 
 const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
-  form,
   userToUpdate,
   onCancel,
   viewOnly = false,
 }) => {
+  const [form] = Form.useForm<IUser>();
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -113,6 +111,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
           onSuccess: () => {
             toast.success("Cập nhật người dùng thành công");
             onCancel();
+            form.resetFields();
           },
           onError: () => {
             toast.error("Cập nhật người dùng thất bại");
@@ -129,6 +128,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
         onSuccess: () => {
           toast.success("Thêm mới người dùng thành công");
           onCancel();
+          form.resetFields();
         },
         onError: () => {
           toast.error("Thêm mới người dùng thất bại");

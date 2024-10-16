@@ -1,7 +1,7 @@
 import { EditOutlined } from "@ant-design/icons";
-import { IUser } from "../../../interfaces";
+import { Modal, Tooltip } from "antd";
 import { useState } from "react";
-import { Form, Modal, Tooltip } from "antd";
+import { IUser } from "../../../interfaces";
 import UpdateUserForm from "./UpdateUserForm";
 
 interface UpdateUserProps {
@@ -10,7 +10,6 @@ interface UpdateUserProps {
 
 const UpdateUser: React.FC<UpdateUserProps> = ({ user }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [updateUserForm] = Form.useForm<IUser>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -18,7 +17,6 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ user }) => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    updateUserForm.resetFields();
   };
 
   return (
@@ -37,11 +35,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ user }) => {
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdateUserForm
-          form={updateUserForm}
-          userToUpdate={user}
-          onCancel={handleCloseModal}
-        />
+        <UpdateUserForm userToUpdate={user} onCancel={handleCloseModal} />
       </Modal>
     </>
   );
