@@ -1,7 +1,7 @@
 import { EditOutlined } from "@ant-design/icons";
-import { Form, Modal, Tooltip } from "antd";
-import { IRoute } from "../../../interfaces";
+import { Modal, Tooltip } from "antd";
 import { useState } from "react";
+import { IRoute } from "../../../interfaces";
 import UpdateRouteForm from "./UpdateRouteForm";
 
 interface UpdateRouteProps {
@@ -10,7 +10,6 @@ interface UpdateRouteProps {
 
 const UpdateRoute: React.FC<UpdateRouteProps> = ({ route }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [updateAirportForm] = Form.useForm<IRoute>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -18,7 +17,6 @@ const UpdateRoute: React.FC<UpdateRouteProps> = ({ route }) => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    updateAirportForm.resetFields();
   };
 
   return (
@@ -37,11 +35,7 @@ const UpdateRoute: React.FC<UpdateRouteProps> = ({ route }) => {
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdateRouteForm
-          form={updateAirportForm}
-          routeToUpdate={route}
-          onCancel={handleCloseModal}
-        />
+        <UpdateRouteForm routeToUpdate={route} onCancel={handleCloseModal} />
       </Modal>
     </>
   );

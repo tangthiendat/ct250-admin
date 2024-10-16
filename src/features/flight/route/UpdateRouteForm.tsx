@@ -1,14 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  Col,
-  Form,
-  FormInstance,
-  Row,
-  Select,
-  SelectProps,
-  Space,
-} from "antd";
+import { Button, Col, Form, Row, Select, SelectProps, Space } from "antd";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
@@ -18,7 +9,6 @@ import { groupBy } from "../../../utils";
 import AirportOption from "../airport/AirportOption";
 
 interface UpdateRouteFormProps {
-  form: FormInstance<IRoute>;
   routeToUpdate?: IRoute;
   onCancel: () => void;
 }
@@ -29,10 +19,10 @@ interface UpdateRouteArgs {
 }
 
 const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
-  form,
   routeToUpdate,
   onCancel,
 }) => {
+  const [form] = Form.useForm<IRoute>();
   const queryClient = useQueryClient();
   const { data: airportsData, isLoading: isAirportsLoading } = useQuery({
     queryKey: ["airports"],
@@ -115,6 +105,7 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
           onSuccess: () => {
             toast.success("Cập nhật tuyến bay thành công");
             onCancel();
+            form.resetFields();
           },
           onError: () => {
             toast.error("Cập nhật tuyến bay thất bại");
@@ -127,6 +118,7 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
         onSuccess: () => {
           toast.success("Thêm mới tuyến bay thành công");
           onCancel();
+          form.resetFields();
         },
         onError: () => {
           toast.error("Thêm mới tuyến bay thất bại");
