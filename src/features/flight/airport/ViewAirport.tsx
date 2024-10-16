@@ -1,8 +1,8 @@
-import { Form, Modal, Tooltip } from "antd";
-import { IAirport } from "../../../interfaces";
 import { EyeOutlined } from "@ant-design/icons";
-import UpdateAirportForm from "./UpdateAirportForm";
+import { Modal, Tooltip } from "antd";
 import { useState } from "react";
+import { IAirport } from "../../../interfaces";
+import UpdateAirportForm from "./UpdateAirportForm";
 
 interface ViewAirportProps {
   airport: IAirport;
@@ -10,7 +10,6 @@ interface ViewAirportProps {
 
 const ViewAirport: React.FC<ViewAirportProps> = ({ airport }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [viewAirportForm] = Form.useForm<IAirport>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -18,7 +17,6 @@ const ViewAirport: React.FC<ViewAirportProps> = ({ airport }) => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    viewAirportForm.resetFields();
   };
 
   return (
@@ -38,7 +36,6 @@ const ViewAirport: React.FC<ViewAirportProps> = ({ airport }) => {
         footer={null}
       >
         <UpdateAirportForm
-          form={viewAirportForm}
           airportToUpdate={airport}
           onCancel={handleCloseModal}
           viewOnly

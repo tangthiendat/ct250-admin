@@ -12,18 +12,16 @@ import {
   Space,
   Upload,
   UploadFile,
-  type FormInstance,
 } from "antd";
 import { UploadProps } from "antd/lib";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
-import { FileType, IAirport } from "../../../interfaces";
+import { FileType, IAirport, ICountry } from "../../../interfaces";
 import { airportService, countryService } from "../../../services";
 import { getBase64 } from "../../../utils";
 
 interface UpdateAirportFormProps {
-  form: FormInstance<IAirport>;
   airportToUpdate?: IAirport;
   onCancel: () => void;
   viewOnly?: boolean;
@@ -35,15 +33,15 @@ interface UpdateAirportArgs {
 }
 
 interface UpdateAirportFormValues extends IAirport {
-  cityImg?: File;
+  cityImg?: UploadFile[];
 }
 
 const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
-  form,
   airportToUpdate,
   onCancel,
   viewOnly = false,
 }) => {
+  const [form] = Form.useForm<IAirport>();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string>("");
@@ -125,25 +123,27 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
       };
       const formData = new FormData();
 
-      Object.keys(updatedAirport)
-        .filter((key) => !["cityImg"].includes(key))
-        .forEach((key) => {
-          const value = updatedAirport[key];
-          if (typeof value === "object" && key === "country") {
-            formData.append("country.countryId", value?.countryId);
-          } else {
-            formData.append(key, value);
+      Object.keys(updatedAirport).forEach((key: string) => {
+        const value = updatedAirport[
+          key as keyof UpdateAirportFormValues
+        ] as UpdateAirportFormValues[keyof UpdateAirportFormValues];
+        console.log("Type: ", typeof value);
+        if (typeof value === "object") {
+          if (key === "country") {
+            formData.append(
+              "country.countryId",
+              (value as ICountry).countryId.toString(),
+            );
           }
-        });
-
-      if (fileList.length > 0) {
-        formData.append("cityImg", fileList[0].originFileObj as File);
-      }
-
-      console.log(fileList);
-
-      formData.forEach((value, key) => {
-        console.log(key, value);
+          if (key === "cityImg") {
+            formData.append(
+              "cityImg",
+              (value as UploadFile[])[0].originFileObj as File,
+            );
+          }
+        } else {
+          formData.append(key, value as string);
+        }
       });
 
       updateAirport(
@@ -152,6 +152,8 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
           onSuccess: () => {
             toast.success("Cập nhật sân bay thành công");
             onCancel();
+            form.resetFields();
+            setFileList([]);
           },
           onError: () => {
             toast.error("Cập nhật sân bay thất bại");
@@ -166,24 +168,36 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
         cityCode: values.cityCode.toUpperCase(),
       };
       Object.keys(newAirport)
-        .filter((key) => ["cityImg", "createdAt"].includes(key))
-        .forEach((key) => {
-          const value = newAirport[key];
-          if (typeof value === "object" && key === "country") {
-            formData.append("country.countryId", value?.countryId);
+        .filter((key: string) => !["createdAt"].includes(key))
+        .forEach((key: string) => {
+          const value = newAirport[
+            key as keyof UpdateAirportFormValues
+          ] as UpdateAirportFormValues[keyof UpdateAirportFormValues];
+          console.log("Type: ", typeof value);
+          if (typeof value === "object") {
+            if (key === "country") {
+              formData.append(
+                "country.countryId",
+                (value as ICountry).countryId.toString(),
+              );
+            }
+            if (key === "cityImg") {
+              formData.append(
+                "cityImg",
+                (value as UploadFile[])[0].originFileObj as File,
+              );
+            }
           } else {
-            formData.append(key, value);
+            formData.append(key, value as string);
           }
         });
-
-      if (fileList.length > 0) {
-        formData.append("cityImg", fileList[0].originFileObj as File);
-      }
 
       createAirport(formData, {
         onSuccess: () => {
           toast.success("Thêm mới sân bay thành công");
           onCancel();
+          form.resetFields();
+          setFileList([]);
         },
         onError: () => {
           toast.error("Thêm mới sân bay thất bại");
@@ -275,18 +289,7 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
             name="cityImg"
             label="Ảnh thành phố"
             valuePropName="fileList"
-            rules={[
-              {
-                validator: (_, value) => {
-                  if (fileList.length < 1 && !value) {
-                    return Promise.reject(
-                      new Error("Vui lòng chọn ảnh thành phố"),
-                    );
-                  }
-                  return Promise.resolve();
-                },
-              },
-            ]}
+            rules={[{ required: true, message: "Vui lòng chọn ảnh thành phố" }]}
             getValueFromEvent={(e) => (Array.isArray(e) ? e : e && e.fileList)}
           >
             <Upload
