@@ -249,7 +249,11 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
               },
             ]}
           >
-            <Input readOnly={viewOnly || isUpdateSession} addonAfter="Km" />
+            <InputNumber
+              readOnly={viewOnly || isUpdateSession}
+              min={0}
+              addonAfter="km"
+            />
           </Form.Item>
 
           <Form.Item
@@ -263,7 +267,11 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
               },
             ]}
           >
-            <Input readOnly={viewOnly || isUpdateSession} addonAfter="Km/h" />
+            <InputNumber
+              readOnly={viewOnly || isUpdateSession}
+              min={0}
+              addonAfter="km/h"
+            />
           </Form.Item>
         </div>
         <div className="flex gap-8">
@@ -280,8 +288,8 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
           >
             <InputNumber
               readOnly={viewOnly || isUpdateSession}
+              min={0}
               addonAfter="m"
-              stringMode
             />
           </Form.Item>
 
@@ -298,8 +306,8 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
           >
             <InputNumber
               readOnly={viewOnly || isUpdateSession}
+              min={0}
               addonAfter="m"
-              stringMode
             />
           </Form.Item>
         </div>
@@ -317,8 +325,8 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
           >
             <InputNumber
               readOnly={viewOnly || isUpdateSession}
+              min={0}
               addonAfter="tấn"
-              stringMode
             />
           </Form.Item>
 
@@ -333,7 +341,11 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
               },
             ]}
           >
-            <InputNumber readOnly={viewOnly || isUpdateSession} />
+            <InputNumber
+              readOnly={viewOnly || isUpdateSession}
+              min={0}
+              addonAfter="ghế"
+            />
           </Form.Item>
         </div>
         <div className="flex gap-8">

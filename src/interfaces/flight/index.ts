@@ -48,6 +48,7 @@ export interface IRoute {
   departureAirport: IAirport;
   arrivalAirport: IAirport;
   routeType: RouteType;
+  duration: number;
   createdAt: string;
   updatedAt?: string;
 }

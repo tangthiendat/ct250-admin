@@ -1,9 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Col, Form, Row, Select, SelectProps, Space } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  InputNumber,
+  Radio,
+  Row,
+  Select,
+  SelectProps,
+  Space,
+} from "antd";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
-import { IAirport, IRoute } from "../../../interfaces";
+import { IAirport, IRoute, RouteType } from "../../../interfaces";
 import { airportService, routeService } from "../../../services";
 import { groupBy } from "../../../utils";
 import AirportOption from "../airport/AirportOption";
@@ -17,6 +27,11 @@ interface UpdateRouteArgs {
   routeId: number;
   updatedRoute: IRoute;
 }
+
+const routeTypeOptions = Object.values(RouteType).map((type: string) => ({
+  label: type,
+  value: type,
+}));
 
 const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
   routeToUpdate,
@@ -216,6 +231,47 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
                 );
               }}
             />
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item
+            className="flex-1"
+            label="Loại tuyến bay"
+            name="routeType"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn trạng thái",
+              },
+            ]}
+            tooltip={
+              <div>
+                <p>Loại tuyến bay</p>
+                <p>- DOMESTIC: các tuyến bay nội địa</p>
+                <p>- INTERNATIONAL: các tuyến bay quốc tế</p>
+              </div>
+            }
+          >
+            <Radio.Group
+              options={routeTypeOptions}
+              optionType="button"
+              buttonStyle="solid"
+            />
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item
+            className="flex-1"
+            label="Thời gian bay"
+            name="duration"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập thời gian bay",
+              },
+            ]}
+          >
+            <InputNumber addonAfter="phút" />
           </Form.Item>
         </Col>
       </Row>
