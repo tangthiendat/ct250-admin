@@ -41,7 +41,7 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
   onCancel,
   viewOnly = false,
 }) => {
-  const [form] = Form.useForm<IAirport>();
+  const [form] = Form.useForm<UpdateAirportFormValues>();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string>("");
@@ -127,7 +127,7 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
         const value = updatedAirport[
           key as keyof UpdateAirportFormValues
         ] as UpdateAirportFormValues[keyof UpdateAirportFormValues];
-        console.log("Type: ", typeof value);
+
         if (typeof value === "object") {
           if (key === "country") {
             formData.append(
@@ -135,16 +135,13 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
               (value as ICountry).countryId.toString(),
             );
           }
-          if (key === "cityImg") {
-            formData.append(
-              "cityImg",
-              (value as UploadFile[])[0].originFileObj as File,
-            );
-          }
         } else {
           formData.append(key, value as string);
         }
       });
+      if (fileList.length > 0) {
+        formData.append("cityImg", fileList[0].originFileObj as File);
+      }
 
       updateAirport(
         { airportId: airportToUpdate.airportId, updatedAirport: formData },
@@ -173,7 +170,6 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
           const value = newAirport[
             key as keyof UpdateAirportFormValues
           ] as UpdateAirportFormValues[keyof UpdateAirportFormValues];
-          console.log("Type: ", typeof value);
           if (typeof value === "object") {
             if (key === "country") {
               formData.append(
@@ -289,11 +285,21 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
             name="cityImg"
             label="Ảnh thành phố"
             valuePropName="fileList"
-            rules={[{ required: true, message: "Vui lòng chọn ảnh thành phố" }]}
+            rules={[
+              {
+                validator: () => {
+                  if (fileList && fileList.length < 1) {
+                    return Promise.reject(new Error("Vui lòng tải ảnh lên"));
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
             getValueFromEvent={(e) => (Array.isArray(e) ? e : e && e.fileList)}
           >
             <Upload
               maxCount={1}
+              disabled={viewOnly}
               listType="picture-card"
               fileList={fileList}
               beforeUpload={() => false} // Prevent automatic upload
