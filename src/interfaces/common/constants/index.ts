@@ -55,6 +55,12 @@ export const PERMISSIONS = {
     UPDATE: { method: "PUT", apiPath: "/api/v1/flights/{id}" },
     UPLOAD: { method: "POST", apiPath: "/api/v1/flights/upload" },
   },
+  [Module.MEALS]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/meals" },
+    CREATE: { method: "POST", apiPath: "/api/v1/meals" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/meals/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/meals/{id}" },
+  },
 };
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";

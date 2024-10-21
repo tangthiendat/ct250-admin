@@ -6,17 +6,18 @@ import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
 import { FaLocationArrow } from "react-icons/fa6";
 import { GiCommercialAirplane } from "react-icons/gi";
-import { IoShieldCheckmark } from "react-icons/io5";
+import { GrBusinessService } from "react-icons/gr";
+import { IoFastFoodOutline, IoShieldCheckmark } from "react-icons/io5";
 import { MdDashboard, MdFlight } from "react-icons/md";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { TbRouteSquare } from "react-icons/tb";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import Loading from "../common/components/Loading";
-import { PERMISSIONS } from "../interfaces/common/constants";
-import { Module } from "../interfaces/common/enums";
 import { useAvatarUrl } from "../features/auth/hooks/useAvatarUrl";
 import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
+import { PERMISSIONS } from "../interfaces/common/constants";
+import { Module } from "../interfaces/common/enums";
 import { authService } from "../services";
 
 const { Header, Sider } = Layout;
@@ -200,6 +201,26 @@ const AdminLayout: React.FC = () => {
                           label: <NavLink to="/schedule">Lịch bay</NavLink>,
                           key: "schedule",
                           icon: <RiCalendarScheduleLine />,
+                        },
+                      ]
+                    : []),
+                ],
+              },
+            ]
+          : []),
+        ...(hasFlightChildren
+          ? [
+              {
+                label: "Dịch vụ",
+                key: "service-management",
+                icon: <GrBusinessService />,
+                children: [
+                  ...(viewAirports
+                    ? [
+                        {
+                          label: <NavLink to="/meals">Món ăn </NavLink>,
+                          key: "airports",
+                          icon: <IoFastFoodOutline size={17} />,
                         },
                       ]
                     : []),

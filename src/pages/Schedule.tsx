@@ -1,6 +1,6 @@
-import { PERMISSIONS } from "../interfaces/common/constants";
 import Access from "../features/auth/Access";
 import FlightPanel from "../features/flight/schedule/FlightPanel";
+import { PERMISSIONS } from "../interfaces/common/constants";
 import { Module } from "../interfaces/common/enums";
 
 const Schedule: React.FC = () => {
