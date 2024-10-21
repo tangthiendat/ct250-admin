@@ -11,6 +11,7 @@ import Roles from "../pages/Roles";
 import Routes from "../pages/Routes";
 import Schedule from "../pages/Schedule";
 import Users from "../pages/Users";
+import Meals from "../pages/Meals";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: "/schedule",
         element: <Schedule />,
+      },
+      {
+        path: "/meals",
+        element: <Meals />,
       },
     ],
   },
