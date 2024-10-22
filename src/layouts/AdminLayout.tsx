@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, theme } from "antd";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
+import { BsFillLuggageFill } from "react-icons/bs";
 import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
 import { FaLocationArrow } from "react-icons/fa6";
 import { GiCommercialAirplane } from "react-icons/gi";
@@ -113,6 +114,21 @@ const AdminLayout: React.FC = () => {
         viewAirports || viewAirplanes || viewRoutes || viewFlightSchedules,
       );
 
+      const viewMeals = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.MEALS].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.MEALS].GET_PAGINATION.method,
+      );
+
+      const viewBaggages = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.BAGGAGES].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.BAGGAGES].GET_PAGINATION.method,
+      );
+
+      const hasServiceChildren: boolean = Boolean(viewMeals || viewBaggages);
+
       const menuItems = [
         {
           label: (
@@ -208,19 +224,28 @@ const AdminLayout: React.FC = () => {
               },
             ]
           : []),
-        ...(hasFlightChildren
+        ...(hasServiceChildren
           ? [
               {
                 label: "Dịch vụ",
                 key: "service-management",
                 icon: <GrBusinessService />,
                 children: [
-                  ...(viewAirports
+                  ...(viewMeals
                     ? [
                         {
-                          label: <NavLink to="/meals">Món ăn </NavLink>,
-                          key: "airports",
+                          label: <NavLink to="/meals">Món ăn</NavLink>,
+                          key: "meals",
                           icon: <IoFastFoodOutline size={17} />,
+                        },
+                      ]
+                    : []),
+                  ...(viewBaggages
+                    ? [
+                        {
+                          label: <NavLink to="/baggages">Hành lý</NavLink>,
+                          key: "baggages",
+                          icon: <BsFillLuggageFill size={17} />,
                         },
                       ]
                     : []),
