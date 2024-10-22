@@ -57,9 +57,17 @@ export const PERMISSIONS = {
   },
   [Module.MEALS]: {
     GET_PAGINATION: { method: "GET", apiPath: "/api/v1/meals" },
+    GET_ALL: { method: "GET", apiPath: "/api/v1/meals/all" },
     CREATE: { method: "POST", apiPath: "/api/v1/meals" },
     UPDATE: { method: "PUT", apiPath: "/api/v1/meals/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/meals/{id}" },
+  },
+  [Module.BAGGAGES]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/baggage" },
+    GET_ALL: { method: "GET", apiPath: "/api/v1/baggage/all" },
+    CREATE: { method: "POST", apiPath: "/api/v1/baggage" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/baggage/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/baggage/{id}" },
   },
 };
 

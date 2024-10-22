@@ -6,6 +6,7 @@ import {
   Form,
   Image,
   Input,
+  InputNumber,
   Row,
   Space,
   Upload,
@@ -196,7 +197,7 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
             name="price"
             rules={[{ required: true, message: "Vui lòng nhập giá món ăn" }]}
           >
-            <Input readOnly={viewOnly} addonAfter="VND" />
+            <InputNumber readOnly={viewOnly} min={0} addonAfter="VND" />
           </Form.Item>
         </Col>
 
@@ -208,7 +209,7 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
             rules={[
               {
                 validator: () => {
-                  if (fileList && fileList.length < 1) {
+                  if (fileList && fileList.length < 1 && !viewOnly) {
                     return Promise.reject(new Error("Vui lòng tải ảnh lên"));
                   }
                   return Promise.resolve();
