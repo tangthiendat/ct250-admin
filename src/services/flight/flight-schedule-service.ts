@@ -11,6 +11,7 @@ interface IFlightScheduleService {
     pagination: PaginationParams,
   ): Promise<ApiResponse<Page<IFlightSchedule>>>;
   getFlight(flightId: string): Promise<ApiResponse<IFlightSchedule>>;
+  upload(formData: FormData): Promise<ApiResponse<void>>;
 }
 
 const apiClient = createApiClient("flights", { auth: true });
@@ -24,6 +25,10 @@ class FlightScheduleService implements IFlightScheduleService {
 
   async getFlight(flightId: string): Promise<ApiResponse<IFlightSchedule>> {
     return (await apiClient.get(`/${flightId}`)).data;
+  }
+
+  async upload(formData: FormData): Promise<ApiResponse<void>> {
+    return (await apiClient.post("/upload", formData)).data;
   }
 }
 

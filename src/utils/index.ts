@@ -80,3 +80,9 @@ export async function getBase64(file: FileType): Promise<string> {
     reader.onerror = (error) => reject(error);
   });
 }
+
+export function getFormattedDuration(durationInMinutes: number): string {
+  const hours = Math.floor(durationInMinutes / 60);
+  const minutes = durationInMinutes % 60;
+  return minutes === 0 ? `${hours} giờ` : `${hours} giờ ${minutes} phút`;
+}

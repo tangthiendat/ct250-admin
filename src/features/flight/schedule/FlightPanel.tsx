@@ -1,11 +1,4 @@
 import { Pagination } from "antd";
-// import {
-//   AirplaneStatus,
-//   IFlightSchedule,
-//   PaginationParams,
-//   RouteType,
-//   TicketClass,
-// } from "../../../interfaces";
 import FlightList from "./FlightList";
 import { useEffect, useState } from "react";
 import { PaginationConfig } from "antd/es/pagination";
@@ -14,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { flightScheduleService } from "../../../services";
 import Loading from "../../../common/components/Loading";
 import { PaginationParams } from "../../../interfaces";
+import AddFlight from "./AddFlight";
 
 const FlightPanel: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -66,6 +60,7 @@ const FlightPanel: React.FC = () => {
       <div className="px-2 py-2">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Danh sách chuyến bay</h2>
+          <AddFlight />
         </div>
       </div>
 

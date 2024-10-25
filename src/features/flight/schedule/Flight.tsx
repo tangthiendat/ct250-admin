@@ -3,20 +3,14 @@ import dayjs from "dayjs";
 import { IoAirplaneOutline } from "react-icons/io5";
 import { IFlightSchedule } from "../../../interfaces";
 import { GoDotFill } from "react-icons/go";
+import { getFormattedDuration } from "../../../utils";
 
 interface FlightProps {
   flight: IFlightSchedule;
 }
 
 const Flight: React.FC<FlightProps> = ({ flight }) => {
-  const durationInMinutes = dayjs(flight.arrivalDateTime).diff(
-    dayjs(flight.departureDateTime),
-    "minute",
-  );
-  const hours = Math.floor(durationInMinutes / 60);
-  const minutes = durationInMinutes % 60;
-  const formattedDuration =
-    minutes === 0 ? `${hours} giờ` : `${hours} giờ ${minutes} phút`;
+  const formattedDuration = getFormattedDuration(flight.route.duration);
   return (
     <div className="mb-3 rounded-lg bg-white">
       <div className="flex flex-col items-stretch">
@@ -35,7 +29,6 @@ const Flight: React.FC<FlightProps> = ({ flight }) => {
               type="vertical"
             />
           </div>
-
           <div className="flex basis-[87%] items-center justify-between gap-2">
             <div className="px-4 text-center">
               <div className="text-lg font-semibold">
