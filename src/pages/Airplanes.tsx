@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { SearchProps } from "antd/es/input";
-import { Input } from "antd/lib";
+import { Input } from "antd";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import Access from "../features/auth/Access";
