@@ -32,7 +32,13 @@ export enum RouteType {
 }
 
 //FLIGHTS
-export enum TicketClass {
+export enum TicketClassName {
   ECONOMY = "ECONOMY",
   BUSINESS = "BUSINESS",
+}
+
+export enum SeatAvailabilityStatus {
+  AVAILABLE = "AVAILABLE",
+  BOOKED = "BOOKED",
+  BLOCKED = "BLOCKED",
 }
