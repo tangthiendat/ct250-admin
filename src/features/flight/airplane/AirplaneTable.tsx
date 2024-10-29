@@ -122,13 +122,13 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
       title: "Số hiệu đăng ký",
       key: "registrationNumber",
       dataIndex: "registrationNumber",
-      width: "25%",
+      width: "15%",
     },
     {
       title: "Mô hình máy bay",
       key: "model",
       dataIndex: "model",
-      width: "25%",
+      width: "15%",
       render: (model: IAirplane["model"]) => model?.modelName,
     },
     {
@@ -199,7 +199,8 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
     {
       title: "Hành động",
       key: "action",
-
+      width: "12%",
+      align: "center",
       render: (record: IAirplane) => (
         <Space>
           <ViewAirplane airplane={record} />
