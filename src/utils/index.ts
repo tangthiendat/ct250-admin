@@ -1,7 +1,7 @@
 import { blue, green, grey, orange, red } from "@ant-design/colors";
 import { SortOrder } from "antd/es/table/interface";
 import dayjs from "dayjs";
-import { FileType } from "../interfaces";
+import { FileType, TicketClassName } from "../interfaces";
 
 export function colorMethod(method: "GET" | "POST" | "PUT" | "DELETE") {
   switch (method) {
@@ -16,6 +16,27 @@ export function colorMethod(method: "GET" | "POST" | "PUT" | "DELETE") {
     default:
       return grey[10];
   }
+}
+
+export function colorTicketClassName(ticketClassName: string) {
+  switch (ticketClassName) {
+    case TicketClassName.ECONOMY:
+      return "#15803D";
+    case TicketClassName.BUSINESS:
+      return "#1E40AF";
+  }
+}
+
+export function colorFilterIcon(filtered: boolean) {
+  return filtered ? "#3b82f6" : "#fff";
+}
+
+export function colorSortUpIcon(sortOrder: SortOrder | undefined) {
+  return sortOrder === "ascend" ? "#3b82f6" : "#fff";
+}
+
+export function colorSortDownIcon(sortOrder: SortOrder | undefined) {
+  return sortOrder === "descend" ? "#3b82f6" : "#fff";
 }
 
 export function groupBy<T, K>(

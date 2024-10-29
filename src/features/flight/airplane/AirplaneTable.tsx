@@ -5,6 +5,14 @@ import { PERMISSIONS } from "../../../interfaces/common/constants";
 import { AirplaneStatus, Module } from "../../../interfaces/common/enums";
 import { IAirplane, Page } from "../../../interfaces";
 import {
+  FilterFilled,
+  CaretUpFilled,
+  CaretDownFilled,
+} from "@ant-design/icons";
+import {
+  colorFilterIcon,
+  colorSortDownIcon,
+  colorSortUpIcon,
   formatTimestamp,
   getDefaultFilterValue,
   getDefaultSortOrder,
@@ -150,6 +158,9 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
         value: status,
       })),
       defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
+      ),
     },
 
     {
@@ -161,6 +172,12 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
         createdAt ? formatTimestamp(createdAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
 
     {
@@ -172,6 +189,12 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
         updatedAt ? formatTimestamp(updatedAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Hành động",
@@ -199,11 +222,15 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
 
   return (
     <Table
-      bordered
+      bordered={false}
       columns={columns}
       rowKey={(record: IAirplane) => record.airplaneId}
       pagination={tableParams.pagination}
       dataSource={airplanePage?.content || []}
+      rowClassName={(_, index) =>
+        index % 2 === 0 ? "table-row-light" : "table-row-gray"
+      }
+      rowHoverable={false}
       loading={{
         spinning: isLoading,
         tip: "Đang tải dữ liệu...",

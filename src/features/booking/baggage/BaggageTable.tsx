@@ -1,10 +1,18 @@
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import {
+  FilterFilled,
+  CaretUpFilled,
+  CaretDownFilled,
+} from "@ant-design/icons";
 import { IBaggages, Page } from "../../../interfaces";
 import { PERMISSIONS } from "../../../interfaces/common/constants";
 import { Module, RouteType } from "../../../interfaces/common/enums";
 import {
+  colorFilterIcon,
+  colorSortDownIcon,
+  colorSortUpIcon,
   formatTimestamp,
   getDefaultFilterValue,
   getDefaultSortOrder,
@@ -118,14 +126,15 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
       title: "Cân nặng hành lý",
       key: "baggageWeight",
       dataIndex: "baggageWeight",
-      width: "25%",
+      width: "20%",
       render: (weight: number) => `${weight} Kg`,
     },
     {
       title: "Giá hành lý",
       key: "price",
       dataIndex: "price",
-      width: "25%",
+      width: "20%",
+      render: (price: number) => price.toLocaleString(),
     },
     {
       title: "Loại chuyến bay",
@@ -151,6 +160,9 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
         value: routeType,
       })),
       defaultFilteredValue: getDefaultFilterValue(searchParams, "routeType"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
+      ),
     },
     {
       key: "createdAt",
@@ -161,6 +173,12 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
         createdAt ? formatTimestamp(createdAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
     {
       key: "updatedAt",
@@ -171,6 +189,12 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
         updatedAt ? formatTimestamp(updatedAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Hành động",
@@ -190,11 +214,15 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
 
   return (
     <Table
-      bordered
+      bordered={false}
       columns={columns}
       rowKey={(record: IBaggages) => record.baggageId}
       pagination={tableParams.pagination}
       dataSource={baggagePage?.content || []}
+      rowClassName={(_, index) =>
+        index % 2 === 0 ? "table-row-light" : "table-row-gray"
+      }
+      rowHoverable={false}
       loading={{
         spinning: isLoading,
         tip: "Đang tải dữ liệu...",

@@ -132,8 +132,12 @@ const RolesTable: React.FC = () => {
       dataSource={data?.payload?.content}
       columns={columns}
       pagination={tableParams.pagination}
-      bordered
+      bordered={false}
       size="middle"
+      rowClassName={(_, index) =>
+        index % 2 === 0 ? "table-row-light" : "table-row-gray"
+      }
+      rowHoverable={false}
       loading={{
         spinning: isLoading,
         tip: "Đang tải dữ liệu...",

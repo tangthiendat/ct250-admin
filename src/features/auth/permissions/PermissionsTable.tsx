@@ -3,6 +3,11 @@ import { GetProp, Space, Table, TablePaginationConfig, TableProps } from "antd";
 import { SorterResult } from "antd/es/table/interface";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  FilterFilled,
+} from "@ant-design/icons";
 import { PERMISSIONS } from "../../../interfaces/common/constants";
 import { Method, Module } from "../../../interfaces/common/enums";
 import {
@@ -13,7 +18,10 @@ import {
 } from "../../../interfaces";
 import { permissionService } from "../../../services";
 import {
+  colorFilterIcon,
   colorMethod,
+  colorSortDownIcon,
+  colorSortUpIcon,
   formatTimestamp,
   getDefaultFilterValue,
   getDefaultSortOrder,
@@ -172,6 +180,9 @@ const PermissionTable: React.FC = () => {
         value: method,
       })),
       defaultFilteredValue: getDefaultFilterValue(searchParams, "method"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
+      ),
     },
     {
       title: "Module",
@@ -182,6 +193,9 @@ const PermissionTable: React.FC = () => {
         value: module,
       })),
       defaultFilteredValue: getDefaultFilterValue(searchParams, "module"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
+      ),
     },
     {
       title: "Thời gian tạo",
@@ -192,6 +206,12 @@ const PermissionTable: React.FC = () => {
         createdAt ? formatTimestamp(createdAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Thời gian cập nhật",
@@ -202,6 +222,12 @@ const PermissionTable: React.FC = () => {
         updatedAt ? formatTimestamp(updatedAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Hành động",
@@ -223,12 +249,16 @@ const PermissionTable: React.FC = () => {
   ];
   return (
     <Table
-      bordered
+      bordered={false}
       rowKey={(record: IPermission) => record.permissionId}
       dataSource={data?.payload?.content || []}
       columns={columns}
       pagination={tableParams.pagination}
       size="middle"
+      rowClassName={(_, index) =>
+        index % 2 === 0 ? "table-row-light" : "table-row-gray"
+      }
+      rowHoverable={false}
       loading={{
         spinning: isLoading,
         tip: "Đang tải dữ liệu...",

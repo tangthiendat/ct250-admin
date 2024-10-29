@@ -124,17 +124,21 @@ const UsersTable: React.FC = () => {
 
   return (
     <Table
-      bordered
+      bordered={false}
       columns={columns}
       rowKey={(record: IUser) => record.userId}
       pagination={tableParams.pagination}
       dataSource={data?.payload?.content}
+      rowClassName={(_, index) =>
+        index % 2 === 0 ? "table-row-light" : "table-row-gray"
+      }
+      rowHoverable={false}
       loading={{
         spinning: isLoading,
         tip: "Đang tải dữ liệu...",
       }}
       onChange={handleTableChange}
-      size="small"
+      size="middle"
     />
   );
 };

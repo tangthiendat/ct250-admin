@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast";
 import AppRouter from "./router/AppRouter";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { VIETNAM_TIMEZONE } from "./interfaces/common/constants";
+import { PRIMARY_COLOR, VIETNAM_TIMEZONE } from "./interfaces/common/constants";
 
 dayjs.locale("vi");
 dayjs.extend(utc);
@@ -25,7 +25,22 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <ConfigProvider locale={viVN}>
+    <ConfigProvider
+      locale={viVN}
+      theme={{
+        token: {
+          colorPrimary: PRIMARY_COLOR,
+        },
+        components: {
+          Table: {
+            headerBg: PRIMARY_COLOR,
+            headerColor: "#fff",
+            headerSortActiveBg: PRIMARY_COLOR,
+            headerSortHoverBg: PRIMARY_COLOR,
+          },
+        },
+      }}
+    >
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <AppRouter />

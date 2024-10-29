@@ -21,4 +21,14 @@
   .table-icon {
     @apply h-6 w-6 cursor-pointer;
   }
+
+  .table-row-light,
+  .table-row-light .ant-table-column-sort {
+    @apply bg-white;
+  }
+
+  .table-row-gray,
+  .table-row-gray .ant-table-column-sort {
+    @apply bg-gray-100;
+  }
 }
