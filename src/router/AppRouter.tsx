@@ -13,6 +13,8 @@ import Roles from "../pages/Roles";
 import Routes from "../pages/Routes";
 import Schedule from "../pages/Schedule";
 import Users from "../pages/Users";
+import FlightLayout from "../layouts/FlightLayout";
+import FlightDetails from "../features/flight/schedule/FlightDetails";
 
 const router = createBrowserRouter([
   {
@@ -58,7 +60,18 @@ const router = createBrowserRouter([
       },
       {
         path: "/schedule",
-        element: <Schedule />,
+        element: <FlightLayout />,
+        children: [
+          {
+            path: "",
+            index: true,
+            element: <Schedule />,
+          },
+          {
+            path: ":id",
+            element: <FlightDetails />,
+          },
+        ],
       },
       {
         path: "/meals",

@@ -31,4 +31,8 @@
   .table-row-gray .ant-table-cell.ant-table-column-sort {
     @apply bg-gray-100;
   }
+
+  .ant-timeline-item.timeline-item-content {
+    @apply pb-[4rem];
+  }
 }

@@ -1,9 +1,10 @@
-import { Button, Divider } from "antd";
+import { Button, Divider, Tag } from "antd";
 import dayjs from "dayjs";
-import { IoAirplaneOutline } from "react-icons/io5";
-import { IFlightSchedule } from "../../../interfaces";
 import { GoDotFill } from "react-icons/go";
-import { getFormattedDuration } from "../../../utils";
+import { IoAirplane } from "react-icons/io5";
+import { useNavigate } from "react-router";
+import { IFlightSchedule, PRIMARY_COLOR } from "../../../interfaces";
+import { colorFlightStatus, getFormattedDuration } from "../../../utils";
 
 interface FlightProps {
   flight: IFlightSchedule;
@@ -11,12 +12,16 @@ interface FlightProps {
 
 const Flight: React.FC<FlightProps> = ({ flight }) => {
   const formattedDuration = getFormattedDuration(flight.route.duration);
+  const navigate = useNavigate();
   return (
     <div className="mb-3 rounded-lg bg-white">
       <div className="flex flex-col items-stretch">
         <div className="flex items-center justify-between p-3">
           <div className="basis-[10%] text-center text-lg font-semibold">
-            {flight.flightId}
+            <div>{flight.flightId}</div>
+            <Tag color={colorFlightStatus(flight.flightStatus)}>
+              {flight.flightStatus}
+            </Tag>
           </div>
           <div className="mx-0 self-stretch">
             <Divider
@@ -44,16 +49,19 @@ const Flight: React.FC<FlightProps> = ({ flight }) => {
                 <div className="basis-[15%] text-center text-sm text-gray-500">
                   {flight.route.departureAirport.airportCode}
                 </div>
-                <GoDotFill style={{ color: "blue" }} />
+                <GoDotFill style={{ color: PRIMARY_COLOR }} />
                 <div className="w-full">
                   <Divider
                     style={{ borderColor: "blue", margin: "0.25rem 0" }}
                     variant="dashed"
                   >
-                    <IoAirplaneOutline style={{ color: "blue" }} />
+                    <IoAirplane
+                      style={{ color: PRIMARY_COLOR }}
+                      className="text-lg"
+                    />
                   </Divider>
                 </div>
-                <GoDotFill style={{ color: "blue" }} />
+                <GoDotFill style={{ color: PRIMARY_COLOR }} />
                 <p className="basis-[15%] text-center text-sm text-gray-500">
                   {flight.route.arrivalAirport.airportCode}
                 </p>
@@ -81,7 +89,11 @@ const Flight: React.FC<FlightProps> = ({ flight }) => {
           />
         </div>
         <div className="flex items-center justify-end px-2">
-          <Button type="primary" className="my-3">
+          <Button
+            type="primary"
+            className="my-3"
+            onClick={() => navigate(`${flight.flightId}`)}
+          >
             Xem chi tiết
           </Button>
         </div>

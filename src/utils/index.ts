@@ -6,13 +6,13 @@ import { FileType, TicketClassName } from "../interfaces";
 export function colorMethod(method: "GET" | "POST" | "PUT" | "DELETE") {
   switch (method) {
     case "POST":
-      return green[6];
+      return green[5];
     case "PUT":
-      return orange[6];
+      return orange[5];
     case "GET":
-      return blue[6];
+      return blue[5];
     case "DELETE":
-      return red[6];
+      return red[5];
     default:
       return grey[10];
   }
@@ -37,6 +37,19 @@ export function colorSortUpIcon(sortOrder: SortOrder | undefined) {
 
 export function colorSortDownIcon(sortOrder: SortOrder | undefined) {
   return sortOrder === "descend" ? "#3b82f6" : "#fff";
+}
+
+export function colorFlightStatus(status: string) {
+  switch (status) {
+    case "SCHEDULED":
+      return blue[5];
+    case "DELAYED":
+      return orange[5];
+    case "CANCELLED":
+      return red[5];
+    case "COMPLETED":
+      return green[5];
+  }
 }
 
 export function groupBy<T, K>(

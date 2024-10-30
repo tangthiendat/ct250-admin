@@ -42,3 +42,10 @@ export enum SeatAvailabilityStatus {
   BOOKED = "BOOKED",
   BLOCKED = "BLOCKED",
 }
+
+export enum FlightStatus {
+  SCHEDULED = "SCHEDULED",
+  DELAYED = "DELAYED",
+  CANCELLED = "CANCELLED",
+  COMPLETED = "COMPLETED",
+}
