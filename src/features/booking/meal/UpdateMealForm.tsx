@@ -1,23 +1,32 @@
-import { PlusOutlined } from "@ant-design/icons";
+import {
+  CloseOutlined,
+  PlusOutlined,
+  QuestionCircleOutlined,
+} from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Col,
+  Collapse,
+  DatePicker,
   Form,
   Image,
   Input,
   InputNumber,
   Row,
   Space,
+  Switch,
+  Tooltip,
   Upload,
   UploadFile,
 } from "antd";
 import { UploadProps } from "antd/lib";
+import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FileType, IMeal } from "../../../interfaces";
+import { FileType, IMeal, IMealPricing } from "../../../interfaces";
 import { mealService } from "../../../services/booking/meal-service";
-import { getBase64 } from "../../../utils";
+import { formatCurrency, getBase64, parseCurrency } from "../../../utils";
 
 interface UpdateMealFormProps {
   mealToUpdate?: IMeal;
@@ -103,6 +112,22 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
     setFileList(fileList);
   };
 
+  function handleIsActiveChange(isActive: boolean, formListItemIndex: number) {
+    form.setFieldsValue({
+      mealPricing: form
+        .getFieldValue("mealPricing")
+        .map((pricing: IMealPricing, index: number) => {
+          if (index === formListItemIndex) {
+            return {
+              ...pricing,
+              isActive,
+            };
+          }
+          return { ...pricing, isActive: false };
+        }),
+    });
+  }
+
   function handleFinish(values: UpdateMealFormValues) {
     if (mealToUpdate) {
       const updatedMeal = {
@@ -111,13 +136,25 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
       };
       const formData = new FormData();
 
-      Object.keys(updatedMeal).forEach((key: string) => {
-        const value = updatedMeal[
-          key as keyof UpdateMealFormValues
-        ] as UpdateMealFormValues[keyof UpdateMealFormValues];
-
-        formData.append(key, value as string);
-      });
+      Object.keys(updatedMeal)
+        .filter((key: string) => !["mealImg"].includes(key))
+        .forEach((key: string) => {
+          const value = updatedMeal[
+            key as keyof UpdateMealFormValues
+          ] as UpdateMealFormValues[keyof UpdateMealFormValues];
+          if (key === "mealPricing" && value && Array.isArray(value)) {
+            value.forEach((pricing, index) => {
+              Object.keys(pricing).forEach((subKey: string) => {
+                formData.append(
+                  `mealPricing[${index}].${subKey}`,
+                  `${pricing[subKey as keyof typeof pricing]}`,
+                );
+              });
+            });
+          } else {
+            formData.append(key, value as string);
+          }
+        });
       if (fileList.length > 0) {
         formData.append("mealImg", fileList[0].originFileObj as File);
       }
@@ -138,26 +175,33 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
       );
     } else {
       const formData = new FormData();
-      const newMeal = {
-        ...values,
-      };
+      const newMeal = form.getFieldsValue();
+
       Object.keys(newMeal)
-        .filter((key: string) => !["createdAt"].includes(key))
+        .filter((key: string) => !["createdAt", "mealImg"].includes(key))
         .forEach((key: string) => {
           const value = newMeal[
             key as keyof UpdateMealFormValues
           ] as UpdateMealFormValues[keyof UpdateMealFormValues];
           if (typeof value === "object") {
-            if (key === "mealImg") {
-              formData.append(
-                "mealImg",
-                (value as UploadFile[])[0].originFileObj as File,
-              );
+            if (key === "mealPricing" && value && Array.isArray(value)) {
+              value.forEach((pricing, index) => {
+                Object.keys(pricing).forEach((subKey: string) => {
+                  formData.append(
+                    `mealPricing[${index}].${subKey}`,
+                    `${pricing[subKey as keyof typeof pricing]}`,
+                  );
+                });
+              });
             }
           } else {
             formData.append(key, value as string);
           }
         });
+
+      if (fileList.length > 0) {
+        formData.append("mealImg", fileList[0].originFileObj as File);
+      }
 
       createMeal(formData, {
         onSuccess: () => {
@@ -188,16 +232,6 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
             rules={[{ required: true, message: "Vui lòng nhập tên món ăn" }]}
           >
             <Input readOnly={viewOnly} />
-          </Form.Item>
-        </Col>
-
-        <Col span={24}>
-          <Form.Item
-            label="Giá món ăn"
-            name="price"
-            rules={[{ required: true, message: "Vui lòng nhập giá món ăn" }]}
-          >
-            <InputNumber readOnly={viewOnly} min={0} addonAfter="VND" />
           </Form.Item>
         </Col>
 
@@ -252,8 +286,242 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
         </Col>
       </Row>
 
+      <Row className="mt-3">
+        <Col span={24}>
+          <Collapse
+            size="small"
+            defaultActiveKey={["1"]}
+            items={[
+              {
+                key: "1",
+                label: "Chi tiết giá món ăn",
+                children: (
+                  <Form.Item wrapperCol={{ span: 24 }}>
+                    <Form.List
+                      name="mealPricing"
+                      rules={[
+                        {
+                          validator: (_, value: IMealPricing[]) => {
+                            if (!value || value.length === 0) {
+                              toast.error("Phải có ít nhất một giá món ăn");
+                              return Promise.reject();
+                            } else {
+                              const hasActive = value.some(
+                                (item) => item.isActive,
+                              );
+                              if (!hasActive) {
+                                toast.error(
+                                  "Phải có ít nhất một giá hiện hành",
+                                );
+                                return Promise.reject();
+                              }
+                            }
+                            return Promise.resolve();
+                          },
+                        },
+                      ]}
+                    >
+                      {(
+                        pricingFields,
+                        { add: addPricing, remove: removePricing },
+                      ) => {
+                        return (
+                          <>
+                            <div className="flex flex-col">
+                              {pricingFields.length > 0 && (
+                                <div className="mb-2 flex items-center justify-between font-semibold">
+                                  <div className="basis-[25%]">Giá</div>
+                                  <div className="basis-[20%]">
+                                    Ngày bắt đầu
+                                  </div>
+                                  <div className="basis-[20%]">
+                                    Ngày kết thúc
+                                  </div>
+                                  <div className="basis-[10%]">
+                                    <span>Trạng thái&nbsp;</span>
+                                    <Tooltip
+                                      title={
+                                        <div>
+                                          <div>
+                                            ACTIVE: Giá được áp dụng hiện hành
+                                          </div>
+                                          <div>
+                                            INACTIVE: Giá không được áp dụng
+                                          </div>
+                                        </div>
+                                      }
+                                    >
+                                      <QuestionCircleOutlined className="text-gray-500" />
+                                    </Tooltip>
+                                  </div>
+
+                                  <div className="basis-[2%]"></div>
+                                </div>
+                              )}
+                              {pricingFields.map((pricingField) => {
+                                return (
+                                  <div
+                                    className="flex items-center justify-between"
+                                    key={pricingField.key}
+                                  >
+                                    <Form.Item
+                                      className="basis-[25%]"
+                                      name={[pricingField.name, "price"]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "Vui lòng nhập giá món ăn",
+                                        },
+                                      ]}
+                                    >
+                                      <InputNumber
+                                        className="w-full"
+                                        min={0}
+                                        addonAfter="VND"
+                                        formatter={(value) =>
+                                          formatCurrency(value)
+                                        }
+                                        parser={(value) =>
+                                          parseCurrency(value) as unknown as 0
+                                        }
+                                      />
+                                    </Form.Item>
+                                    <Form.Item
+                                      className="basis-[20%]"
+                                      name={[pricingField.name, "validFrom"]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "Hãy chọn ngày bắt đầu",
+                                        },
+                                      ]}
+                                      getValueProps={(value: string) => ({
+                                        value: value && dayjs(value),
+                                      })}
+                                      normalize={(value: Dayjs) =>
+                                        value && value.tz().format("YYYY-MM-DD")
+                                      }
+                                    >
+                                      <DatePicker
+                                        disabled={viewOnly}
+                                        className="w-full"
+                                        format="DD/MM/YYYY"
+                                        placeholder="Ngày bắt đầu"
+                                      />
+                                    </Form.Item>
+                                    <Form.Item
+                                      className="basis-[20%]"
+                                      name={[pricingField.name, "validTo"]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "Hãy chọn ngày kết thúc",
+                                        },
+                                        // {
+                                        //   validator: (_, value: Dayjs) => {
+                                        //     if (
+                                        //       value &&
+                                        //       value.isBefore(
+                                        //         dayjs(
+                                        //           form.getFieldValue([
+                                        //             "mealPricing",
+                                        //             pricingField.name,
+                                        //             "validFrom",
+                                        //           ]),
+                                        //         ),
+                                        //       )
+                                        //     ) {
+                                        //       return Promise.reject(
+                                        //         "Ngày kết thúc phải sau ngày bắt đầu",
+                                        //       );
+                                        //     }
+                                        //     return Promise.resolve();
+                                        //   },
+                                        // },
+                                      ]}
+                                      getValueProps={(value: string) => ({
+                                        value: value && dayjs(value),
+                                      })}
+                                      normalize={(value: Dayjs) =>
+                                        value && value.tz().format("YYYY-MM-DD")
+                                      }
+                                    >
+                                      <DatePicker
+                                        disabled={viewOnly}
+                                        className="w-full"
+                                        format="DD/MM/YYYY"
+                                        placeholder="Ngày kết thúc"
+                                        disabledDate={(current) =>
+                                          current.isBefore(
+                                            dayjs(
+                                              form.getFieldValue([
+                                                "mealPricing",
+                                                pricingField.name,
+                                                "validFrom",
+                                              ]),
+                                            ),
+                                          )
+                                        }
+                                      />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                      className="basis-[10%]"
+                                      name={[pricingField.name, "isActive"]}
+                                      valuePropName="checked"
+                                      initialValue={pricingField.name === 0}
+                                      tooltip="Chỉ có một giá món ăn được chọn là giá hiện hành"
+                                    >
+                                      <Switch
+                                        disabled={viewOnly}
+                                        checkedChildren="ACTIVE"
+                                        unCheckedChildren="INACTIVE"
+                                        onChange={(isActive) =>
+                                          handleIsActiveChange(
+                                            isActive,
+                                            pricingField.name,
+                                          )
+                                        }
+                                      />
+                                    </Form.Item>
+                                    <Form.Item className="basis-[2%]">
+                                      <CloseOutlined
+                                        onClick={(
+                                          event: React.MouseEvent<
+                                            HTMLSpanElement,
+                                            MouseEvent
+                                          >,
+                                        ) => {
+                                          event.stopPropagation();
+                                          removePricing(pricingField.name);
+                                        }}
+                                      />
+                                    </Form.Item>
+                                  </div>
+                                );
+                              })}
+
+                              <Button
+                                className="w-[150px]"
+                                onClick={() => addPricing()}
+                              >
+                                + Thêm giá món ăn
+                              </Button>
+                            </div>
+                          </>
+                        );
+                      }}
+                    </Form.List>
+                  </Form.Item>
+                ),
+              },
+            ]}
+          ></Collapse>
+        </Col>
+      </Row>
+
       {!viewOnly && (
-        <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
+        <Form.Item className="mt-5 text-right" wrapperCol={{ span: 24 }}>
           <Space>
             <Button onClick={onCancel} loading={isCreating || isUpdating}>
               Hủy

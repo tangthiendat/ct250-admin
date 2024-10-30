@@ -29,7 +29,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({ meal }) => {
       </Tooltip>
       <Modal
         open={isOpenModal}
-        width="40%"
+        width="60%"
         title={<span className="text-lg">Chỉnh sửa món ăn</span>}
         destroyOnClose
         onCancel={handleCloseModal}
