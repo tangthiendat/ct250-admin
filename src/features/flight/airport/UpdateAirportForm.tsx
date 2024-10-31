@@ -165,7 +165,7 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
         cityCode: values.cityCode.toUpperCase(),
       };
       Object.keys(newAirport)
-        .filter((key: string) => !["createdAt"].includes(key))
+        .filter((key: string) => !["createdAt", "cityImg"].includes(key))
         .forEach((key: string) => {
           const value = newAirport[
             key as keyof UpdateAirportFormValues
@@ -177,16 +177,14 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
                 (value as ICountry).countryId.toString(),
               );
             }
-            if (key === "cityImg") {
-              formData.append(
-                "cityImg",
-                (value as UploadFile[])[0].originFileObj as File,
-              );
-            }
           } else {
             formData.append(key, value as string);
           }
         });
+
+      if (fileList.length > 0) {
+        formData.append("cityImg", fileList[0].originFileObj as File);
+      }
 
       createAirport(formData, {
         onSuccess: () => {
