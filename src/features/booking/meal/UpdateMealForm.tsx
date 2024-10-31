@@ -112,6 +112,31 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
     setFileList(fileList);
   };
 
+  const handleValidFromChange = (date: Dayjs, formListItemIndex: number) => {
+    const currentValidTo = form.getFieldValue([
+      "mealPricing",
+      formListItemIndex,
+      "validTo",
+    ]);
+
+    // If validFrom is after validTo, set validTo to validFrom
+    if (dayjs(date).isAfter(dayjs(currentValidTo))) {
+      form.setFieldsValue({
+        mealPricing: form
+          .getFieldValue("mealPricing")
+          .map((pricing: IMealPricing, index: number) => {
+            if (index === formListItemIndex) {
+              return {
+                ...pricing,
+                validTo: date.tz().format("YYYY-MM-DD"),
+              };
+            }
+            return pricing;
+          }),
+      });
+    }
+  };
+
   function handleIsActiveChange(isActive: boolean, formListItemIndex: number) {
     form.setFieldsValue({
       mealPricing: form
@@ -407,6 +432,12 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                                         className="w-full"
                                         format="DD/MM/YYYY"
                                         placeholder="Ngày bắt đầu"
+                                        onChange={(date) =>
+                                          handleValidFromChange(
+                                            date,
+                                            pricingField.name,
+                                          )
+                                        }
                                       />
                                     </Form.Item>
                                     <Form.Item
@@ -417,27 +448,6 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                                           required: true,
                                           message: "Hãy chọn ngày kết thúc",
                                         },
-                                        // {
-                                        //   validator: (_, value: Dayjs) => {
-                                        //     if (
-                                        //       value &&
-                                        //       value.isBefore(
-                                        //         dayjs(
-                                        //           form.getFieldValue([
-                                        //             "mealPricing",
-                                        //             pricingField.name,
-                                        //             "validFrom",
-                                        //           ]),
-                                        //         ),
-                                        //       )
-                                        //     ) {
-                                        //       return Promise.reject(
-                                        //         "Ngày kết thúc phải sau ngày bắt đầu",
-                                        //       );
-                                        //     }
-                                        //     return Promise.resolve();
-                                        //   },
-                                        // },
                                       ]}
                                       getValueProps={(value: string) => ({
                                         value: value && dayjs(value),
