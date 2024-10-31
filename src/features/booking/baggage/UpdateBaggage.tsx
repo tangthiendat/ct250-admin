@@ -29,7 +29,7 @@ const UpdateBaggage: React.FC<UpdateBaggageProps> = ({ baggage }) => {
       </Tooltip>
       <Modal
         open={isOpenModal}
-        width="40%"
+        width="60%"
         title={<span className="text-lg">Chỉnh sửa hành lý</span>}
         destroyOnClose
         onCancel={handleCloseModal}

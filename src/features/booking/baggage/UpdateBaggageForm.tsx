@@ -1,10 +1,25 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Form, InputNumber, Radio, Space } from "antd";
+import {
+  Button,
+  Col,
+  Collapse,
+  DatePicker,
+  Form,
+  InputNumber,
+  Radio,
+  Row,
+  Space,
+  Switch,
+  Tooltip,
+} from "antd";
 import React, { useEffect } from "react";
+import { CloseOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import toast from "react-hot-toast";
-import { IBaggages } from "../../../interfaces";
+import { IBaggagePricing, IBaggages } from "../../../interfaces";
 import { RouteType } from "../../../interfaces/common/enums";
 import { baggageService } from "../../../services/booking/baggage-service";
+import { formatCurrency, parseCurrency } from "../../../utils";
+import dayjs, { Dayjs } from "dayjs";
 
 interface UpdateBaggageFormProps {
   baggageToUpdate?: IBaggages;
@@ -28,7 +43,8 @@ const UpdateBaggageForm: React.FC<UpdateBaggageFormProps> = ({
   viewOnly = false,
 }) => {
   const [form] = Form.useForm<IBaggages>();
-  // const isUpdateSession: boolean = !!baggageToUpdate;
+  const isUpdateSession: boolean =
+    Boolean(baggageToUpdate?.baggageId) && !viewOnly;
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -63,6 +79,47 @@ const UpdateBaggageForm: React.FC<UpdateBaggageFormProps> = ({
     },
   });
 
+  const handleValidFromChange = (date: Dayjs, formListItemIndex: number) => {
+    const currentValidTo = form.getFieldValue([
+      "baggagePricing",
+      formListItemIndex,
+      "validTo",
+    ]);
+
+    // If validFrom is after validTo, set validTo to validFrom
+    if (dayjs(date).isAfter(dayjs(currentValidTo))) {
+      form.setFieldsValue({
+        baggagePricing: form
+          .getFieldValue("baggagePricing")
+          .map((pricing: IBaggagePricing, index: number) => {
+            if (index === formListItemIndex) {
+              return {
+                ...pricing,
+                validTo: date.tz().format("YYYY-MM-DD"),
+              };
+            }
+            return pricing;
+          }),
+      });
+    }
+  };
+
+  function handleIsActiveChange(isActive: boolean, formListItemIndex: number) {
+    form.setFieldsValue({
+      baggagePricing: form
+        .getFieldValue("baggagePricing")
+        .map((pricing: IBaggagePricing, index: number) => {
+          if (index === formListItemIndex) {
+            return {
+              ...pricing,
+              isActive,
+            };
+          }
+          return { ...pricing, isActive: false };
+        }),
+    });
+  }
+
   function handleFinish(values: IBaggages) {
     if (baggageToUpdate) {
       const updatedBaggage = {
@@ -83,9 +140,8 @@ const UpdateBaggageForm: React.FC<UpdateBaggageFormProps> = ({
         },
       );
     } else {
-      const newBaggage = {
-        ...values,
-      };
+      const newBaggage = form.getFieldsValue();
+
       createBaggage(newBaggage, {
         onSuccess: () => {
           toast.success("Thêm mới hành lý thành công");
@@ -106,63 +162,286 @@ const UpdateBaggageForm: React.FC<UpdateBaggageFormProps> = ({
       layout="vertical"
       initialValues={{ active: true }}
     >
-      <Form.Item
-        label="Cân nặng hành lý"
-        name="baggageWeight"
-        rules={[
-          {
-            required: true,
-            message: "Vui lòng nhập số ký hành lý",
-          },
-        ]}
-      >
-        <InputNumber
-          //readOnly={viewOnly || isUpdateSession}
-          min={0}
-          addonAfter="Kg"
-          className="w-full"
-        />
-      </Form.Item>
+      <Row>
+        <Col span={11}>
+          <Form.Item
+            label="Cân nặng hành lý"
+            name="baggageWeight"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập cân nặng hành lý",
+              },
+            ]}
+          >
+            <InputNumber
+              //readOnly={viewOnly || isUpdateSession}
+              min={0}
+              addonAfter="Kg"
+              className="w-[70%]"
+            />
+          </Form.Item>
+        </Col>
+        <Col offset={2} span={11}>
+          <Form.Item
+            label="Loại chuyến bay"
+            name="routeType"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn loại chuyến bay",
+              },
+            ]}
+            tooltip={
+              <div>
+                <p>Loại chuyến bay</p>
+                <p>- DOMESTIC: các chuyến bay nội địa</p>
+                <p>- INTERNATIONAL: các chuyến bay quốc tế</p>
+              </div>
+            }
+          >
+            <Radio.Group
+              disabled={viewOnly}
+              options={routeTypeOptions}
+              optionType="button"
+              buttonStyle="solid"
+              className="w-full"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row className="mt-3">
+        <Col span={24}>
+          <Collapse
+            size="small"
+            defaultActiveKey={["1"]}
+            items={[
+              {
+                key: "1",
+                label: "Chi tiết giá hành lý",
+                children: (
+                  <Form.Item wrapperCol={{ span: 24 }}>
+                    <Form.List
+                      name="baggagePricing"
+                      rules={[
+                        {
+                          validator: (_, value: IBaggagePricing[]) => {
+                            if (!value || value.length === 0) {
+                              toast.error("Phải có ít nhất một giá hành lý");
+                              return Promise.reject();
+                            } else {
+                              const hasActive = value.some(
+                                (item) => item && item.isActive === true,
+                              );
+                              if (!hasActive) {
+                                toast.error(
+                                  "Phải có ít nhất một giá hiện hành",
+                                );
+                                return Promise.reject();
+                              }
+                            }
+                            return Promise.resolve();
+                          },
+                        },
+                      ]}
+                    >
+                      {(
+                        pricingFields,
+                        { add: addPricing, remove: removePricing },
+                      ) => {
+                        return (
+                          <>
+                            <div className="flex flex-col">
+                              {pricingFields.length > 0 && (
+                                <div className="mb-2 flex items-center justify-between font-semibold">
+                                  <div className="basis-[25%]">Giá</div>
+                                  <div className="basis-[20%]">
+                                    Ngày bắt đầu
+                                  </div>
+                                  <div className="basis-[20%]">
+                                    Ngày kết thúc
+                                  </div>
+                                  <div className="basis-[10%]">
+                                    <span>Trạng thái&nbsp;</span>
+                                    <Tooltip
+                                      title={
+                                        <div>
+                                          <div>
+                                            ACTIVE: Giá được áp dụng hiện hành
+                                          </div>
+                                          <div>
+                                            INACTIVE: Giá không được áp dụng
+                                          </div>
+                                        </div>
+                                      }
+                                    >
+                                      <QuestionCircleOutlined className="text-gray-500" />
+                                    </Tooltip>
+                                  </div>
 
-      <Form.Item
-        label="Giá hành lý"
-        name="price"
-        rules={[
-          {
-            required: true,
-            message: "Vui lòng nhập giá hành lý",
-          },
-        ]}
-      >
-        <InputNumber
-          //readOnly={viewOnly || isUpdateSession}
-          min={0}
-          addonAfter="VNĐ"
-          className="w-full"
-        />
-      </Form.Item>
+                                  <div className="basis-[2%]"></div>
+                                </div>
+                              )}
+                              {pricingFields.map((pricingField) => {
+                                return (
+                                  <div
+                                    className="flex items-center justify-between"
+                                    key={pricingField.key}
+                                  >
+                                    <Form.Item
+                                      className="basis-[25%]"
+                                      name={[pricingField.name, "price"]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "Vui lòng nhập giá hành lý",
+                                        },
+                                      ]}
+                                    >
+                                      <InputNumber
+                                        className="w-full"
+                                        readOnly={viewOnly}
+                                        min={0}
+                                        addonAfter="VND"
+                                        formatter={(value) =>
+                                          formatCurrency(value)
+                                        }
+                                        parser={(value) =>
+                                          parseCurrency(value) as unknown as 0
+                                        }
+                                      />
+                                    </Form.Item>
+                                    <Form.Item
+                                      className="basis-[20%]"
+                                      name={[pricingField.name, "validFrom"]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "Hãy chọn ngày bắt đầu",
+                                        },
+                                      ]}
+                                      getValueProps={(value: string) => ({
+                                        value: value && dayjs(value),
+                                      })}
+                                      normalize={(value: Dayjs) =>
+                                        value && value.tz().format("YYYY-MM-DD")
+                                      }
+                                    >
+                                      <DatePicker
+                                        disabled={viewOnly}
+                                        className="w-full"
+                                        format="DD/MM/YYYY"
+                                        placeholder="Ngày bắt đầu"
+                                        onChange={(date) =>
+                                          handleValidFromChange(
+                                            date,
+                                            pricingField.name,
+                                          )
+                                        }
+                                      />
+                                    </Form.Item>
+                                    <Form.Item
+                                      className="basis-[20%]"
+                                      name={[pricingField.name, "validTo"]}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: "Hãy chọn ngày kết thúc",
+                                        },
+                                      ]}
+                                      getValueProps={(value: string) => ({
+                                        value: value && dayjs(value),
+                                      })}
+                                      normalize={(value: Dayjs) =>
+                                        value && value.tz().format("YYYY-MM-DD")
+                                      }
+                                    >
+                                      <DatePicker
+                                        disabled={viewOnly}
+                                        className="w-full"
+                                        format="DD/MM/YYYY"
+                                        placeholder="Ngày kết thúc"
+                                        disabledDate={(current) =>
+                                          current.isBefore(
+                                            dayjs(
+                                              form.getFieldValue([
+                                                "baggagePricing",
+                                                pricingField.name,
+                                                "validFrom",
+                                              ]),
+                                            ),
+                                          )
+                                        }
+                                      />
+                                    </Form.Item>
 
-      <Form.Item
-        label="Loại chuyến bay"
-        name="routeType"
-        rules={[
-          {
-            required: true,
-            message: "Vui lòng chọn loại chuyến bay",
-          },
-        ]}
-      >
-        <Radio.Group
-          disabled={viewOnly}
-          options={routeTypeOptions}
-          optionType="button"
-          buttonStyle="solid"
-          className="w-full"
-        />
-      </Form.Item>
+                                    <Form.Item
+                                      className="basis-[10%]"
+                                      name={[pricingField.name, "isActive"]}
+                                      valuePropName="checked"
+                                      initialValue={
+                                        !isUpdateSession &&
+                                        pricingField.name === 0
+                                      }
+                                    >
+                                      <Switch
+                                        disabled={viewOnly}
+                                        checkedChildren="ACTIVE"
+                                        unCheckedChildren="INACTIVE"
+                                        onChange={(isActive) =>
+                                          handleIsActiveChange(
+                                            isActive,
+                                            pricingField.name,
+                                          )
+                                        }
+                                      />
+                                    </Form.Item>
+                                    <Form.Item className="basis-[2%]">
+                                      {!viewOnly &&
+                                        (!isUpdateSession ||
+                                          pricingField.name + 1 >
+                                            (baggageToUpdate?.baggagePricing
+                                              .length || 0)) && (
+                                          <CloseOutlined
+                                            onClick={(
+                                              event: React.MouseEvent<
+                                                HTMLSpanElement,
+                                                MouseEvent
+                                              >,
+                                            ) => {
+                                              event.stopPropagation();
+                                              removePricing(pricingField.name);
+                                            }}
+                                          />
+                                        )}
+                                    </Form.Item>
+                                  </div>
+                                );
+                              })}
+
+                              {!viewOnly && (
+                                <Button
+                                  className="w-[150px]"
+                                  onClick={() => addPricing()}
+                                >
+                                  + Thêm giá hành lý
+                                </Button>
+                              )}
+                            </div>
+                          </>
+                        );
+                      }}
+                    </Form.List>
+                  </Form.Item>
+                ),
+              },
+            ]}
+          ></Collapse>
+        </Col>
+      </Row>
 
       {!viewOnly && (
-        <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
+        <Form.Item className="mt-5 text-right" wrapperCol={{ span: 24 }}>
           <Space>
             <Button onClick={onCancel} loading={isCreating || isUpdating}>
               Hủy

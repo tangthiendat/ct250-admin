@@ -130,11 +130,14 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
       render: (weight: number) => `${weight} Kg`,
     },
     {
-      title: "Giá hành lý",
-      key: "price",
-      dataIndex: "price",
+      title: "Giá hiện hành",
+      key: "currentPrice",
+      dataIndex: "baggagePricing",
       width: "20%",
-      render: (price: number) => price.toLocaleString(),
+      render: (baggagePricing: IBaggages["baggagePricing"]) => {
+        const currentPrice = baggagePricing.find((pricing) => pricing.isActive);
+        return currentPrice?.price.toLocaleString();
+      },
     },
     {
       title: "Loại chuyến bay",

@@ -22,12 +22,20 @@ export interface IMealPricing {
 export interface IBaggages {
   baggageId: number;
   baggageWeight: number;
-  price: number;
+  baggagePricing: IBaggagePricing[];
   routeType: RouteType;
   createdAt: string;
   updatedAt?: string;
   createdBy?: string;
   updatedBy?: string;
+}
+
+export interface IBaggagePricing {
+  baggagePricingId: number;
+  price: number;
+  validFrom: string;
+  validTo: string;
+  isActive: boolean;
 }
 
 export interface BaggageFilterCriteria {

@@ -20,7 +20,7 @@ const AddBaggage: React.FC = () => {
       </Button>
       <Modal
         open={isOpenModal}
-        width="30%"
+        width="60%"
         title={<span className="text-lg">Thêm hành lý</span>}
         destroyOnClose
         onCancel={handleCloseModal}
