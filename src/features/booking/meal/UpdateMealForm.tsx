@@ -402,6 +402,7 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                                     >
                                       <InputNumber
                                         className="w-full"
+                                        readOnly={viewOnly}
                                         min={0}
                                         addonAfter="VND"
                                         formatter={(value) =>
@@ -480,7 +481,10 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                                       className="basis-[10%]"
                                       name={[pricingField.name, "isActive"]}
                                       valuePropName="checked"
-                                      initialValue={pricingField.name === 0}
+                                      initialValue={
+                                        !isUpdateSession &&
+                                        pricingField.name === 0
+                                      }
                                       tooltip="Chỉ có một giá món ăn được chọn là giá hiện hành"
                                     >
                                       <Switch
@@ -496,33 +500,36 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                                       />
                                     </Form.Item>
                                     <Form.Item className="basis-[2%]">
-                                      {(!isUpdateSession ||
-                                        pricingField.name + 1 >
-                                          (mealToUpdate?.mealPricing.length ||
-                                            0)) && (
-                                        <CloseOutlined
-                                          onClick={(
-                                            event: React.MouseEvent<
-                                              HTMLSpanElement,
-                                              MouseEvent
-                                            >,
-                                          ) => {
-                                            event.stopPropagation();
-                                            removePricing(pricingField.name);
-                                          }}
-                                        />
-                                      )}
+                                      {!viewOnly &&
+                                        (!isUpdateSession ||
+                                          pricingField.name + 1 >
+                                            (mealToUpdate?.mealPricing.length ||
+                                              0)) && (
+                                          <CloseOutlined
+                                            onClick={(
+                                              event: React.MouseEvent<
+                                                HTMLSpanElement,
+                                                MouseEvent
+                                              >,
+                                            ) => {
+                                              event.stopPropagation();
+                                              removePricing(pricingField.name);
+                                            }}
+                                          />
+                                        )}
                                     </Form.Item>
                                   </div>
                                 );
                               })}
 
-                              <Button
-                                className="w-[150px]"
-                                onClick={() => addPricing()}
-                              >
-                                + Thêm giá món ăn
-                              </Button>
+                              {!viewOnly && (
+                                <Button
+                                  className="w-[150px]"
+                                  onClick={() => addPricing()}
+                                >
+                                  + Thêm giá món ăn
+                                </Button>
+                              )}
                             </div>
                           </>
                         );

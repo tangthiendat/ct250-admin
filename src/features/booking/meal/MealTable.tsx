@@ -1,15 +1,7 @@
-import {
-  Image,
-  Space,
-  Table,
-  TablePaginationConfig,
-  TableProps,
-  Tag,
-  Tooltip,
-} from "antd";
+import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import { Image, Space, Table, TablePaginationConfig, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
 import { IMeal, IMealPricing, Module, Page } from "../../../interfaces";
 import { PERMISSIONS } from "../../../interfaces/common/constants";
 import {
@@ -22,7 +14,7 @@ import {
 import Access from "../../auth/Access";
 import DeleteMeal from "./DeleteMeal";
 import UpdateMeal from "./UpdateMeal";
-import dayjs from "dayjs";
+import ViewMeal from "./ViewMeal";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -172,6 +164,7 @@ const MealTable: React.FC<MealTableProps> = ({ mealPage, isLoading }) => {
       width: "12%",
       render: (record: IMeal) => (
         <Space>
+          <ViewMeal meal={record} />
           <Access permission={PERMISSIONS[Module.MEALS].UPDATE} hideChildren>
             <UpdateMeal meal={record} />
           </Access>
@@ -179,47 +172,6 @@ const MealTable: React.FC<MealTableProps> = ({ mealPage, isLoading }) => {
             <DeleteMeal mealId={record.mealId} />
           </Access>
         </Space>
-      ),
-    },
-  ];
-
-  const expandColumns: TableProps<IMealPricing>["columns"] = [
-    {
-      title: "ID",
-      key: "mealPricingId",
-      dataIndex: "mealPricingId",
-      width: "10%",
-    },
-    {
-      title: "Giá",
-      key: "price",
-      dataIndex: "price",
-      width: "20%",
-      render: (price: number) => price.toLocaleString(),
-    },
-    {
-      title: "Ngày bắt đầu",
-      key: "validFrom",
-      dataIndex: "validFrom",
-      width: "20%",
-      render: (validFrom: string) => dayjs(validFrom).format("YYYY-MM-DD"),
-    },
-    {
-      title: "Ngày kết thúc",
-      key: "validTo",
-      dataIndex: "validTo",
-      width: "20%",
-      render: (validTo: string) => dayjs(validTo).format("YYYY-MM-DD"),
-    },
-    {
-      title: "Trạng thái",
-      key: "isActive",
-      dataIndex: "isActive",
-      width: "20%",
-      render: (isActive: boolean) => (
-        <Tag color={isActive ? "green" : "red"}>
-          {isActive ? "ACTIVE" : "INACTIVE"}
-        </Tag>
       ),
     },
   ];
@@ -241,46 +193,6 @@ const MealTable: React.FC<MealTableProps> = ({ mealPage, isLoading }) => {
       }}
       onChange={handleTableChange}
       size="small"
-      expandable={{
-        columnWidth: "5%",
-        expandedRowRender: (record: IMeal) => (
-          <Table
-            columns={expandColumns}
-            dataSource={record.mealPricing}
-            pagination={false}
-            size="small"
-          />
-        ),
-        expandIcon: ({ expanded, onExpand, record }) => (
-          <Tooltip
-            title={expanded ? "Đóng chi tiết giá" : "Hiển thị chi tiết giá"}
-          >
-            {expanded ? (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onExpand(record, e);
-                }}
-                type="button"
-                className="ant-table-row-expand-icon ant-table-row-expand-icon-expanded"
-                aria-label="Thu gọn dòng"
-                aria-expanded="true"
-              ></button>
-            ) : (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onExpand(record, e);
-                }}
-                type="button"
-                className="ant-table-row-expand-icon ant-table-row-expand-icon-collapsed"
-                aria-label="Mở rộng dòng"
-                aria-expanded="false"
-              ></button>
-            )}
-          </Tooltip>
-        ),
-      }}
     />
   );
 };
