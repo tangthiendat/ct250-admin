@@ -175,7 +175,7 @@ const UpdateBaggageForm: React.FC<UpdateBaggageFormProps> = ({
             ]}
           >
             <InputNumber
-              //readOnly={viewOnly || isUpdateSession}
+              readOnly={viewOnly}
               min={0}
               addonAfter="Kg"
               className="w-[70%]"

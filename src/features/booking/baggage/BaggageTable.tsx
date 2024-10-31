@@ -21,6 +21,7 @@ import {
 import Access from "../../auth/Access";
 import DeleteBaggage from "./DeleteBaggage";
 import UpdateBaggage from "./UpdateBaggage";
+import ViewBaggage from "./ViewBaggage";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -204,6 +205,7 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
       key: "action",
       render: (record: IBaggages) => (
         <Space>
+          <ViewBaggage baggage={record} />
           <Access permission={PERMISSIONS[Module.BAGGAGES].UPDATE} hideChildren>
             <UpdateBaggage baggage={record} />
           </Access>
