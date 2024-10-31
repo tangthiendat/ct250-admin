@@ -52,6 +52,7 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string>("");
+  const isUpdateSession: boolean = Boolean(mealToUpdate?.mealId) && !viewOnly;
 
   const queryClient = useQueryClient();
 
@@ -332,7 +333,7 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                               return Promise.reject();
                             } else {
                               const hasActive = value.some(
-                                (item) => item.isActive,
+                                (item) => item && item.isActive === true,
                               );
                               if (!hasActive) {
                                 toast.error(
@@ -495,17 +496,22 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                                       />
                                     </Form.Item>
                                     <Form.Item className="basis-[2%]">
-                                      <CloseOutlined
-                                        onClick={(
-                                          event: React.MouseEvent<
-                                            HTMLSpanElement,
-                                            MouseEvent
-                                          >,
-                                        ) => {
-                                          event.stopPropagation();
-                                          removePricing(pricingField.name);
-                                        }}
-                                      />
+                                      {(!isUpdateSession ||
+                                        pricingField.name + 1 >
+                                          (mealToUpdate?.mealPricing.length ||
+                                            0)) && (
+                                        <CloseOutlined
+                                          onClick={(
+                                            event: React.MouseEvent<
+                                              HTMLSpanElement,
+                                              MouseEvent
+                                            >,
+                                          ) => {
+                                            event.stopPropagation();
+                                            removePricing(pricingField.name);
+                                          }}
+                                        />
+                                      )}
                                     </Form.Item>
                                   </div>
                                 );
