@@ -1,8 +1,4 @@
-import {
-  CloseOutlined,
-  PlusOutlined,
-  QuestionCircleOutlined,
-} from "@ant-design/icons";
+import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
@@ -15,8 +11,6 @@ import {
   InputNumber,
   Row,
   Space,
-  Switch,
-  Tooltip,
   Upload,
   UploadFile,
 } from "antd";
@@ -137,22 +131,6 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
       });
     }
   };
-
-  function handleIsActiveChange(isActive: boolean, formListItemIndex: number) {
-    form.setFieldsValue({
-      mealPricing: form
-        .getFieldValue("mealPricing")
-        .map((pricing: IMealPricing, index: number) => {
-          if (index === formListItemIndex) {
-            return {
-              ...pricing,
-              isActive,
-            };
-          }
-          return { ...pricing, isActive: false };
-        }),
-    });
-  }
 
   function handleFinish(values: UpdateMealFormValues) {
     if (mealToUpdate) {
@@ -331,16 +309,6 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                             if (!value || value.length === 0) {
                               toast.error("Phải có ít nhất một giá món ăn");
                               return Promise.reject();
-                            } else {
-                              const hasActive = value.some(
-                                (item) => item && item.isActive === true,
-                              );
-                              if (!hasActive) {
-                                toast.error(
-                                  "Phải có ít nhất một giá hiện hành",
-                                );
-                                return Promise.reject();
-                              }
                             }
                             return Promise.resolve();
                           },
@@ -357,28 +325,11 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                               {pricingFields.length > 0 && (
                                 <div className="mb-2 flex items-center justify-between font-semibold">
                                   <div className="basis-[25%]">Giá</div>
-                                  <div className="basis-[20%]">
+                                  <div className="basis-[25%]">
                                     Ngày bắt đầu
                                   </div>
-                                  <div className="basis-[20%]">
+                                  <div className="basis-[25%]">
                                     Ngày kết thúc
-                                  </div>
-                                  <div className="basis-[10%]">
-                                    <span>Trạng thái&nbsp;</span>
-                                    <Tooltip
-                                      title={
-                                        <div>
-                                          <div>
-                                            ACTIVE: Giá được áp dụng hiện hành
-                                          </div>
-                                          <div>
-                                            INACTIVE: Giá không được áp dụng
-                                          </div>
-                                        </div>
-                                      }
-                                    >
-                                      <QuestionCircleOutlined className="text-gray-500" />
-                                    </Tooltip>
                                   </div>
 
                                   <div className="basis-[2%]"></div>
@@ -414,7 +365,7 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                                       />
                                     </Form.Item>
                                     <Form.Item
-                                      className="basis-[20%]"
+                                      className="basis-[25%]"
                                       name={[pricingField.name, "validFrom"]}
                                       rules={[
                                         {
@@ -443,7 +394,7 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                                       />
                                     </Form.Item>
                                     <Form.Item
-                                      className="basis-[20%]"
+                                      className="basis-[25%]"
                                       name={[pricingField.name, "validTo"]}
                                       rules={[
                                         {
@@ -477,28 +428,6 @@ const UpdateMealForm: React.FC<UpdateMealFormProps> = ({
                                       />
                                     </Form.Item>
 
-                                    <Form.Item
-                                      className="basis-[10%]"
-                                      name={[pricingField.name, "isActive"]}
-                                      valuePropName="checked"
-                                      initialValue={
-                                        !isUpdateSession &&
-                                        pricingField.name === 0
-                                      }
-                                      tooltip="Chỉ có một giá món ăn được chọn là giá hiện hành"
-                                    >
-                                      <Switch
-                                        disabled={viewOnly}
-                                        checkedChildren="ACTIVE"
-                                        unCheckedChildren="INACTIVE"
-                                        onChange={(isActive) =>
-                                          handleIsActiveChange(
-                                            isActive,
-                                            pricingField.name,
-                                          )
-                                        }
-                                      />
-                                    </Form.Item>
                                     <Form.Item className="basis-[2%]">
                                       {!viewOnly &&
                                         (!isUpdateSession ||

@@ -128,3 +128,11 @@ export function formatCurrency(value: number | undefined): string {
 export function parseCurrency(value: string | undefined): number {
   return (value?.replace(/\$\s?|(,*)/g, "") as unknown as number) || 0;
 }
+
+export function isInDateRange(
+  date: string,
+  startDate: string,
+  endDate: string,
+): boolean {
+  return dayjs(date).tz().isBetween(startDate, endDate, null, "[]");
+}

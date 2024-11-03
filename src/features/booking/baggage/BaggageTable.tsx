@@ -17,11 +17,13 @@ import {
   getDefaultFilterValue,
   getDefaultSortOrder,
   getSortDirection,
+  isInDateRange,
 } from "../../../utils";
 import Access from "../../auth/Access";
 import DeleteBaggage from "./DeleteBaggage";
 import UpdateBaggage from "./UpdateBaggage";
 import ViewBaggage from "./ViewBaggage";
+import dayjs from "dayjs";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -136,7 +138,13 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
       dataIndex: "baggagePricing",
       width: "20%",
       render: (baggagePricing: IBaggages["baggagePricing"]) => {
-        const currentPrice = baggagePricing.find((pricing) => pricing.isActive);
+        const currentPrice = baggagePricing.find((pricing) =>
+          isInDateRange(
+            dayjs().tz().format("YYYY-MM-DD"),
+            pricing.validFrom,
+            pricing.validTo,
+          ),
+        );
         return currentPrice?.price.toLocaleString();
       },
     },

@@ -16,7 +16,6 @@ export interface IMealPricing {
   price: number;
   validFrom: string;
   validTo: string;
-  isActive: boolean;
 }
 
 export interface IBaggages {
@@ -35,7 +34,6 @@ export interface IBaggagePricing {
   price: number;
   validFrom: string;
   validTo: string;
-  isActive: boolean;
 }
 
 export interface BaggageFilterCriteria {

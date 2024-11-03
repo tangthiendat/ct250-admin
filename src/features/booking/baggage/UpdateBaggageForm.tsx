@@ -1,3 +1,4 @@
+import { CloseOutlined } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
@@ -9,17 +10,14 @@ import {
   Radio,
   Row,
   Space,
-  Switch,
-  Tooltip,
 } from "antd";
+import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect } from "react";
-import { CloseOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import toast from "react-hot-toast";
 import { IBaggagePricing, IBaggages } from "../../../interfaces";
 import { RouteType } from "../../../interfaces/common/enums";
 import { baggageService } from "../../../services/booking/baggage-service";
 import { formatCurrency, parseCurrency } from "../../../utils";
-import dayjs, { Dayjs } from "dayjs";
 
 interface UpdateBaggageFormProps {
   baggageToUpdate?: IBaggages;
@@ -103,22 +101,6 @@ const UpdateBaggageForm: React.FC<UpdateBaggageFormProps> = ({
       });
     }
   };
-
-  function handleIsActiveChange(isActive: boolean, formListItemIndex: number) {
-    form.setFieldsValue({
-      baggagePricing: form
-        .getFieldValue("baggagePricing")
-        .map((pricing: IBaggagePricing, index: number) => {
-          if (index === formListItemIndex) {
-            return {
-              ...pricing,
-              isActive,
-            };
-          }
-          return { ...pricing, isActive: false };
-        }),
-    });
-  }
 
   function handleFinish(values: IBaggages) {
     if (baggageToUpdate) {
@@ -229,16 +211,6 @@ const UpdateBaggageForm: React.FC<UpdateBaggageFormProps> = ({
                             if (!value || value.length === 0) {
                               toast.error("Phải có ít nhất một giá hành lý");
                               return Promise.reject();
-                            } else {
-                              const hasActive = value.some(
-                                (item) => item && item.isActive === true,
-                              );
-                              if (!hasActive) {
-                                toast.error(
-                                  "Phải có ít nhất một giá hiện hành",
-                                );
-                                return Promise.reject();
-                              }
                             }
                             return Promise.resolve();
                           },
@@ -255,28 +227,11 @@ const UpdateBaggageForm: React.FC<UpdateBaggageFormProps> = ({
                               {pricingFields.length > 0 && (
                                 <div className="mb-2 flex items-center justify-between font-semibold">
                                   <div className="basis-[25%]">Giá</div>
-                                  <div className="basis-[20%]">
+                                  <div className="basis-[25%]">
                                     Ngày bắt đầu
                                   </div>
-                                  <div className="basis-[20%]">
+                                  <div className="basis-[25%]">
                                     Ngày kết thúc
-                                  </div>
-                                  <div className="basis-[10%]">
-                                    <span>Trạng thái&nbsp;</span>
-                                    <Tooltip
-                                      title={
-                                        <div>
-                                          <div>
-                                            ACTIVE: Giá được áp dụng hiện hành
-                                          </div>
-                                          <div>
-                                            INACTIVE: Giá không được áp dụng
-                                          </div>
-                                        </div>
-                                      }
-                                    >
-                                      <QuestionCircleOutlined className="text-gray-500" />
-                                    </Tooltip>
                                   </div>
 
                                   <div className="basis-[2%]"></div>
@@ -312,7 +267,7 @@ const UpdateBaggageForm: React.FC<UpdateBaggageFormProps> = ({
                                       />
                                     </Form.Item>
                                     <Form.Item
-                                      className="basis-[20%]"
+                                      className="basis-[25%]"
                                       name={[pricingField.name, "validFrom"]}
                                       rules={[
                                         {
@@ -341,7 +296,7 @@ const UpdateBaggageForm: React.FC<UpdateBaggageFormProps> = ({
                                       />
                                     </Form.Item>
                                     <Form.Item
-                                      className="basis-[20%]"
+                                      className="basis-[25%]"
                                       name={[pricingField.name, "validTo"]}
                                       rules={[
                                         {
@@ -375,27 +330,6 @@ const UpdateBaggageForm: React.FC<UpdateBaggageFormProps> = ({
                                       />
                                     </Form.Item>
 
-                                    <Form.Item
-                                      className="basis-[10%]"
-                                      name={[pricingField.name, "isActive"]}
-                                      valuePropName="checked"
-                                      initialValue={
-                                        !isUpdateSession &&
-                                        pricingField.name === 0
-                                      }
-                                    >
-                                      <Switch
-                                        disabled={viewOnly}
-                                        checkedChildren="ACTIVE"
-                                        unCheckedChildren="INACTIVE"
-                                        onChange={(isActive) =>
-                                          handleIsActiveChange(
-                                            isActive,
-                                            pricingField.name,
-                                          )
-                                        }
-                                      />
-                                    </Form.Item>
                                     <Form.Item className="basis-[2%]">
                                       {!viewOnly &&
                                         (!isUpdateSession ||

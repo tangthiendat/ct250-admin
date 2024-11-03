@@ -10,11 +10,13 @@ import {
   formatTimestamp,
   getDefaultSortOrder,
   getSortDirection,
+  isInDateRange,
 } from "../../../utils";
 import Access from "../../auth/Access";
 import DeleteMeal from "./DeleteMeal";
 import UpdateMeal from "./UpdateMeal";
 import ViewMeal from "./ViewMeal";
+import dayjs from "dayjs";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -121,7 +123,13 @@ const MealTable: React.FC<MealTableProps> = ({ mealPage, isLoading }) => {
       dataIndex: "mealPricing",
       width: "20%",
       render: (mealPricing: IMealPricing[]) => {
-        const currentPrice = mealPricing.find((pricing) => pricing.isActive);
+        const currentPrice = mealPricing.find((pricing) =>
+          isInDateRange(
+            dayjs().tz().format("YYYY-MM-DD"),
+            pricing.validFrom,
+            pricing.validTo,
+          ),
+        );
         return currentPrice?.price.toLocaleString();
       },
     },
