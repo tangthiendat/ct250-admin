@@ -65,7 +65,7 @@ const FlightPanel: React.FC = () => {
       </div>
 
       <FlightList flights={data?.payload?.content || []} />
-      <Pagination {...pagination} />
+      <Pagination {...pagination} hideOnSinglePage />
     </div>
   );
 };
