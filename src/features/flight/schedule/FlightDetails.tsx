@@ -16,6 +16,7 @@ import {
   colorFlightStatus,
   colorTicketClassName,
   getFormattedDuration,
+  isInDateRange,
 } from "../../../utils";
 import Access from "../../auth/Access";
 import ViewSeatAvailability from "./ViewSeatAvailability";
@@ -49,7 +50,7 @@ const FlightDetails: React.FC = () => {
       ),
     },
     {
-      title: "Giá vé cơ bản",
+      title: "Giá vé cơ bản hiện tại",
       dataIndex: "ticketPrice",
       key: "ticketPrice",
       render: (ticketPrice: IFlightPricing["ticketPrice"]) =>
@@ -189,7 +190,13 @@ const FlightDetails: React.FC = () => {
                 rowKey={(record) => record.flightPricingId}
                 columns={columns}
                 bordered={false}
-                dataSource={flight.flightPricing}
+                dataSource={flight.flightPricing.filter((pricing) =>
+                  isInDateRange(
+                    dayjs().tz().format("YYYY-MM-DD"),
+                    pricing.validFrom,
+                    pricing.validTo,
+                  ),
+                )}
                 pagination={false}
                 size="small"
               />
