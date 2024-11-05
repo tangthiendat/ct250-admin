@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Button, Space, Table, TableProps, Tag, Timeline } from "antd";
+import { Button, Space, Table, TableProps, Tag, Timeline, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import { IoAirplane } from "react-icons/io5";
@@ -78,6 +78,36 @@ const FlightDetails: React.FC = () => {
             availability.status === SeatAvailabilityStatus.AVAILABLE,
         ).length;
       },
+    },
+  ];
+
+  const expandColumns: TableProps<IFlightPricing>["columns"] = [
+    {
+      title: "ID",
+      key: "flightPricingId",
+      dataIndex: "flightPricingId",
+      width: "10%",
+    },
+    {
+      title: "Giá vé cơ bản",
+      key: "ticketPrice",
+      dataIndex: "ticketPrice",
+      width: "30%",
+      render: (price: number) => price.toLocaleString(),
+    },
+    {
+      title: "Ngày bắt đầu",
+      key: "validFrom",
+      dataIndex: "validFrom",
+      width: "30%",
+      render: (validFrom: string) => dayjs(validFrom).format("YYYY-MM-DD"),
+    },
+    {
+      title: "Ngày kết thúc",
+      key: "validTo",
+      dataIndex: "validTo",
+      width: "30%",
+      render: (validTo: string) => dayjs(validTo).format("YYYY-MM-DD"),
     },
   ];
 
@@ -199,6 +229,52 @@ const FlightDetails: React.FC = () => {
                 )}
                 pagination={false}
                 size="small"
+                expandable={{
+                  columnWidth: "5%",
+                  expandedRowRender: (record: IFlightPricing) => (
+                    <Table
+                      columns={expandColumns}
+                      dataSource={flight.flightPricing.filter(
+                        (pricing) =>
+                          pricing.ticketClass.ticketClassId ===
+                          record.ticketClass.ticketClassId,
+                      )}
+                      pagination={false}
+                      size="small"
+                    />
+                  ),
+                  expandIcon: ({ expanded, onExpand, record }) => (
+                    <Tooltip
+                      title={
+                        expanded ? "Đóng chi tiết giá" : "Hiển thị chi tiết giá"
+                      }
+                    >
+                      {expanded ? (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onExpand(record, e);
+                          }}
+                          type="button"
+                          className="ant-table-row-expand-icon ant-table-row-expand-icon-expanded"
+                          aria-label="Thu gọn dòng"
+                          aria-expanded="true"
+                        ></button>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onExpand(record, e);
+                          }}
+                          type="button"
+                          className="ant-table-row-expand-icon ant-table-row-expand-icon-collapsed"
+                          aria-label="Mở rộng dòng"
+                          aria-expanded="false"
+                        ></button>
+                      )}
+                    </Tooltip>
+                  ),
+                }}
               />
             </div>
           </div>
