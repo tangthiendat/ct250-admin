@@ -1,3 +1,8 @@
+import { GetProp } from "antd";
+import { UploadProps } from "antd/lib";
+
+export * from "./enums";
+export * from "./constants";
 export interface ApiResponse<T> {
   payload?: T;
   error?: string;
@@ -27,6 +32,11 @@ export interface SortParams {
   direction: string;
 }
 
+export interface ElasticSortParams {
+  sort: string;
+  order: string;
+}
+
 export interface ICountry {
   countryId: number;
   countryName: string;
@@ -34,3 +44,5 @@ export interface ICountry {
   iso2Code: string;
   iso3Code: string;
 }
+
+export type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];

@@ -1,13 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import { Input } from "antd";
-import { PERMISSIONS } from "../common/constants";
+import { SearchProps } from "antd/es/input";
+import { useSearchParams } from "react-router-dom";
 import Access from "../features/auth/Access";
 import AddAirport from "../features/flight/airport/AddAirport";
 import AirportTable from "../features/flight/airport/AirportTable";
-import { useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { SortParams } from "../interfaces";
+import { PERMISSIONS } from "../interfaces/common/constants";
+import { Module } from "../interfaces/common/enums";
 import { airportService } from "../services";
-import { SearchProps } from "antd/es/input";
-import { Module } from "../common/enums";
 
 const Airports: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,9 +19,22 @@ const Airports: React.FC = () => {
     pageSize: Number(searchParams.get("pageSize")) || 10,
   };
 
+  const sort: SortParams = {
+    sortBy: searchParams.get("sortBy") || "",
+    direction: searchParams.get("direction") || "",
+  };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["airports", pagination, query],
-    queryFn: () => airportService.getAirports(pagination, query),
+    queryKey: ["airports", pagination, query, sort].filter((key) => {
+      if (typeof key === "string") {
+        return key !== "";
+      } else if (key instanceof Object) {
+        return Object.values(key).some(
+          (value) => value !== undefined && value !== "",
+        );
+      }
+    }),
+    queryFn: () => airportService.getAirports(pagination, query, sort),
   });
 
   const handleSearch: SearchProps["onSearch"] = (value) => {

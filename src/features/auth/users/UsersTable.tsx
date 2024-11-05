@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../../../common/constants";
-import { Module } from "../../../common/enums";
+import { PERMISSIONS } from "../../../interfaces/common/constants";
+import { Module } from "../../../interfaces/common/enums";
 import { IUser } from "../../../interfaces";
 import { userService } from "../../../services";
 import { formatTimestamp } from "../../../utils";
@@ -124,17 +124,21 @@ const UsersTable: React.FC = () => {
 
   return (
     <Table
-      bordered
+      bordered={false}
       columns={columns}
       rowKey={(record: IUser) => record.userId}
       pagination={tableParams.pagination}
       dataSource={data?.payload?.content}
+      rowClassName={(_, index) =>
+        index % 2 === 0 ? "table-row-light" : "table-row-gray"
+      }
+      rowHoverable={false}
       loading={{
         spinning: isLoading,
         tip: "Đang tải dữ liệu...",
       }}
       onChange={handleTableChange}
-      size="small"
+      size="middle"
     />
   );
 };

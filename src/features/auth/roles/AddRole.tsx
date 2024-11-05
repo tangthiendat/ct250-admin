@@ -1,12 +1,10 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Modal } from "antd";
+import { Button, Modal } from "antd";
 import { useState } from "react";
-import { IRole } from "../../../interfaces";
 import UpdateRoleForm from "./UpdateRoleForm";
 
 const AddRole: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [addRoleForm] = Form.useForm<IRole>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -14,7 +12,6 @@ const AddRole: React.FC = () => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    addRoleForm.resetFields();
   };
   return (
     <>
@@ -29,7 +26,7 @@ const AddRole: React.FC = () => {
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdateRoleForm form={addRoleForm} onCancel={handleCloseModal} />
+        <UpdateRoleForm onCancel={handleCloseModal} />
       </Modal>
     </>
   );

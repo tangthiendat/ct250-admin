@@ -2,10 +2,13 @@ import { Space, Table, TablePaginationConfig, Tag } from "antd";
 import { TableProps } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../../../common/constants";
-import { Module } from "../../../common/enums";
+import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import { PERMISSIONS } from "../../../interfaces/common/constants";
+import { Module } from "../../../interfaces/common/enums";
 import { IRoute, Page } from "../../../interfaces";
 import {
+  colorSortDownIcon,
+  colorSortUpIcon,
   formatTimestamp,
   getDefaultSortOrder,
   getSortDirection,
@@ -86,6 +89,12 @@ const RouteTable: React.FC<RouteTableProps> = ({ routePage, isLoading }) => {
         createdAt ? formatTimestamp(createdAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
     {
       key: "updatedAt",
@@ -96,6 +105,12 @@ const RouteTable: React.FC<RouteTableProps> = ({ routePage, isLoading }) => {
         updatedAt ? formatTimestamp(updatedAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Hành động",
@@ -152,11 +167,15 @@ const RouteTable: React.FC<RouteTableProps> = ({ routePage, isLoading }) => {
   };
   return (
     <Table
-      bordered
+      bordered={false}
       columns={columns}
       rowKey={(record: IRoute) => record.routeId}
       pagination={tableParams.pagination}
       dataSource={routePage?.content || []}
+      rowClassName={(_, index) =>
+        index % 2 === 0 ? "table-row-light" : "table-row-gray"
+      }
+      rowHoverable={false}
       loading={{
         spinning: isLoading,
         tip: "Đang tải dữ liệu...",

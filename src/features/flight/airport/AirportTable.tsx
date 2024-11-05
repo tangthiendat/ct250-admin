@@ -1,9 +1,12 @@
-import { Space, Table, TablePaginationConfig, TableProps } from "antd";
+import { Image, Space, Table, TablePaginationConfig, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../../../common/constants";
+import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import { PERMISSIONS } from "../../../interfaces/common/constants";
 import { IAirport, Page } from "../../../interfaces";
 import {
+  colorSortDownIcon,
+  colorSortUpIcon,
   formatTimestamp,
   getDefaultSortOrder,
   getSortDirection,
@@ -11,7 +14,8 @@ import {
 import Access from "../../auth/Access";
 import DeleteAirport from "./DeleteAirport";
 import UpdateAirport from "./UpdateAirport";
-import { Module } from "../../../common/enums";
+import { Module } from "../../../interfaces/common/enums";
+import ViewAirport from "./ViewAirport";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -88,10 +92,26 @@ const AirportTable: React.FC<AirportTableProps> = ({
 
   const columns: TableProps<IAirport>["columns"] = [
     {
-      title: "Id",
+      title: "ID",
       key: "airportId",
       dataIndex: "airportId",
-      width: "5%",
+      width: "3%",
+    },
+    {
+      title: "Ảnh thành phố",
+      key: "imgUrl",
+      dataIndex: "imgUrl",
+      width: "10%",
+      render: (imgUrl: string) => {
+        return (
+          <Image
+            src={imgUrl}
+            alt="airport"
+            preview={Boolean(imgUrl)}
+            fallback="image-placeholder.svg"
+          />
+        );
+      },
     },
     {
       title: "Tên sân bay",
@@ -109,7 +129,7 @@ const AirportTable: React.FC<AirportTableProps> = ({
       key: "cityName",
       title: "Tên thành phố",
       dataIndex: "cityName",
-      width: "15%",
+      width: "10%",
     },
     {
       key: "cityCode",
@@ -121,21 +141,33 @@ const AirportTable: React.FC<AirportTableProps> = ({
       key: "createdAt",
       title: "Ngày tạo",
       dataIndex: "createdAt",
-      width: "15%",
+      width: "13%",
       render: (createdAt: string) =>
         createdAt ? formatTimestamp(createdAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
     {
       key: "updatedAt",
       title: "Ngày cập nhật",
       dataIndex: "updatedAt",
-      width: "15%",
+      width: "13%",
       render: (updatedAt: string) =>
         updatedAt ? formatTimestamp(updatedAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Hành động",
@@ -143,6 +175,7 @@ const AirportTable: React.FC<AirportTableProps> = ({
 
       render: (record: IAirport) => (
         <Space>
+          <ViewAirport airport={record} />
           <Access permission={PERMISSIONS[Module.AIRPORTS].UPDATE} hideChildren>
             <UpdateAirport airport={record} />
           </Access>
@@ -156,11 +189,15 @@ const AirportTable: React.FC<AirportTableProps> = ({
 
   return (
     <Table
-      bordered
+      bordered={false}
       columns={columns}
       rowKey={(record: IAirport) => record.airportId}
       pagination={tableParams.pagination}
       dataSource={airportPage?.content || []}
+      rowClassName={(_, index) =>
+        index % 2 === 0 ? "table-row-light" : "table-row-gray"
+      }
+      rowHoverable={false}
       loading={{
         spinning: isLoading,
         tip: "Đang tải dữ liệu...",

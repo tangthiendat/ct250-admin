@@ -1,5 +1,5 @@
 import { EditOutlined } from "@ant-design/icons";
-import { Form, Modal, Tooltip } from "antd";
+import { Modal, Tooltip } from "antd";
 import { useState } from "react";
 import { type IRole } from "../../../interfaces";
 import UpdateRoleForm from "./UpdateRoleForm";
@@ -10,7 +10,6 @@ interface UpdateRoleProps {
 
 const UpdateRole: React.FC<UpdateRoleProps> = ({ role }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [updateRoleForm] = Form.useForm<IRole>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -18,7 +17,6 @@ const UpdateRole: React.FC<UpdateRoleProps> = ({ role }) => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    updateRoleForm.resetFields();
   };
   return (
     <>
@@ -36,11 +34,7 @@ const UpdateRole: React.FC<UpdateRoleProps> = ({ role }) => {
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdateRoleForm
-          form={updateRoleForm}
-          roleToUpdate={role}
-          onCancel={handleCloseModal}
-        />
+        <UpdateRoleForm roleToUpdate={role} onCancel={handleCloseModal} />
       </Modal>
     </>
   );

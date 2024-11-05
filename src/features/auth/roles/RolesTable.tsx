@@ -2,14 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../../../common/constants";
+import { PERMISSIONS } from "../../../interfaces/common/constants";
 import { IRole } from "../../../interfaces";
 import { roleService } from "../../../services/auth/role-service";
 import { formatTimestamp } from "../../../utils";
 import Access from "../Access";
 import UpdateRole from "./UpdateRole";
 import ViewRole from "./ViewRole";
-import { Module } from "../../../common/enums";
+import { Module } from "../../../interfaces/common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -132,8 +132,12 @@ const RolesTable: React.FC = () => {
       dataSource={data?.payload?.content}
       columns={columns}
       pagination={tableParams.pagination}
-      bordered
+      bordered={false}
       size="middle"
+      rowClassName={(_, index) =>
+        index % 2 === 0 ? "table-row-light" : "table-row-gray"
+      }
+      rowHoverable={false}
       loading={{
         spinning: isLoading,
         tip: "Đang tải dữ liệu...",

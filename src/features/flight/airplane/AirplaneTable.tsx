@@ -1,10 +1,18 @@
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../../../common/constants";
-import { AirplaneStatus, Module } from "../../../common/enums";
+import { PERMISSIONS } from "../../../interfaces/common/constants";
+import { AirplaneStatus, Module } from "../../../interfaces/common/enums";
 import { IAirplane, Page } from "../../../interfaces";
 import {
+  FilterFilled,
+  CaretUpFilled,
+  CaretDownFilled,
+} from "@ant-design/icons";
+import {
+  colorFilterIcon,
+  colorSortDownIcon,
+  colorSortUpIcon,
   formatTimestamp,
   getDefaultFilterValue,
   getDefaultSortOrder,
@@ -114,13 +122,13 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
       title: "Số hiệu đăng ký",
       key: "registrationNumber",
       dataIndex: "registrationNumber",
-      width: "25%",
+      width: "15%",
     },
     {
       title: "Mô hình máy bay",
       key: "model",
       dataIndex: "model",
-      width: "25%",
+      width: "15%",
       render: (model: IAirplane["model"]) => model?.modelName,
     },
     {
@@ -150,6 +158,9 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
         value: status,
       })),
       defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
+      ),
     },
 
     {
@@ -161,6 +172,12 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
         createdAt ? formatTimestamp(createdAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
 
     {
@@ -172,11 +189,18 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
         updatedAt ? formatTimestamp(updatedAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
+          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Hành động",
       key: "action",
-
+      width: "12%",
+      align: "center",
       render: (record: IAirplane) => (
         <Space>
           <ViewAirplane airplane={record} />
@@ -199,11 +223,15 @@ const AirplaneTable: React.FC<AirplaneTableProps> = ({
 
   return (
     <Table
-      bordered
+      bordered={false}
       columns={columns}
       rowKey={(record: IAirplane) => record.airplaneId}
       pagination={tableParams.pagination}
       dataSource={airplanePage?.content || []}
+      rowClassName={(_, index) =>
+        index % 2 === 0 ? "table-row-light" : "table-row-gray"
+      }
+      rowHoverable={false}
       loading={{
         spinning: isLoading,
         tip: "Đang tải dữ liệu...",

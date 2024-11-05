@@ -1,10 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { SearchProps } from "antd/es/input";
-import { Input } from "antd/lib";
+import { Input } from "antd";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import { PERMISSIONS } from "../common/constants";
-import { AirplaneStatus, Module } from "../common/enums";
 import Access from "../features/auth/Access";
 import AddAirplane from "../features/flight/airplane/AddAirplane";
 import AirplaneTable from "../features/flight/airplane/AirplaneTable";
@@ -13,6 +11,8 @@ import {
   PaginationParams,
   SortParams,
 } from "../interfaces";
+import { PERMISSIONS } from "../interfaces/common/constants";
+import { AirplaneStatus, Module } from "../interfaces/common/enums";
 import { airplaneService } from "../services/flight/airplane-service";
 
 const Airplanes: React.FC = () => {

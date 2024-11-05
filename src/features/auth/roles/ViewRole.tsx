@@ -1,5 +1,5 @@
 import { EyeOutlined } from "@ant-design/icons";
-import { Form, Modal, Tooltip } from "antd";
+import { Modal, Tooltip } from "antd";
 import { useState } from "react";
 import { type IRole } from "../../../interfaces";
 import UpdateRoleForm from "./UpdateRoleForm";
@@ -10,7 +10,6 @@ interface ViewRoleProps {
 
 const ViewRole: React.FC<ViewRoleProps> = ({ role }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [viewRoleForm] = Form.useForm<IRole>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -36,7 +35,6 @@ const ViewRole: React.FC<ViewRoleProps> = ({ role }) => {
         footer={null}
       >
         <UpdateRoleForm
-          form={viewRoleForm}
           roleToUpdate={role}
           onCancel={handleCloseModal}
           viewOnly

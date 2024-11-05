@@ -1,12 +1,10 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Modal } from "antd";
+import { Button, Modal } from "antd";
 import { useState } from "react";
-import { IUser } from "../../../interfaces";
 import UpdateUserForm from "./UpdateUserForm";
 
 const AddUser: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [addUserForm] = Form.useForm<IUser>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -14,7 +12,6 @@ const AddUser: React.FC = () => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    addUserForm.resetFields();
   };
 
   return (
@@ -30,7 +27,7 @@ const AddUser: React.FC = () => {
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdateUserForm form={addUserForm} onCancel={handleCloseModal} />
+        <UpdateUserForm onCancel={handleCloseModal} />
       </Modal>
     </>
   );

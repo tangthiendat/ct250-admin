@@ -1,12 +1,10 @@
-import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import { IRoute } from "../../../interfaces";
-import { Button, Form, Modal } from "antd";
+import { Button, Modal } from "antd";
+import { useState } from "react";
 import UpdateRouteForm from "./UpdateRouteForm";
 
 const AddRoute: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [addRouteForm] = Form.useForm<IRoute>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -14,7 +12,6 @@ const AddRoute: React.FC = () => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    addRouteForm.resetFields();
   };
 
   return (
@@ -30,7 +27,7 @@ const AddRoute: React.FC = () => {
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdateRouteForm form={addRouteForm} onCancel={handleCloseModal} />
+        <UpdateRouteForm onCancel={handleCloseModal} />
       </Modal>
     </>
   );

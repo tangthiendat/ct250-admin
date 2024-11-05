@@ -1,12 +1,10 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Modal } from "antd";
+import { Button, Modal } from "antd";
 import React, { useState } from "react";
-import { IAirplane } from "../../../interfaces";
 import UpdateAirplaneForm from "./UpdateAirplaneForm";
 
 const AddAirplane: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [addAirplaneForm] = Form.useForm<IAirplane>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -14,7 +12,6 @@ const AddAirplane: React.FC = () => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    addAirplaneForm.resetFields();
   };
 
   return (
@@ -30,10 +27,7 @@ const AddAirplane: React.FC = () => {
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdateAirplaneForm
-          form={addAirplaneForm}
-          onCancel={handleCloseModal}
-        />
+        <UpdateAirplaneForm onCancel={handleCloseModal} />
       </Modal>
     </>
   );

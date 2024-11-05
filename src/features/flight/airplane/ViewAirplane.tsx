@@ -1,5 +1,5 @@
 import { EyeOutlined } from "@ant-design/icons";
-import { Form, Modal, Tooltip } from "antd";
+import { Modal, Tooltip } from "antd";
 import { useState } from "react";
 import { IAirplane } from "../../../interfaces";
 import UpdateAirplaneForm from "./UpdateAirplaneForm";
@@ -10,7 +10,6 @@ interface ViewAirplaneProps {
 
 const ViewAirplane: React.FC<ViewAirplaneProps> = ({ airplane }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [viewAirplaneForm] = Form.useForm<IAirplane>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -37,7 +36,6 @@ const ViewAirplane: React.FC<ViewAirplaneProps> = ({ airplane }) => {
         footer={null}
       >
         <UpdateAirplaneForm
-          form={viewAirplaneForm}
           airplaneToUpdate={airplane}
           onCancel={handleCloseModal}
           viewOnly

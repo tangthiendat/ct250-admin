@@ -3,20 +3,23 @@ import React, { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, theme } from "antd";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
+import { BsFillLuggageFill } from "react-icons/bs";
 import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
 import { FaLocationArrow } from "react-icons/fa6";
+import { GiCommercialAirplane } from "react-icons/gi";
+import { GrBusinessService } from "react-icons/gr";
+import { IoFastFoodOutline, IoShieldCheckmark } from "react-icons/io5";
 import { MdDashboard, MdFlight } from "react-icons/md";
+import { RiCalendarScheduleLine } from "react-icons/ri";
+import { TbRouteSquare } from "react-icons/tb";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import Loading from "../common/components/Loading";
-import { PERMISSIONS } from "../common/constants";
 import { useAvatarUrl } from "../features/auth/hooks/useAvatarUrl";
 import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
+import { PERMISSIONS } from "../interfaces/common/constants";
+import { Module } from "../interfaces/common/enums";
 import { authService } from "../services";
-import { Module } from "../common/enums";
-import { TbRouteSquare } from "react-icons/tb";
-import { IoShieldCheckmark } from "react-icons/io5";
-import { GiCommercialAirplane } from "react-icons/gi";
 
 const { Header, Sider } = Layout;
 
@@ -101,9 +104,30 @@ const AdminLayout: React.FC = () => {
           item.method === PERMISSIONS[Module.ROUTES].GET_PAGINATION.method,
       );
 
-      const hasFlightChildren: boolean = Boolean(
-        viewAirports || viewAirplanes || viewRoutes,
+      const viewFlightSchedules = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.FLIGHTS].GET_ALL.apiPath &&
+          item.method === PERMISSIONS[Module.FLIGHTS].GET_ALL.method,
       );
+
+      const hasFlightChildren: boolean = Boolean(
+        viewAirports || viewAirplanes || viewRoutes || viewFlightSchedules,
+      );
+
+      const viewMeals = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.MEALS].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.MEALS].GET_PAGINATION.method,
+      );
+
+      const viewBaggages = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.BAGGAGES].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.BAGGAGES].GET_PAGINATION.method,
+      );
+
+      const hasServiceChildren: boolean = Boolean(viewMeals || viewBaggages);
 
       const menuItems = [
         {
@@ -184,6 +208,44 @@ const AdminLayout: React.FC = () => {
                           label: <NavLink to="/routes">Tuyến bay</NavLink>,
                           key: "routes",
                           icon: <TbRouteSquare />,
+                        },
+                      ]
+                    : []),
+                  ...(viewFlightSchedules
+                    ? [
+                        {
+                          label: <NavLink to="/schedule">Lịch bay</NavLink>,
+                          key: "schedule",
+                          icon: <RiCalendarScheduleLine />,
+                        },
+                      ]
+                    : []),
+                ],
+              },
+            ]
+          : []),
+        ...(hasServiceChildren
+          ? [
+              {
+                label: "Dịch vụ",
+                key: "service-management",
+                icon: <GrBusinessService />,
+                children: [
+                  ...(viewMeals
+                    ? [
+                        {
+                          label: <NavLink to="/meals">Món ăn</NavLink>,
+                          key: "meals",
+                          icon: <IoFastFoodOutline size={17} />,
+                        },
+                      ]
+                    : []),
+                  ...(viewBaggages
+                    ? [
+                        {
+                          label: <NavLink to="/baggages">Hành lý</NavLink>,
+                          key: "baggages",
+                          icon: <BsFillLuggageFill size={17} />,
                         },
                       ]
                     : []),

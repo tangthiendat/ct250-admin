@@ -1,7 +1,7 @@
 import { EyeOutlined } from "@ant-design/icons";
-import { IUser } from "../../../interfaces";
+import { Modal, Tooltip } from "antd";
 import { useState } from "react";
-import { Form, Modal, Tooltip } from "antd";
+import { IUser } from "../../../interfaces";
 import UpdateUserForm from "./UpdateUserForm";
 
 interface ViewUserProps {
@@ -10,7 +10,6 @@ interface ViewUserProps {
 
 const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [viewUserForm] = Form.useForm<IUser>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -37,7 +36,6 @@ const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
         footer={null}
       >
         <UpdateUserForm
-          form={viewUserForm}
           userToUpdate={user}
           onCancel={handleCloseModal}
           viewOnly

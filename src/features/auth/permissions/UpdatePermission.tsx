@@ -1,5 +1,5 @@
 import { EditOutlined } from "@ant-design/icons";
-import { Form, Modal, Tooltip } from "antd";
+import { Modal, Tooltip } from "antd";
 import { useState } from "react";
 import { IPermission } from "../../../interfaces";
 import UpdatePermissionForm from "./UpdatePermissionForm";
@@ -10,7 +10,6 @@ interface UpdatePermissionProps {
 
 const UpdatePermission: React.FC<UpdatePermissionProps> = ({ permission }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [updatePermissionForm] = Form.useForm<IPermission>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -18,7 +17,6 @@ const UpdatePermission: React.FC<UpdatePermissionProps> = ({ permission }) => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    updatePermissionForm.resetFields();
   };
 
   return (
@@ -38,7 +36,6 @@ const UpdatePermission: React.FC<UpdatePermissionProps> = ({ permission }) => {
         footer={null}
       >
         <UpdatePermissionForm
-          form={updatePermissionForm}
           permissionToUpdate={permission}
           onCancel={handleCloseModal}
         />

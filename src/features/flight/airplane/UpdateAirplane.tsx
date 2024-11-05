@@ -1,5 +1,5 @@
 import { EditOutlined } from "@ant-design/icons";
-import { Form, Modal, Tooltip } from "antd";
+import { Modal, Tooltip } from "antd";
 import { useState } from "react";
 import { IAirplane } from "../../../interfaces";
 import UpdateAirplaneForm from "./UpdateAirplaneForm";
@@ -10,7 +10,6 @@ interface UpdateAirplaneProps {
 
 const UpdateAirplane: React.FC<UpdateAirplaneProps> = ({ airplane }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [updateAirplaneForm] = Form.useForm<IAirplane>();
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -18,7 +17,6 @@ const UpdateAirplane: React.FC<UpdateAirplaneProps> = ({ airplane }) => {
 
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    updateAirplaneForm.resetFields();
   };
 
   return (
@@ -38,7 +36,6 @@ const UpdateAirplane: React.FC<UpdateAirplaneProps> = ({ airplane }) => {
         footer={null}
       >
         <UpdateAirplaneForm
-          form={updateAirplaneForm}
           airplaneToUpdate={airplane}
           onCancel={handleCloseModal}
         />

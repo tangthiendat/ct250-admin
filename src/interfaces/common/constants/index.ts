@@ -7,7 +7,11 @@ export const PERMISSIONS = {
     GET_BY_ID: { method: "GET", apiPath: "/api/v1/users/{id}" },
     CREATE: { method: "POST", apiPath: "/api/v1/users" },
     UPDATE: { method: "PUT", apiPath: "/api/v1/users/{id}" },
-    DELETE: { method: "DELETE", apiPath: "/api/v1/users/{id}" }, CHANGE_PASSWORD: { method: "PUT", apiPath: "/api/v1/users/{id}/change-password" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/users/{id}" },
+    CHANGE_PASSWORD: {
+      method: "PUT",
+      apiPath: "/api/v1/users/{id}/change-password",
+    },
   },
   [Module.ROLES]: {
     GET_PAGINATION: { method: "GET", apiPath: "/api/v1/roles" },
@@ -44,6 +48,29 @@ export const PERMISSIONS = {
     UPDATE: { method: "PUT", apiPath: "/api/v1/routes/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/routes/{id}" },
   },
+  [Module.FLIGHTS]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/flights" },
+    GET_BY_ID: { method: "GET", apiPath: "/api/v1/flights/{id}" },
+    GET_ALL: { method: "GET", apiPath: "/api/v1/flights/all" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/flights/{id}" },
+    UPLOAD: { method: "POST", apiPath: "/api/v1/flights/upload" },
+  },
+  [Module.MEALS]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/meals" },
+    GET_ALL: { method: "GET", apiPath: "/api/v1/meals/all" },
+    CREATE: { method: "POST", apiPath: "/api/v1/meals" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/meals/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/meals/{id}" },
+  },
+  [Module.BAGGAGES]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/baggage" },
+    GET_ALL: { method: "GET", apiPath: "/api/v1/baggage/all" },
+    CREATE: { method: "POST", apiPath: "/api/v1/baggage" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/baggage/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/baggage/{id}" },
+  },
 };
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
+
+export const PRIMARY_COLOR = "#004AAD";

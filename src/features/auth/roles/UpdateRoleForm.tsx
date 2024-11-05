@@ -1,15 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Input,
-  Row,
-  Space,
-  Switch,
-  type FormInstance,
-} from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Switch } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
@@ -18,7 +8,6 @@ import { permissionService, roleService } from "../../../services";
 import RolePermissions from "./RolePermissions";
 
 interface UpdateRoleFormProps {
-  form: FormInstance<IRole>;
   roleToUpdate?: IRole;
   onCancel: () => void;
   viewOnly?: boolean;
@@ -30,11 +19,11 @@ interface UpdateRoleArgs {
 }
 
 const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
-  form,
   roleToUpdate,
   onCancel,
   viewOnly = false,
 }) => {
+  const [form] = Form.useForm<IRole>();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -88,6 +77,7 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
           onSuccess: () => {
             toast.success("Cập nhật vai trò thành công");
             onCancel();
+            form.resetFields();
           },
           onError: () => {
             toast.error("Cập nhật vai trò thất bại");
@@ -101,11 +91,12 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
           roleName: values.roleName.toUpperCase(),
           permissions: form.getFieldValue("permissions"),
         };
-        console.log(newRole);
+
         createRole(newRole, {
           onSuccess: () => {
             toast.success("Thêm mới vai trò thành công");
             onCancel();
+            form.resetFields();
           },
           onError: () => {
             toast.error("Thêm mới vai trò thất bại");
@@ -165,7 +156,9 @@ const UpdateRoleForm: React.FC<UpdateRoleFormProps> = ({
       {!viewOnly && (
         <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
           <Space>
-            <Button onClick={onCancel}>Hủy</Button>
+            <Button onClick={onCancel} loading={isCreating || isUpdating}>
+              Hủy
+            </Button>
             <Button
               type="primary"
               htmlType="submit"

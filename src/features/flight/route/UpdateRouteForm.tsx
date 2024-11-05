@@ -3,7 +3,8 @@ import {
   Button,
   Col,
   Form,
-  FormInstance,
+  InputNumber,
+  Radio,
   Row,
   Select,
   SelectProps,
@@ -12,13 +13,12 @@ import {
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
-import { IAirport, IRoute } from "../../../interfaces";
+import { IAirport, IRoute, RouteType } from "../../../interfaces";
 import { airportService, routeService } from "../../../services";
 import { groupBy } from "../../../utils";
 import AirportOption from "../airport/AirportOption";
 
 interface UpdateRouteFormProps {
-  form: FormInstance<IRoute>;
   routeToUpdate?: IRoute;
   onCancel: () => void;
 }
@@ -28,11 +28,16 @@ interface UpdateRouteArgs {
   updatedRoute: IRoute;
 }
 
+const routeTypeOptions = Object.values(RouteType).map((type: string) => ({
+  label: type,
+  value: type,
+}));
+
 const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
-  form,
   routeToUpdate,
   onCancel,
 }) => {
+  const [form] = Form.useForm<IRoute>();
   const queryClient = useQueryClient();
   const { data: airportsData, isLoading: isAirportsLoading } = useQuery({
     queryKey: ["airports"],
@@ -115,6 +120,7 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
           onSuccess: () => {
             toast.success("Cập nhật tuyến bay thành công");
             onCancel();
+            form.resetFields();
           },
           onError: () => {
             toast.error("Cập nhật tuyến bay thất bại");
@@ -127,6 +133,7 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
         onSuccess: () => {
           toast.success("Thêm mới tuyến bay thành công");
           onCancel();
+          form.resetFields();
         },
         onError: () => {
           toast.error("Thêm mới tuyến bay thất bại");
@@ -226,11 +233,54 @@ const UpdateRouteForm: React.FC<UpdateRouteFormProps> = ({
             />
           </Form.Item>
         </Col>
+        <Col span={24}>
+          <Form.Item
+            className="flex-1"
+            label="Loại tuyến bay"
+            name="routeType"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn trạng thái",
+              },
+            ]}
+            tooltip={
+              <div>
+                <p>Loại tuyến bay</p>
+                <p>- DOMESTIC: các tuyến bay nội địa</p>
+                <p>- INTERNATIONAL: các tuyến bay quốc tế</p>
+              </div>
+            }
+          >
+            <Radio.Group
+              options={routeTypeOptions}
+              optionType="button"
+              buttonStyle="solid"
+            />
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item
+            className="flex-1"
+            label="Thời gian bay"
+            name="duration"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập thời gian bay",
+              },
+            ]}
+          >
+            <InputNumber addonAfter="phút" />
+          </Form.Item>
+        </Col>
       </Row>
 
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
-          <Button onClick={onCancel}>Hủy</Button>
+          <Button onClick={onCancel} loading={isCreating || isUpdating}>
+            Hủy
+          </Button>
           <Button
             type="primary"
             htmlType="submit"

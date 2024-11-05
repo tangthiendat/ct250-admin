@@ -10,17 +10,15 @@ import {
   Radio,
   Select,
   Space,
-  type FormInstance,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../common/components/Loading";
-import { AirplaneStatus } from "../../../common/enums";
 import { IAirplane, IModel } from "../../../interfaces";
+import { AirplaneStatus } from "../../../interfaces/common/enums";
 import { airplaneService, modelService } from "../../../services";
 
 interface UpdateAirplaneFormProps {
-  form: FormInstance<IAirplane>;
   airplaneToUpdate?: IAirplane;
   onCancel: () => void;
   viewOnly?: boolean;
@@ -37,11 +35,11 @@ const statusOptions = Object.values(AirplaneStatus).map((status: string) => ({
 }));
 
 const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
-  form,
   airplaneToUpdate,
   onCancel,
   viewOnly = false,
 }) => {
+  const [form] = Form.useForm<IAirplane>();
   const [newModelName, setNewModelName] = useState<string>("");
   const inputRef = useRef<InputRef>(null);
   const isUpdateSession: boolean = !!airplaneToUpdate;
@@ -117,6 +115,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
           onSuccess: () => {
             toast.success("Cập nhật máy bay thành công");
             onCancel();
+            form.resetFields();
           },
           onError: () => {
             toast.error("Cập nhật máy bay thất bại");
@@ -131,6 +130,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
         onSuccess: () => {
           toast.success("Thêm mới máy bay thành công");
           onCancel();
+          form.resetFields();
         },
         onError: () => {
           toast.error("Thêm mới máy thất bại");
@@ -138,11 +138,6 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
       });
     }
   }
-
-  // function handleModelFinish(values: IModel) {
-  //   console.log("TRIGGER create");
-  //   createModel(values);
-  // }
 
   const onNewModelNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewModelName(event.target.value);
@@ -217,6 +212,7 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
                       type="text"
                       icon={<PlusOutlined />}
                       onClick={addNewModel}
+                      loading={isCreatingModel}
                     >
                       Thêm mới mô hình
                     </Button>
@@ -253,7 +249,11 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
               },
             ]}
           >
-            <Input readOnly={viewOnly || isUpdateSession} addonAfter="Km" />
+            <InputNumber
+              readOnly={viewOnly || isUpdateSession}
+              min={0}
+              addonAfter="km"
+            />
           </Form.Item>
 
           <Form.Item
@@ -267,7 +267,11 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
               },
             ]}
           >
-            <Input readOnly={viewOnly || isUpdateSession} addonAfter="Km/h" />
+            <InputNumber
+              readOnly={viewOnly || isUpdateSession}
+              min={0}
+              addonAfter="km/h"
+            />
           </Form.Item>
         </div>
         <div className="flex gap-8">
@@ -284,8 +288,8 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
           >
             <InputNumber
               readOnly={viewOnly || isUpdateSession}
+              min={0}
               addonAfter="m"
-              stringMode
             />
           </Form.Item>
 
@@ -302,8 +306,8 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
           >
             <InputNumber
               readOnly={viewOnly || isUpdateSession}
+              min={0}
               addonAfter="m"
-              stringMode
             />
           </Form.Item>
         </div>
@@ -321,8 +325,8 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
           >
             <InputNumber
               readOnly={viewOnly || isUpdateSession}
+              min={0}
               addonAfter="tấn"
-              stringMode
             />
           </Form.Item>
 
@@ -337,7 +341,11 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
               },
             ]}
           >
-            <InputNumber readOnly={viewOnly || isUpdateSession} />
+            <InputNumber
+              readOnly={viewOnly || isUpdateSession}
+              min={0}
+              addonAfter="ghế"
+            />
           </Form.Item>
         </div>
         <div className="flex gap-8">
@@ -364,7 +372,9 @@ const UpdateAirplaneForm: React.FC<UpdateAirplaneFormProps> = ({
         {!viewOnly && (
           <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
             <Space>
-              <Button onClick={onCancel}>Hủy</Button>
+              <Button onClick={onCancel} loading={isCreating || isUpdating}>
+                Hủy
+              </Button>
               <Button
                 type="primary"
                 htmlType="submit"

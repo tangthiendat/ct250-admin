@@ -1,22 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  Col,
-  Form,
-  FormInstance,
-  Input,
-  Row,
-  Select,
-  Space,
-} from "antd";
+import { Button, Col, Form, Input, Row, Select, Space } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { Method, Module } from "../../../common/enums";
 import { IPermission } from "../../../interfaces";
+import { Method, Module } from "../../../interfaces/common/enums";
 import { permissionService } from "../../../services";
 
 interface UpdatePermissionFormProps {
-  form: FormInstance<IPermission>;
   permissionToUpdate?: IPermission;
   onCancel: () => void;
 }
@@ -32,10 +22,10 @@ const moduleOptions = Object.values(Module).map((module: string) => ({
 }));
 
 const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
-  form,
   permissionToUpdate,
   onCancel,
 }) => {
+  const [form] = Form.useForm<IPermission>();
   const queryClient = useQueryClient();
 
   const { mutate: createPermission, isPending: isCreating } = useMutation({
@@ -68,6 +58,7 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
           onSuccess: () => {
             toast.success("Cập nhật quyền hạn thành công");
             onCancel();
+            form.resetFields();
           },
           onError: () => {
             toast.error("Cập nhật quyền hạn thất bại");
@@ -79,6 +70,7 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
         onSuccess: () => {
           toast.success("Thêm quyền hạn thành công");
           onCancel();
+          form.resetFields();
         },
         onError: () => {
           toast.error("Thêm quyền hạn thất bại");
@@ -141,7 +133,9 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
       </Row>
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
-          <Button onClick={onCancel}>Hủy</Button>
+          <Button onClick={onCancel} loading={isCreating || isUpdating}>
+            Hủy
+          </Button>
           <Button
             type="primary"
             htmlType="submit"
