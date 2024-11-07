@@ -11,6 +11,11 @@ interface UpdateFeeFormProps {
   onCancel: () => void;
 }
 
+interface UpdateFeeArgs {
+  feeId: number;
+  updatedFee: IFee;
+}
+
 const UpdateFeeForm: React.FC<UpdateFeeFormProps> = ({
   feeToUpdate,
   onCancel,
@@ -46,9 +51,41 @@ const UpdateFeeForm: React.FC<UpdateFeeFormProps> = ({
     },
   });
 
+  const { mutate: updateFee, isPending: isUpdating } = useMutation({
+    mutationFn: ({ feeId, updatedFee }: UpdateFeeArgs) =>
+      feeService.update(feeId, updatedFee),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey.includes("fees");
+        },
+      });
+    },
+  });
+
   function handleFinish(values: IFee) {
     if (isUpdateSession) {
-      console.log("update");
+      const newFeeGroup = feeGroupsData!.payload!.find(
+        (feeGroup) => feeGroup.feeGroupId === values.feeGroup.feeGroupId,
+      );
+      const updatedFee = {
+        ...feeToUpdate,
+        ...values,
+        feeGroup: newFeeGroup!,
+      };
+      updateFee(
+        { feeId: feeToUpdate!.feeId, updatedFee },
+        {
+          onSuccess: () => {
+            toast.success("Cập nhật phí thành công");
+            onCancel();
+            form.resetFields();
+          },
+          onError: () => {
+            toast.error("Cập nhật phí thất bại");
+          },
+        },
+      );
     } else {
       createFee(values, {
         onSuccess: () => {
@@ -90,11 +127,13 @@ const UpdateFeeForm: React.FC<UpdateFeeFormProps> = ({
       </Form.Item>
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
-          <Button onClick={onCancel}>Hủy</Button>
+          <Button onClick={onCancel} loading={isCreating || isUpdating}>
+            Hủy
+          </Button>
           <Button
             type="primary"
             htmlType="submit"
-            // loading={isCreating || isUpdating}
+            loading={isCreating || isUpdating}
           >
             {isUpdateSession ? "Cập nhật" : "Thêm mới"}
           </Button>

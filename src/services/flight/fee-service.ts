@@ -14,6 +14,7 @@ interface IFeeService {
     sort?: SortParams,
   ): Promise<ApiResponse<Page<IFee>>>;
   create(newFee: IFee): Promise<ApiResponse<IFee>>;
+  update(feeId: number, updatedFee: IFee): Promise<ApiResponse<IFee>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("fees", { auth: true });
@@ -35,6 +36,10 @@ class FeeService implements IFeeService {
   }
   async create(newFee: IFee): Promise<ApiResponse<IFee>> {
     return (await apiClient.post("", newFee)).data;
+  }
+
+  async update(feeId: number, updatedFee: IFee): Promise<ApiResponse<IFee>> {
+    return (await apiClient.put(`/${feeId}`, updatedFee)).data;
   }
 }
 

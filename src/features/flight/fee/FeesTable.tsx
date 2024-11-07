@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { Table, TablePaginationConfig } from "antd";
+import { Space, Table, TablePaginationConfig } from "antd";
 import { CaretUpFilled, CaretDownFilled } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { feeService } from "../../../services";
 import { TableProps } from "antd/lib";
-import { IFee, SortParams } from "../../../interfaces";
+import { IFee, Module, PERMISSIONS, SortParams } from "../../../interfaces";
 import {
   colorSortDownIcon,
   colorSortUpIcon,
@@ -13,6 +13,8 @@ import {
   getDefaultSortOrder,
   getSortDirection,
 } from "../../../utils";
+import Access from "../../auth/Access";
+import UpdateFee from "./UpdateFee";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -152,6 +154,18 @@ const FeesTable: React.FC = () => {
           <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
           <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
         </div>
+      ),
+    },
+    {
+      title: "Hành động",
+      key: "action",
+      width: "12%",
+      render: (record: IFee) => (
+        <Space>
+          <Access permission={PERMISSIONS[Module.FEES].UPDATE} hideChildren>
+            <UpdateFee fee={record} />
+          </Access>
+        </Space>
       ),
     },
   ];
