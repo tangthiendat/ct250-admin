@@ -1,5 +1,10 @@
 import { ICountry } from "../common";
-import { AirplaneStatus, RouteType, TicketClassName } from "../common/enums";
+import {
+  AirplaneStatus,
+  PassengerType,
+  RouteType,
+  TicketClassName,
+} from "../common/enums";
 
 export interface IAirport {
   airportId: number;
@@ -95,4 +100,29 @@ export interface IFlightSchedule {
   seatAvailability: ISeatAvailability[];
   airplane: IAirplane;
   createdAt: string;
+  updatedAt?: string;
+}
+
+export interface IFeeGroup {
+  feeGroupId: number;
+  feeGroupName: string;
+}
+
+export interface IFeePricing {
+  feePricingId: number;
+  passengerType: PassengerType;
+  feeAmount: number;
+  isPercentage: boolean;
+  routeType: RouteType;
+  validFrom: string;
+  validTo: string;
+}
+
+export interface IFee {
+  feeId: number;
+  feeName: string;
+  feeGroup: IFeeGroup;
+  feePricing: IFeePricing[];
+  createdAt: string;
+  updatedAt?: string;
 }

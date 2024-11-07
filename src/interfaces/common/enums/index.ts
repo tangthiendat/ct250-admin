@@ -16,6 +16,8 @@ export enum Module {
   FLIGHTS = "FLIGHTS",
   MEALS = "MEALS",
   BAGGAGES = "BAGGAGE",
+  FEES = "FEES",
+  FEE_GROUP = "FEE-GROUP",
 }
 
 //AIRPLANES
@@ -48,4 +50,10 @@ export enum FlightStatus {
   DELAYED = "DELAYED",
   CANCELLED = "CANCELLED",
   COMPLETED = "COMPLETED",
+}
+
+export enum PassengerType {
+  ADULT = "ADULT",
+  CHILD = "CHILD",
+  INFANT = "INFANT",
 }

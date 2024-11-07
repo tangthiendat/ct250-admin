@@ -69,6 +69,16 @@ export const PERMISSIONS = {
     UPDATE: { method: "PUT", apiPath: "/api/v1/baggage/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/baggage/{id}" },
   },
+  [Module.FEES]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/fees" },
+    GET_ALL: { method: "GET", apiPath: "/api/v1/fees/all" },
+    CREATE: { method: "POST", apiPath: "/api/v1/fees" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/fees/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/fees/{id}" },
+  },
+  [Module.FEE_GROUP]: {
+    GET_ALL: { method: "GET", apiPath: "/api/v1/fee-groups/all" },
+  },
 };
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
