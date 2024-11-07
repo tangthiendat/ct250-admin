@@ -14,6 +14,7 @@ import {
   RouteType,
 } from "../../../interfaces";
 import { colorFilterIcon } from "../../../utils";
+import AddFeePricing from "./AddFeePricing";
 
 const FeeDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -139,7 +140,7 @@ const FeeDetails: React.FC = () => {
           <div className="mb-5 flex items-center justify-between">
             <h2 className="text-xl font-semibold">Chi tiết mức phí</h2>
 
-            {/* <AddFee /> */}
+            <AddFeePricing fee={fee} />
           </div>
           <Table
             rowKey={(record) => record.feePricingId}
