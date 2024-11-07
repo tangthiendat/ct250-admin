@@ -21,6 +21,7 @@ import {
 } from "../../../interfaces";
 import { feeService } from "../../../services";
 import { formatCurrency, parseCurrency } from "../../../utils";
+import { useEffect } from "react";
 
 interface UpdateFeePricingFormProps {
   feePricingToUpdate?: IFeePricing;
@@ -41,6 +42,12 @@ const UpdateFeePricingForm: React.FC<UpdateFeePricingFormProps> = ({
   const [form] = Form.useForm<IFeePricing>();
   const isUpdateSession: boolean = !!feePricingToUpdate;
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (feePricingToUpdate) {
+      form.setFieldsValue(feePricingToUpdate);
+    }
+  }, [form, feePricingToUpdate]);
 
   const passengerTypeOptions = Object.keys(PASSENGER_TYPE_TRANSLATION).map(
     (key) => ({
@@ -78,7 +85,29 @@ const UpdateFeePricingForm: React.FC<UpdateFeePricingFormProps> = ({
 
   function handleFinish(values: IFeePricing) {
     if (isUpdateSession) {
-      // Update fee pricing
+      const updatedFee = {
+        ...fee,
+        feePricing: fee.feePricing.map((feePricing) => {
+          if (feePricing.feePricingId === feePricingToUpdate!.feePricingId) {
+            return { ...feePricing, ...values };
+          }
+          return feePricing;
+        }),
+      };
+      console.log(updatedFee);
+      updateFee(
+        { feeId: fee.feeId, updatedFee },
+        {
+          onSuccess: () => {
+            toast.success("Cập nhật chi tiết phí thành công");
+            onCancel();
+            form.resetFields();
+          },
+          onError: () => {
+            toast.error("Cập nhật chi tiết phí thất bại");
+          },
+        },
+      );
     } else {
       const updatedFee = { ...fee, feePricing: [...fee.feePricing, values] };
       updateFee(

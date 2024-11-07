@@ -15,6 +15,7 @@ import {
 } from "../../../interfaces";
 import { colorFilterIcon } from "../../../utils";
 import AddFeePricing from "./AddFeePricing";
+import UpdateFeePricing from "./UpdateFeePricing";
 
 const FeeDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -119,6 +120,9 @@ const FeeDetails: React.FC = () => {
       title: "Hành động",
       key: "action",
       width: "10%",
+      render: (record: IFeePricing) => (
+        <UpdateFeePricing fee={fee!} feePricing={record} />
+      ),
     },
   ];
 
