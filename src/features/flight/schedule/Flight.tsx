@@ -3,8 +3,14 @@ import dayjs from "dayjs";
 import { GoDotFill } from "react-icons/go";
 import { IoAirplane } from "react-icons/io5";
 import { useNavigate } from "react-router";
-import { IFlightSchedule, PRIMARY_COLOR } from "../../../interfaces";
+import {
+  IFlightSchedule,
+  Module,
+  PERMISSIONS,
+  PRIMARY_COLOR,
+} from "../../../interfaces";
 import { colorFlightStatus, getFormattedDuration } from "../../../utils";
+import Access from "../../auth/Access";
 
 interface FlightProps {
   flight: IFlightSchedule;
@@ -88,15 +94,20 @@ const Flight: React.FC<FlightProps> = ({ flight }) => {
             }}
           />
         </div>
-        <div className="flex items-center justify-end px-2">
-          <Button
-            type="primary"
-            className="my-3"
-            onClick={() => navigate(`${flight.flightId}`)}
-          >
-            Xem chi tiết
-          </Button>
-        </div>
+        <Access
+          permission={PERMISSIONS[Module.FLIGHTS].GET_BY_ID}
+          hideChildren={false}
+        >
+          <div className="flex items-center justify-end px-2">
+            <Button
+              type="primary"
+              className="my-3"
+              onClick={() => navigate(`${flight.flightId}`)}
+            >
+              Xem chi tiết
+            </Button>
+          </div>
+        </Access>
       </div>
     </div>
   );

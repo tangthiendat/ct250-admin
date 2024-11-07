@@ -11,3 +11,5 @@ export * from "./flight/airplane-service.ts";
 export * from "./flight/route-service.ts";
 export * from "./flight/model-service.ts";
 export * from "./flight/flight-schedule-service.ts";
+export * from "./flight/fee-service.ts";
+export * from "./flight/fee-group-service.ts";

@@ -7,7 +7,7 @@ import {
   CaretDownFilled,
 } from "@ant-design/icons";
 import { IBaggages, Page } from "../../../interfaces";
-import { PERMISSIONS } from "../../../interfaces/common/constants";
+import { PERMISSIONS, ROUTE_TYPE_TRANSLATION } from "../../../interfaces";
 import { Module, RouteType } from "../../../interfaces/common/enums";
 import {
   colorFilterIcon,
@@ -33,11 +33,6 @@ interface BaggageTableProps {
   baggagePage?: Page<IBaggages>;
   isLoading: boolean;
 }
-
-const routeTypeTranslations: Record<RouteType, string> = {
-  [RouteType.DOMESTIC]: "Nội địa",
-  [RouteType.INTERNATIONAL]: "Quốc tế",
-};
 
 const BaggageTable: React.FC<BaggageTableProps> = ({
   baggagePage,
@@ -153,10 +148,10 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
       key: "routeType",
       dataIndex: "routeType",
       width: "15%",
-      render: (status: IBaggages["routeType"]) => {
+      render: (routeType: IBaggages["routeType"]) => {
         let color = "";
 
-        switch (status) {
+        switch (routeType) {
           case RouteType.DOMESTIC:
             color = "green";
             break;
@@ -165,10 +160,10 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
             break;
         }
 
-        return <Tag color={color}>{routeTypeTranslations[status]}</Tag>;
+        return <Tag color={color}>{ROUTE_TYPE_TRANSLATION[routeType]}</Tag>;
       },
       filters: Object.values(RouteType).map((routeType: string) => ({
-        text: routeTypeTranslations[routeType as RouteType],
+        text: ROUTE_TYPE_TRANSLATION[routeType as RouteType],
         value: routeType,
       })),
       defaultFilteredValue: getDefaultFilterValue(searchParams, "routeType"),

@@ -1,4 +1,4 @@
-import { Module } from "../enums";
+import { Module, PassengerType, RouteType } from "../enums";
 
 export const PERMISSIONS = {
   [Module.USERS]: {
@@ -69,6 +69,28 @@ export const PERMISSIONS = {
     UPDATE: { method: "PUT", apiPath: "/api/v1/baggage/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/baggage/{id}" },
   },
+  [Module.FEES]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/fees" },
+    GET_ALL: { method: "GET", apiPath: "/api/v1/fees/all" },
+    GET_BY_ID: { method: "GET", apiPath: "/api/v1/fees/{id}" },
+    CREATE: { method: "POST", apiPath: "/api/v1/fees" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/fees/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/fees/{id}" },
+  },
+  [Module.FEE_GROUP]: {
+    GET_ALL: { method: "GET", apiPath: "/api/v1/fee-groups/all" },
+  },
+};
+
+export const ROUTE_TYPE_TRANSLATION: Record<RouteType, string> = {
+  [RouteType.DOMESTIC]: "Nội địa",
+  [RouteType.INTERNATIONAL]: "Quốc tế",
+};
+
+export const PASSENGER_TYPE_TRANSLATION: Record<PassengerType, string> = {
+  [PassengerType.ADULT]: "Người lớn",
+  [PassengerType.CHILD]: "Trẻ em",
+  [PassengerType.INFANT]: "Em bé",
 };
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
