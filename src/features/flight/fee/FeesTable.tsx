@@ -15,6 +15,7 @@ import {
 } from "../../../utils";
 import Access from "../../auth/Access";
 import UpdateFee from "./UpdateFee";
+import ViewFee from "./ViewFee";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -162,6 +163,9 @@ const FeesTable: React.FC = () => {
       width: "12%",
       render: (record: IFee) => (
         <Space>
+          <Access permission={PERMISSIONS[Module.FEES].GET_BY_ID} hideChildren>
+            <ViewFee fee={record} />
+          </Access>
           <Access permission={PERMISSIONS[Module.FEES].UPDATE} hideChildren>
             <UpdateFee fee={record} />
           </Access>

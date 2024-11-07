@@ -5,12 +5,7 @@ import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import { IoAirplane } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router";
 import Loading from "../../../common/components/Loading";
-import {
-  IFlightPricing,
-  Module,
-  PERMISSIONS,
-  SeatAvailabilityStatus,
-} from "../../../interfaces";
+import { IFlightPricing, SeatAvailabilityStatus } from "../../../interfaces";
 import { flightScheduleService } from "../../../services";
 import {
   colorFlightStatus,
@@ -18,7 +13,6 @@ import {
   getFormattedDuration,
   isInDateRange,
 } from "../../../utils";
-import Access from "../../auth/Access";
 import ViewSeatAvailability from "./ViewSeatAvailability";
 
 const FlightDetails: React.FC = () => {
@@ -112,175 +106,169 @@ const FlightDetails: React.FC = () => {
   ];
 
   return (
-    <Access
-      permission={PERMISSIONS[Module.FLIGHTS].GET_BY_ID}
-      hideChildren={false}
-    >
-      {flight && (
-        <div className="h-full">
-          <Space align="start" size="small">
+    flight && (
+      <div className="h-full">
+        <Space align="start" size="small">
+          <Tooltip title="Quay lại">
             <Button icon={<GoArrowLeft />} onClick={() => navigate(-1)} />
-            <div>
-              <p className="mb-1 text-gray-500">Trở về trang trước</p>
-              <div className="mb-1 flex items-center gap-1 text-base font-bold">
-                <span>{flight.route.departureAirport.cityName}</span>
-                <GoArrowRight className="text-base" />
-                <span>{flight.route.arrivalAirport.cityName}</span>
-              </div>
-              {/* <p className="text-gray-500">{flight.airplane.model.modelName}</p> */}
-              <Tag
-                color={colorFlightStatus(flight.flightStatus)}
-                className="font-semibold"
-              >
-                {flight.flightStatus}
-              </Tag>
+          </Tooltip>
+          <div>
+            <div className="mb-1 flex items-center gap-1 text-base font-bold">
+              <span>{flight.route.departureAirport.cityName}</span>
+              <GoArrowRight className="text-base" />
+              <span>{flight.route.arrivalAirport.cityName}</span>
             </div>
-          </Space>
-          <div className="card mt-3 flex min-h-[400px] gap-6 px-6 py-6">
-            <div className="h-full basis-1/3">
-              <Timeline
-                mode="left"
-                items={[
-                  {
-                    className: "timeline-item-content",
-                    label: (
-                      <div>
-                        <div className="text-lg font-semibold">
-                          {dayjs(flight.departureDateTime).format("HH:mm")}
-                        </div>
-                        <div className="text-gray-500">
-                          {dayjs(flight.departureDateTime).format("DD/MM/YYYY")}
-                        </div>
+            {/* <p className="text-gray-500">{flight.airplane.model.modelName}</p> */}
+            <Tag
+              color={colorFlightStatus(flight.flightStatus)}
+              className="font-semibold"
+            >
+              {flight.flightStatus}
+            </Tag>
+          </div>
+        </Space>
+        <div className="card mt-3 flex min-h-[400px] gap-6 px-6 py-6">
+          <div className="h-full basis-1/3">
+            <Timeline
+              mode="left"
+              items={[
+                {
+                  className: "timeline-item-content",
+                  label: (
+                    <div>
+                      <div className="text-lg font-semibold">
+                        {dayjs(flight.departureDateTime).format("HH:mm")}
                       </div>
-                    ),
-                    children: (
-                      <div>
-                        <div className="text-lg font-semibold">
-                          {flight.route.departureAirport.cityName}
-                        </div>
-                        <div className="text-gray-500">
-                          {`${flight.route.departureAirport.airportName} (${flight.route.departureAirport.airportCode})`}
-                        </div>
-                      </div>
-                    ),
-                  },
-                  {
-                    className: "timeline-item-content",
-                    dot: <IoAirplane className="rotate-90 text-lg" />,
-                    label: (
                       <div className="text-gray-500">
-                        {getFormattedDuration(flight.route.duration)}
+                        {dayjs(flight.departureDateTime).format("DD/MM/YYYY")}
                       </div>
-                    ),
+                    </div>
+                  ),
+                  children: (
+                    <div>
+                      <div className="text-lg font-semibold">
+                        {flight.route.departureAirport.cityName}
+                      </div>
+                      <div className="text-gray-500">
+                        {`${flight.route.departureAirport.airportName} (${flight.route.departureAirport.airportCode})`}
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  className: "timeline-item-content",
+                  dot: <IoAirplane className="rotate-90 text-lg" />,
+                  label: (
+                    <div className="text-gray-500">
+                      {getFormattedDuration(flight.route.duration)}
+                    </div>
+                  ),
 
-                    children: (
-                      <div>
-                        <div className="text-lg font-semibold">
-                          {flight.flightId}
-                        </div>
-                        <div className="text-gray-500">
-                          {flight.airplane.model.modelName}
-                        </div>
+                  children: (
+                    <div>
+                      <div className="text-lg font-semibold">
+                        {flight.flightId}
                       </div>
-                    ),
-                  },
-                  {
-                    label: (
-                      <div>
-                        <div className="text-lg font-semibold">
-                          {dayjs(flight.arrivalDateTime).format("HH:mm")}
-                        </div>
-                        <div className="text-gray-500">
-                          {dayjs(flight.arrivalDateTime).format("DD/MM/YYYY")}
-                        </div>
+                      <div className="text-gray-500">
+                        {flight.airplane.model.modelName}
                       </div>
-                    ),
-                    children: (
-                      <div>
-                        <div className="text-lg font-semibold">
-                          {flight.route.arrivalAirport.cityName}
-                        </div>
-                        <div className="text-gray-500">
-                          {`${flight.route.arrivalAirport.airportName} (${flight.route.arrivalAirport.airportCode})`}
-                        </div>
+                    </div>
+                  ),
+                },
+                {
+                  label: (
+                    <div>
+                      <div className="text-lg font-semibold">
+                        {dayjs(flight.arrivalDateTime).format("HH:mm")}
                       </div>
-                    ),
-                  },
-                ]}
-              />
+                      <div className="text-gray-500">
+                        {dayjs(flight.arrivalDateTime).format("DD/MM/YYYY")}
+                      </div>
+                    </div>
+                  ),
+                  children: (
+                    <div>
+                      <div className="text-lg font-semibold">
+                        {flight.route.arrivalAirport.cityName}
+                      </div>
+                      <div className="text-gray-500">
+                        {`${flight.route.arrivalAirport.airportName} (${flight.route.arrivalAirport.airportCode})`}
+                      </div>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+          <div className="mt-20 flex-1 px-4">
+            <div className="mb-3 flex items-center justify-between">
+              <div className="text-lg font-bold">Thông tin về các hạng vé</div>
+              <ViewSeatAvailability flight={flight} />
             </div>
-            <div className="mt-20 flex-1 px-4">
-              <div className="mb-3 flex items-center justify-between">
-                <div className="text-lg font-bold">
-                  Thông tin về các hạng vé
-                </div>
-                <ViewSeatAvailability flight={flight} />
-              </div>
-              <Table
-                rowKey={(record) => record.flightPricingId}
-                columns={columns}
-                bordered={false}
-                dataSource={flight.flightPricing.filter((pricing) =>
-                  isInDateRange(
-                    dayjs().tz().format("YYYY-MM-DD"),
-                    pricing.validFrom,
-                    pricing.validTo,
-                  ),
-                )}
-                pagination={false}
-                size="small"
-                expandable={{
-                  columnWidth: "5%",
-                  expandedRowRender: (record: IFlightPricing) => (
-                    <Table
-                      columns={expandColumns}
-                      dataSource={flight.flightPricing.filter(
-                        (pricing) =>
-                          pricing.ticketClass.ticketClassId ===
-                          record.ticketClass.ticketClassId,
-                      )}
-                      pagination={false}
-                      size="small"
-                    />
-                  ),
-                  expandIcon: ({ expanded, onExpand, record }) => (
-                    <Tooltip
-                      title={
-                        expanded ? "Đóng chi tiết giá" : "Hiển thị chi tiết giá"
-                      }
-                    >
-                      {expanded ? (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onExpand(record, e);
-                          }}
-                          type="button"
-                          className="ant-table-row-expand-icon ant-table-row-expand-icon-expanded"
-                          aria-label="Thu gọn dòng"
-                          aria-expanded="true"
-                        ></button>
-                      ) : (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onExpand(record, e);
-                          }}
-                          type="button"
-                          className="ant-table-row-expand-icon ant-table-row-expand-icon-collapsed"
-                          aria-label="Mở rộng dòng"
-                          aria-expanded="false"
-                        ></button>
-                      )}
-                    </Tooltip>
-                  ),
-                }}
-              />
-            </div>
+            <Table
+              rowKey={(record) => record.flightPricingId}
+              columns={columns}
+              bordered={false}
+              dataSource={flight.flightPricing.filter((pricing) =>
+                isInDateRange(
+                  dayjs().tz().format("YYYY-MM-DD"),
+                  pricing.validFrom,
+                  pricing.validTo,
+                ),
+              )}
+              pagination={false}
+              size="small"
+              expandable={{
+                columnWidth: "5%",
+                expandedRowRender: (record: IFlightPricing) => (
+                  <Table
+                    columns={expandColumns}
+                    dataSource={flight.flightPricing.filter(
+                      (pricing) =>
+                        pricing.ticketClass.ticketClassId ===
+                        record.ticketClass.ticketClassId,
+                    )}
+                    pagination={false}
+                    size="small"
+                  />
+                ),
+                expandIcon: ({ expanded, onExpand, record }) => (
+                  <Tooltip
+                    title={
+                      expanded ? "Đóng chi tiết giá" : "Hiển thị chi tiết giá"
+                    }
+                  >
+                    {expanded ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onExpand(record, e);
+                        }}
+                        type="button"
+                        className="ant-table-row-expand-icon ant-table-row-expand-icon-expanded"
+                        aria-label="Thu gọn dòng"
+                        aria-expanded="true"
+                      ></button>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onExpand(record, e);
+                        }}
+                        type="button"
+                        className="ant-table-row-expand-icon ant-table-row-expand-icon-collapsed"
+                        aria-label="Mở rộng dòng"
+                        aria-expanded="false"
+                      ></button>
+                    )}
+                  </Tooltip>
+                ),
+              }}
+            />
           </div>
         </div>
-      )}
-    </Access>
+      </div>
+    )
   );
 };
 

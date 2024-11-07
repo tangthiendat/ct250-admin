@@ -15,6 +15,7 @@ import Schedule from "../pages/Schedule";
 import Users from "../pages/Users";
 import FlightDetails from "../features/flight/schedule/FlightDetails";
 import Fees from "../pages/Fees";
+import FeeDetails from "../features/flight/fee/FeeDetails";
 
 const router = createBrowserRouter([
   {
@@ -74,7 +75,17 @@ const router = createBrowserRouter([
       },
       {
         path: "/fees",
-        element: <Fees />,
+        children: [
+          {
+            path: "",
+            index: true,
+            element: <Fees />,
+          },
+          {
+            path: ":id",
+            element: <FeeDetails />,
+          },
+        ],
       },
       {
         path: "/meals",
