@@ -115,7 +115,7 @@ const FeesTable: React.FC = () => {
       width: "20%",
     },
     {
-      title: "Nhóm",
+      title: "Nhóm phí",
       dataIndex: "feeGroup",
       key: "feeGroup",
       width: "30%",
