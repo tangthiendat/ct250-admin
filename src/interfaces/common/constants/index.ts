@@ -1,4 +1,3 @@
-import { DISCOUNT_TYPE } from './index';
 import { CouponType, Module, PassengerType, RouteType } from "../enums";
 
 export const PERMISSIONS = {
@@ -104,9 +103,9 @@ export const PASSENGER_TYPE_TRANSLATION: Record<PassengerType, string> = {
 };
 
 export const COUPON_TYPE_TRANSLATION: Record<CouponType, string> = {
-  [CouponType.PERCENTAGE]: "Phần trăm",
-  [CouponType.AMOUNT]: "Số tiền",
-};
+  [CouponType.AMOUNT]: "VND",
+  [CouponType.PERCENTAGE]: "%"
+}
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
 

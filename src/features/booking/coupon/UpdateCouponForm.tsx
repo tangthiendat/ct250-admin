@@ -28,6 +28,11 @@ interface UpdateCouponArgs {
   updatedCoupon: ICoupons;
 }
 
+const couponTypeOptions = [
+  { label: "VND", value: CouponType.AMOUNT },
+  { label: "%", value: CouponType.PERCENTAGE },
+];
+
 const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
   couponToUpdate,
   onCancel,
@@ -35,8 +40,6 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
 }) => {
   const [form] = Form.useForm<ICoupons>();
   const [addonAfter, setAddonAfter] = useState<string>("VND");
-  //   const isUpdateSession: boolean =
-  //     Boolean(couponToUpdate?.couponId) && !viewOnly;
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -52,9 +55,7 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
     mutationFn: couponService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("coupons");
-        },
+        predicate: (query) => query.queryKey.includes("coupons"),
       });
     },
   });
@@ -64,9 +65,7 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
       couponService.update(couponId, updatedCoupon),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("coupons");
-        },
+        predicate: (query) => query.queryKey.includes("coupons"),
       });
     },
   });
@@ -74,7 +73,6 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
   const handleValidFromChange = (date: Dayjs) => {
     const currentValidTo = form.getFieldValue("validTo");
 
-    // If validFrom is after validTo, set validTo to validFrom
     if (dayjs(date).isAfter(dayjs(currentValidTo))) {
       form.setFieldsValue({
         validTo: date.tz().format("YYYY-MM-DD"),
@@ -82,7 +80,7 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
     }
   };
 
-  function handleFinish(values: ICoupons) {
+  const handleFinish = (values: ICoupons) => {
     const updatedValues = {
       ...values,
       couponType:
@@ -95,7 +93,7 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
         ...updatedValues,
       };
       updateCoupon(
-        { couponId: couponToUpdate.couponId, updatedCoupon: updatedCoupon },
+        { couponId: couponToUpdate.couponId, updatedCoupon },
         {
           onSuccess: () => {
             toast.success("Cập nhật mã giảm giá thành công");
@@ -108,8 +106,11 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
         },
       );
     } else {
-      const newCoupon = form.getFieldsValue();
-
+      const newCoupon = {
+        ...form.getFieldsValue(),
+        couponType:
+          addonAfter === "%" ? CouponType.PERCENTAGE : CouponType.AMOUNT,
+      };
       createCoupon(newCoupon, {
         onSuccess: () => {
           toast.success("Thêm mới mã giảm giá thành công");
@@ -121,7 +122,7 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
         },
       });
     }
-  }
+  };
 
   return (
     <Form
@@ -130,6 +131,9 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
       layout="vertical"
       initialValues={{ active: true }}
     >
+      <Form.Item name="couponType" hidden>
+        <Input />
+      </Form.Item>
       <Row gutter={16}>
         <Col span={24}>
           <Form.Item
@@ -150,7 +154,7 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
         <Col span={24}>
           <Form.Item
             label="Giá trị mã giảm giá"
-            name="couponValue"
+            name="discountValue"
             rules={[
               {
                 required: true,
@@ -164,11 +168,17 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
               addonAfter={
                 <Select
                   value={addonAfter}
-                  onChange={(value) => setAddonAfter(value)}
+                  onChange={(value) => {
+                    setAddonAfter(value);
+                    form.setFieldsValue({ couponType: value as CouponType });
+                  }}
                   style={{ width: 80 }}
                 >
-                  <Select.Option value="VND">VND</Select.Option>
-                  <Select.Option value="%">%</Select.Option>
+                  {couponTypeOptions.map((option) => (
+                    <Select.Option key={option.value} value={option.value}>
+                      {option.label}
+                    </Select.Option>
+                  ))}
                 </Select>
               }
               formatter={(value) => formatCurrency(value)}

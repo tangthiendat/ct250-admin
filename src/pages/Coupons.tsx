@@ -14,6 +14,7 @@ import {
 } from "../interfaces";
 import { couponService } from "../services/booking/coupon-service";
 import AddCoupon from "../features/booking/coupon/AddCoupon";
+import CouponTable from "../features/booking/coupon/CouponTable";
 
 const Coupons: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -77,7 +78,7 @@ const Coupons: React.FC = () => {
             <AddCoupon />
           </Access>
         </div>
-        {/* <CouponTable couponPage={data?.payload} isLoading={isLoading} /> */}
+        <CouponTable couponPage={data?.payload} isLoading={isLoading} />
       </div>
     </Access>
   );
