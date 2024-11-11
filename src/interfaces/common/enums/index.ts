@@ -18,6 +18,13 @@ export enum Module {
   BAGGAGES = "BAGGAGE",
   FEES = "FEES",
   FEE_GROUP = "FEE-GROUP",
+  COUPONS = "COUPONS",
+}
+
+//COUPONS
+export enum CouponType {
+  PERCENTAGE = "PERCENTAGE",
+  AMOUNT = "AMOUNT",
 }
 
 //AIRPLANES
