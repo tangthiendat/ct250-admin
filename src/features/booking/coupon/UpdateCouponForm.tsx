@@ -106,13 +106,7 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
         },
       );
     } else {
-      const newCoupon = {
-        ...form.getFieldsValue(),
-        couponType:
-          addonAfter === "%" ? CouponType.PERCENTAGE : CouponType.AMOUNT,
-      };
-      console.log("NEW COUPON", newCoupon);
-      createCoupon(newCoupon, {
+      createCoupon(updatedValues, {
         onSuccess: () => {
           toast.success("Thêm mới mã giảm giá thành công");
           onCancel();
@@ -132,9 +126,6 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
       layout="vertical"
       initialValues={{ active: true }}
     >
-      <Form.Item name="couponType" hidden>
-        <Input />
-      </Form.Item>
       <Row gutter={16}>
         <Col span={24}>
           <Form.Item
@@ -170,9 +161,7 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
                 <Select
                   value={addonAfter}
                   onChange={(value) => {
-                    setAddonAfter(
-                      value === CouponType.PERCENTAGE ? "%" : "VND",
-                    );
+                    setAddonAfter(value);
                     form.setFieldsValue({ couponType: value as CouponType });
                   }}
                   style={{ width: 80 }}

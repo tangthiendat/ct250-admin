@@ -3,12 +3,17 @@ import {
   CaretUpFilled,
   FilterFilled,
 } from "@ant-design/icons";
-import { Table, TablePaginationConfig, TableProps, Tag } from "antd";
+import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { COUPON_TYPE_TRANSLATION, ICoupons, Page } from "../../../interfaces";
-import { CouponType } from "../../../interfaces/common/enums";
+import {
+  COUPON_TYPE_TRANSLATION,
+  ICoupons,
+  Page,
+  PERMISSIONS,
+} from "../../../interfaces";
+import { CouponType, Module } from "../../../interfaces/common/enums";
 import {
   colorFilterIcon,
   colorSortDownIcon,
@@ -19,6 +24,10 @@ import {
   getSortDirection,
   isInDateRange,
 } from "../../../utils";
+import Access from "../../auth/Access";
+import DeleteCoupon from "./DeleteCoupon";
+import UpdateCoupon from "./UpdateCoupon";
+import ViewCoupon from "./ViewCoupon";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -120,18 +129,18 @@ const CouponTable: React.FC<CouponTableProps> = ({ couponPage, isLoading }) => {
     },
     {
       title: "Giá trị mã giảm",
-      key: "currentValue",
+      key: "discountValue",
       dataIndex: "discountValue",
       width: "20%",
-      render: () => {
-        const currentValue = couponPage?.content.find((value) =>
-          isInDateRange(
-            dayjs().tz().format("YYYY-MM-DD"),
-            value.validFrom,
-            value.validTo,
-          ),
+      render: (discountValue: number, record: ICoupons) => {
+        const isValid = isInDateRange(
+          dayjs().tz().format("YYYY-MM-DD"),
+          record.validFrom,
+          record.validTo,
         );
-        return currentValue?.discountValue.toLocaleString();
+        return isValid
+          ? discountValue.toLocaleString()
+          : "Mã giảm giá hết hạn ";
       },
     },
     {
@@ -162,48 +171,7 @@ const CouponTable: React.FC<CouponTableProps> = ({ couponPage, isLoading }) => {
         <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
       ),
     },
-    // {
-    //   title: "Giá trị mã giảm",
-    //   key: "currentValueAndType",
-    //   dataIndex: "discountValue",
-    //   width: "35%",
-    //   render: (record) => {
-    //     const currentValue = couponPage?.content.find((pricing) =>
-    //       isInDateRange(
-    //         dayjs().tz().format("YYYY-MM-DD"),
-    //         pricing.validFrom,
-    //         pricing.validTo,
-    //       ),
-    //     );
 
-    //     let color = "";
-    //     switch (record.couponType) {
-    //       case CouponType.AMOUNT:
-    //         color = "green";
-    //         break;
-    //       case CouponType.PERCENTAGE:
-    //         color = "red";
-    //         break;
-    //     }
-
-    //     return (
-    //       <>
-    //         <div>{currentValue?.discountValue.toLocaleString()}</div>
-    //         <Tag color={color}>
-    //           {COUPON_TYPE_TRANSLATION[record.couponType]}
-    //         </Tag>
-    //       </>
-    //     );
-    //   },
-    //   filters: Object.values(CouponType).map((couponType: string) => ({
-    //     text: COUPON_TYPE_TRANSLATION[couponType as CouponType],
-    //     value: couponType,
-    //   })),
-    //   defaultFilteredValue: getDefaultFilterValue(searchParams, "couponType"),
-    //   filterIcon: (filtered) => (
-    //     <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
-    //   ),
-    // },
     {
       key: "createdAt",
       title: "Ngày tạo",
@@ -236,21 +204,21 @@ const CouponTable: React.FC<CouponTableProps> = ({ couponPage, isLoading }) => {
         </div>
       ),
     },
-    // {
-    //   title: "Hành động",
-    //   key: "action",
-    //   render: (record: ICoupons) => (
-    //     <Space>
-    //       <ViewCoupon baggage={record} />
-    //       <Access permission={PERMISSIONS[Module.CouponS].UPDATE} hideChildren>
-    //         <UpdateCoupon Coupon={record} />
-    //       </Access>
-    //       <Access permission={PERMISSIONS[Module.CouponS].DELETE} hideChildren>
-    //         <DeleteCoupon CouponId={record.CouponId} />
-    //       </Access>
-    //     </Space>
-    //   ),
-    // },
+    {
+      title: "Hành động",
+      key: "action",
+      render: (record: ICoupons) => (
+        <Space>
+          <ViewCoupon coupon={record} />
+          <Access permission={PERMISSIONS[Module.COUPONS].UPDATE} hideChildren>
+            <UpdateCoupon coupon={record} />
+          </Access>
+          <Access permission={PERMISSIONS[Module.COUPONS].DELETE} hideChildren>
+            <DeleteCoupon couponId={record.couponId} />
+          </Access>
+        </Space>
+      ),
+    },
   ];
 
   return (
