@@ -161,7 +161,9 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
                 <Select
                   value={addonAfter}
                   onChange={(value) => {
-                    setAddonAfter(value);
+                    setAddonAfter(
+                      value === CouponType.PERCENTAGE ? "%" : "VND",
+                    );
                     form.setFieldsValue({ couponType: value as CouponType });
                   }}
                   style={{ width: 80 }}

@@ -1,7 +1,7 @@
 import { EditOutlined } from "@ant-design/icons";
 import { Modal, Tooltip } from "antd";
 import { useState } from "react";
-import { ICoupons, Icoupons } from "../../../interfaces";
+import { ICoupons } from "../../../interfaces";
 import UpdateCouponForm from "./UpdateCouponForm";
 
 interface UpdateCouponProps {

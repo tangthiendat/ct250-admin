@@ -129,18 +129,16 @@ const CouponTable: React.FC<CouponTableProps> = ({ couponPage, isLoading }) => {
     },
     {
       title: "Giá trị mã giảm",
-      key: "discountValue",
+      key: "currentValue",
       dataIndex: "discountValue",
       width: "20%",
-      render: (discountValue: number, record: ICoupons) => {
+      render: (currentValue: number, record: ICoupons) => {
         const isValid = isInDateRange(
           dayjs().tz().format("YYYY-MM-DD"),
           record.validFrom,
           record.validTo,
         );
-        return isValid
-          ? discountValue.toLocaleString()
-          : "Mã giảm giá hết hạn ";
+        return isValid ? currentValue.toLocaleString() : "Mã giảm giá hết hạn ";
       },
     },
     {
