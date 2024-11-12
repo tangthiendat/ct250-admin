@@ -9,7 +9,13 @@ import { FaLocationArrow } from "react-icons/fa6";
 import { GiCommercialAirplane } from "react-icons/gi";
 import { GrBusinessService } from "react-icons/gr";
 import { IoFastFoodOutline, IoShieldCheckmark } from "react-icons/io5";
-import { MdDashboard, MdFlight, MdOutlineAirplaneTicket } from "react-icons/md";
+import {
+  MdDashboard,
+  MdFlight,
+  MdOutlineAirplaneTicket,
+  MdOutlinePayment,
+  MdOutlinePayments,
+} from "react-icons/md";
 import { RiCalendarScheduleLine, RiCoupon2Line } from "react-icons/ri";
 import { TbReceiptTax, TbRouteSquare } from "react-icons/tb";
 import { Outlet, useLocation, useNavigate } from "react-router";
@@ -146,6 +152,16 @@ const AdminLayout: React.FC = () => {
       );
 
       const hasBookingChildren: boolean = Boolean(viewCoupons);
+
+      const viewPaymentMethods = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.PAYMENT_METHODS].GET_PAGINATION.apiPath &&
+          item.method ===
+            PERMISSIONS[Module.PAYMENT_METHODS].GET_PAGINATION.method,
+      );
+
+      const hasPaymentChildren: boolean = Boolean(viewPaymentMethods);
 
       const menuItems = [
         {
@@ -293,6 +309,28 @@ const AdminLayout: React.FC = () => {
                           label: <NavLink to="/coupons">Mã giảm giá</NavLink>,
                           key: "coupons",
                           icon: <RiCoupon2Line size={16} />,
+                        },
+                      ]
+                    : []),
+                ],
+              },
+            ]
+          : []),
+        ...(hasPaymentChildren
+          ? [
+              {
+                label: "Thanh toán",
+                key: "payment-management",
+                icon: <MdOutlinePayments size={18} />,
+                children: [
+                  ...(viewPaymentMethods
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/payment-methods">Phương thức</NavLink>
+                          ),
+                          key: "payment-methods",
+                          icon: <MdOutlinePayment />,
                         },
                       ]
                     : []),

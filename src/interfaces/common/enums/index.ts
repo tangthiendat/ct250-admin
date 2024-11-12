@@ -19,6 +19,7 @@ export enum Module {
   FEES = "FEES",
   FEE_GROUP = "FEE-GROUP",
   COUPONS = "COUPONS",
+  PAYMENT_METHODS = "PAYMENT-METHODS",
 }
 
 //COUPONS

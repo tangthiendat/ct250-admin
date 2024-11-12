@@ -87,6 +87,12 @@ export const PERMISSIONS = {
     UPDATE: { method: "PUT", apiPath: "/api/v1/coupons/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/coupons/{id}" },
   },
+  [Module.PAYMENT_METHODS]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/payment-methods" },
+    CREATE: { method: "POST", apiPath: "/api/v1/payment-methods" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/payment-methods/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/payment-methods/{id}" },
+  },
 };
 
 

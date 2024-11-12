@@ -17,6 +17,7 @@ import Roles from "../pages/Roles";
 import Routes from "../pages/Routes";
 import Schedule from "../pages/Schedule";
 import Users from "../pages/Users";
+import PaymentMethods from "../pages/PaymentMethods";
 
 const router = createBrowserRouter([
   {
@@ -99,6 +100,10 @@ const router = createBrowserRouter([
       {
         path: "/coupons",
         element: <Coupons />,
+      },
+      {
+        path: "/payment-methods",
+        element: <PaymentMethods />,
       },
     ],
   },
