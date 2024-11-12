@@ -111,6 +111,7 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
         couponType:
           addonAfter === "%" ? CouponType.PERCENTAGE : CouponType.AMOUNT,
       };
+      console.log("NEW COUPON", newCoupon);
       createCoupon(newCoupon, {
         onSuccess: () => {
           toast.success("Thêm mới mã giảm giá thành công");
@@ -169,7 +170,9 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
                 <Select
                   value={addonAfter}
                   onChange={(value) => {
-                    setAddonAfter(value);
+                    setAddonAfter(
+                      value === CouponType.PERCENTAGE ? "%" : "VND",
+                    );
                     form.setFieldsValue({ couponType: value as CouponType });
                   }}
                   style={{ width: 80 }}
