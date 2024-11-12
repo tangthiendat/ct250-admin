@@ -1,4 +1,4 @@
-import { RouteType } from "../common";
+import { CouponType, RouteType } from "../common";
 
 export interface IMeal {
   mealId: number;
@@ -39,4 +39,23 @@ export interface IBaggagePricing {
 export interface BaggageFilterCriteria {
   query?: string;
   routeType?: RouteType;
+}
+
+
+export interface ICoupons {
+  couponId: number;
+  couponCode: string;
+  discountValue: number;
+  couponType: CouponType;
+  validFrom: string;
+  validTo: string;
+  createdAt: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+}
+
+export interface CouponFilterCriteria {
+  query?: string;
+  couponType?: CouponType;
 }

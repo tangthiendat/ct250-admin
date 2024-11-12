@@ -9,8 +9,8 @@ import { FaLocationArrow } from "react-icons/fa6";
 import { GiCommercialAirplane } from "react-icons/gi";
 import { GrBusinessService } from "react-icons/gr";
 import { IoFastFoodOutline, IoShieldCheckmark } from "react-icons/io5";
-import { MdDashboard, MdFlight } from "react-icons/md";
-import { RiCalendarScheduleLine } from "react-icons/ri";
+import { MdDashboard, MdFlight, MdOutlineAirplaneTicket } from "react-icons/md";
+import { RiCalendarScheduleLine, RiCoupon2Line } from "react-icons/ri";
 import { TbReceiptTax, TbRouteSquare } from "react-icons/tb";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
@@ -139,6 +139,14 @@ const AdminLayout: React.FC = () => {
 
       const hasServiceChildren: boolean = Boolean(viewMeals || viewBaggages);
 
+      const viewCoupons = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.COUPONS].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.COUPONS].GET_PAGINATION.method,
+      );
+
+      const hasBookingChildren: boolean = Boolean(viewCoupons);
+
       const menuItems = [
         {
           label: (
@@ -265,6 +273,26 @@ const AdminLayout: React.FC = () => {
                           label: <NavLink to="/baggages">Hành lý</NavLink>,
                           key: "baggages",
                           icon: <BsFillLuggageFill size={17} />,
+                        },
+                      ]
+                    : []),
+                ],
+              },
+            ]
+          : []),
+        ...(hasBookingChildren
+          ? [
+              {
+                label: "Đặt vé",
+                key: "booking-management",
+                icon: <MdOutlineAirplaneTicket size={18} />,
+                children: [
+                  ...(viewCoupons
+                    ? [
+                        {
+                          label: <NavLink to="/coupons">Mã giảm giá</NavLink>,
+                          key: "coupons",
+                          icon: <RiCoupon2Line size={16} />,
                         },
                       ]
                     : []),

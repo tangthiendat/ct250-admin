@@ -1,4 +1,4 @@
-import { Module, PassengerType, RouteType } from "../enums";
+import { CouponType, Module, PassengerType, RouteType } from "../enums";
 
 export const PERMISSIONS = {
   [Module.USERS]: {
@@ -80,7 +80,16 @@ export const PERMISSIONS = {
   [Module.FEE_GROUP]: {
     GET_ALL: { method: "GET", apiPath: "/api/v1/fee-groups/all" },
   },
+  [Module.COUPONS]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/coupons" },
+    GET_ALL: { method: "GET", apiPath: "/api/v1/coupons/all" },
+    CREATE: { method: "POST", apiPath: "/api/v1/coupons" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/coupons/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/coupons/{id}" },
+  },
 };
+
+
 
 export const ROUTE_TYPE_TRANSLATION: Record<RouteType, string> = {
   [RouteType.DOMESTIC]: "Nội địa",
@@ -92,6 +101,11 @@ export const PASSENGER_TYPE_TRANSLATION: Record<PassengerType, string> = {
   [PassengerType.CHILD]: "Trẻ em",
   [PassengerType.INFANT]: "Em bé",
 };
+
+export const COUPON_TYPE_TRANSLATION: Record<CouponType, string> = {
+  [CouponType.AMOUNT]: "VND",
+  [CouponType.PERCENTAGE]: "%"
+}
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
 
