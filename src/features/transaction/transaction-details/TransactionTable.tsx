@@ -4,16 +4,14 @@ import {
   FilterFilled,
 } from "@ant-design/icons";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
-import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
-  IBaggages,
+  ITransaction,
   Page,
-  PERMISSIONS,
-  ROUTE_TYPE_TRANSLATION,
+  TRANSACTION_STATUS_TRANSLATION,
+  TransactionStatus,
 } from "../../../interfaces";
-import { Module, RouteType } from "../../../interfaces/common/enums";
 import {
   colorFilterIcon,
   colorSortDownIcon,
@@ -22,24 +20,20 @@ import {
   getDefaultFilterValue,
   getDefaultSortOrder,
   getSortDirection,
-  isInDateRange,
 } from "../../../utils";
-import Access from "../../auth/Access";
-import DeleteBaggage from "./DeleteBaggage";
-import UpdateBaggage from "./UpdateBaggage";
-import ViewBaggage from "./ViewBaggage";
+import ViewTransaction from "./ViewTransaction";
 
 interface TableParams {
   pagination: TablePaginationConfig;
 }
 
-interface BaggageTableProps {
-  baggagePage?: Page<IBaggages>;
+interface TransactionTableProps {
+  transactionPage?: Page<ITransaction>;
   isLoading: boolean;
 }
 
-const BaggageTable: React.FC<BaggageTableProps> = ({
-  baggagePage,
+const TransactionTable: React.FC<TransactionTableProps> = ({
+  transactionPage,
   isLoading,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -48,24 +42,24 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
       current: Number(searchParams.get("page")) || 1,
       pageSize: Number(searchParams.get("pageSize")) || 10,
       showSizeChanger: true,
-      showTotal: (total) => `Tổng ${total} loại hành lý`,
+      showTotal: (total) => `Tổng ${total} giao dịch`,
     },
   }));
 
   useEffect(() => {
-    if (baggagePage) {
+    if (transactionPage) {
       setTableParams((prev) => ({
         ...prev,
         pagination: {
           ...prev.pagination,
-          total: baggagePage.meta?.total || 0,
-          showTotal: (total) => `Tổng ${total} loại hành lý`,
+          total: transactionPage.meta?.total || 0,
+          showTotal: (total) => `Tổng ${total} giao dịch`,
         },
       }));
     }
-  }, [baggagePage]);
+  }, [transactionPage]);
 
-  const handleTableChange: TableProps<IBaggages>["onChange"] = (
+  const handleTableChange: TableProps<ITransaction>["onChange"] = (
     pagination,
     filters,
     sorter,
@@ -117,60 +111,76 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
     setSearchParams(searchParams);
   };
 
-  const columns: TableProps<IBaggages>["columns"] = [
+  const columns: TableProps<ITransaction>["columns"] = [
     {
-      title: "Id",
-      key: "baggageId",
-      dataIndex: "baggageId",
-      width: "5%",
+      title: "ID",
+      key: "transactionId",
+      dataIndex: "transactionId",
+      width: "3%",
     },
     {
-      title: "Cân nặng hành lý",
-      key: "baggageWeight",
-      dataIndex: "baggageWeight",
-      width: "20%",
-      render: (weight: number) => `${weight} Kg`,
+      title: "Tên khách hàng",
+      key: "passengerName",
+      dataIndex: "passengerName",
+      width: "10%",
     },
     {
-      title: "Giá hiện hành",
-      key: "currentPrice",
-      dataIndex: "baggagePricing",
-      width: "20%",
-      render: (baggagePricing: IBaggages["baggagePricing"]) => {
-        const currentPrice = baggagePricing.find((pricing) =>
-          isInDateRange(
-            dayjs().tz().format("YYYY-MM-DD"),
-            pricing.validFrom,
-            pricing.validTo,
-          ),
-        );
-        return currentPrice?.price.toLocaleString();
+      title: "Mã đặt vé",
+      key: "bookingCode",
+      dataIndex: "bookingCode",
+      width: "8%",
+      render: (bookingCode: string) => {
+        return bookingCode || "Đang xử lý";
       },
     },
     {
-      title: "Loại chuyến bay",
-      key: "routeType",
-      dataIndex: "routeType",
-      width: "15%",
-      render: (routeType: IBaggages["routeType"]) => {
+      title: "Mã giao dịch",
+      key: "txnRef",
+      dataIndex: "txnRef",
+      width: "8%",
+    },
+    {
+      title: "Thành tiền",
+      key: "amount",
+      dataIndex: "amount",
+      width: "8%",
+      render: (amount: number) => {
+        return new Intl.NumberFormat("en-US").format(amount);
+      },
+    },
+    {
+      title: "Trạng thái",
+      key: "status",
+      dataIndex: "status",
+      width: "8%",
+      render: (transactionStatus: ITransaction["status"]) => {
         let color = "";
 
-        switch (routeType) {
-          case RouteType.DOMESTIC:
+        switch (transactionStatus) {
+          case TransactionStatus.COMPLETED:
             color = "green";
             break;
-          case RouteType.INTERNATIONAL:
+          case TransactionStatus.FAILED:
             color = "red";
+            break;
+          case TransactionStatus.PENDING:
+            color = "blue";
             break;
         }
 
-        return <Tag color={color}>{ROUTE_TYPE_TRANSLATION[routeType]}</Tag>;
+        return (
+          <Tag color={color}>
+            {TRANSACTION_STATUS_TRANSLATION[transactionStatus]}
+          </Tag>
+        );
       },
-      filters: Object.values(RouteType).map((routeType: string) => ({
-        text: ROUTE_TYPE_TRANSLATION[routeType as RouteType],
-        value: routeType,
-      })),
-      defaultFilteredValue: getDefaultFilterValue(searchParams, "routeType"),
+      filters: Object.values(TransactionStatus).map(
+        (transactionStatus: TransactionStatus) => ({
+          text: TRANSACTION_STATUS_TRANSLATION[transactionStatus],
+          value: transactionStatus,
+        }),
+      ),
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
       filterIcon: (filtered) => (
         <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
       ),
@@ -179,7 +189,7 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
       key: "createdAt",
       title: "Ngày tạo",
       dataIndex: "createdAt",
-      width: "15%",
+      width: "8%",
       render: (createdAt: string) =>
         createdAt ? formatTimestamp(createdAt) : "",
       sorter: true,
@@ -192,33 +202,12 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
       ),
     },
     {
-      key: "updatedAt",
-      title: "Ngày cập nhật",
-      dataIndex: "updatedAt",
-      width: "15%",
-      render: (updatedAt: string) =>
-        updatedAt ? formatTimestamp(updatedAt) : "",
-      sorter: true,
-      defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
-      sortIcon: ({ sortOrder }) => (
-        <div className="flex flex-col text-[10px]">
-          <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
-          <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
-        </div>
-      ),
-    },
-    {
       title: "Hành động",
       key: "action",
-      render: (record: IBaggages) => (
+      width: "5%",
+      render: (record: ITransaction) => (
         <Space>
-          <ViewBaggage baggage={record} />
-          <Access permission={PERMISSIONS[Module.BAGGAGES].UPDATE} hideChildren>
-            <UpdateBaggage baggage={record} />
-          </Access>
-          <Access permission={PERMISSIONS[Module.BAGGAGES].DELETE} hideChildren>
-            <DeleteBaggage baggageId={record.baggageId} />
-          </Access>
+          <ViewTransaction transaction={record} />
         </Space>
       ),
     },
@@ -228,9 +217,9 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
     <Table
       bordered={false}
       columns={columns}
-      rowKey={(record: IBaggages) => record.baggageId}
+      rowKey={(record: ITransaction) => record.transactionId}
       pagination={tableParams.pagination}
-      dataSource={baggagePage?.content || []}
+      dataSource={transactionPage?.content || []}
       rowClassName={(_, index) =>
         index % 2 === 0 ? "table-row-light" : "table-row-gray"
       }
@@ -245,4 +234,4 @@ const BaggageTable: React.FC<BaggageTableProps> = ({
   );
 };
 
-export default BaggageTable;
+export default TransactionTable;

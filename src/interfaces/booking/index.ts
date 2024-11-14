@@ -1,4 +1,4 @@
-import { CouponType, RouteType } from "../common";
+import { BookingStatus, CouponType, RouteType, TripType } from "../common";
 
 export interface IMeal {
   mealId: number;
@@ -59,3 +59,4 @@ export interface CouponFilterCriteria {
   query?: string;
   couponType?: CouponType;
 }
+

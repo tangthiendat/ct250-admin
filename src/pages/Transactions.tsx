@@ -4,19 +4,19 @@ import { SearchProps } from "antd/es/input";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import Access from "../features/auth/Access";
-import AddCoupon from "../features/booking/coupon/AddCoupon";
-import CouponTable from "../features/booking/coupon/CouponTable";
+import SearchDate from "../features/transaction/transaction-details/SearchDate";
+import TransactionTable from "../features/transaction/transaction-details/TransactionTable";
 import {
-  CouponFilterCriteria,
-  CouponType,
   Module,
   PaginationParams,
   PERMISSIONS,
   SortParams,
+  TransactionFilterCriteria,
+  TransactionStatus,
 } from "../interfaces";
-import { couponService } from "../services/booking/coupon-service";
+import { transactionService } from "../services";
 
-const Coupons: React.FC = () => {
+const Transactions: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get("query") || "";
@@ -26,9 +26,27 @@ const Coupons: React.FC = () => {
     pageSize: Number(searchParams.get("pageSize")) || 10,
   };
 
-  const filter: CouponFilterCriteria = {
+  const handleDateChange = (startDate: string | null, type: string | null) => {
+    if (startDate) {
+      searchParams.set("startDate", startDate);
+    } else {
+      searchParams.delete("startDate");
+    }
+
+    if (type) {
+      searchParams.set("type", type);
+    } else {
+      searchParams.delete("type");
+    }
+
+    setSearchParams(searchParams);
+  };
+
+  const filter: TransactionFilterCriteria = {
     query: searchParams.get("query") || undefined,
-    couponType: (searchParams.get("couponType") as CouponType) || undefined,
+    status: (searchParams.get("status") as TransactionStatus) || undefined,
+    startDate: searchParams.get("startDate") || undefined,
+    type: searchParams.get("type") || undefined,
   };
 
   const sort: SortParams = {
@@ -37,7 +55,7 @@ const Coupons: React.FC = () => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["coupons", pagination, filter, sort].filter((key) => {
+    queryKey: ["transactions", pagination, filter, sort].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {
@@ -46,8 +64,9 @@ const Coupons: React.FC = () => {
         );
       }
     }),
-    queryFn: () => couponService.getCoupons(pagination, filter, sort),
+    queryFn: () => transactionService.getTransactions(pagination, filter, sort),
   });
+
   const handleSearch: SearchProps["onSearch"] = (value) => {
     if (value) {
       searchParams.set("query", value);
@@ -58,15 +77,15 @@ const Coupons: React.FC = () => {
   };
 
   return (
-    <Access permission={PERMISSIONS[Module.COUPONS].GET_PAGINATION}>
+    <Access permission={PERMISSIONS[Module.TRANSACTIONS].GET_PAGINATION}>
       <div className="card">
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Mã giảm giá</h2>
+          <h2 className="text-xl font-semibold">Giao dịch</h2>
 
           <div className="w-[60%]">
             <div className="flex gap-3">
               <Input.Search
-                placeholder="Nhập mã giảm giá để tìm kiếm..."
+                placeholder="Nhập tên khách hàng, mã đặt vé, mã giao dịch, phương thức thanh toán để tìm kiếm..."
                 defaultValue={query}
                 enterButton
                 allowClear
@@ -74,14 +93,15 @@ const Coupons: React.FC = () => {
               />
             </div>
           </div>
-          <Access permission={PERMISSIONS[Module.COUPONS].CREATE} hideChildren>
-            <AddCoupon />
-          </Access>
+          <SearchDate onDateChange={handleDateChange} />
         </div>
-        <CouponTable couponPage={data?.payload} isLoading={isLoading} />
+        <TransactionTable
+          transactionPage={data?.payload}
+          isLoading={isLoading}
+        />
       </div>
     </Access>
   );
 };
 
-export default Coupons;
+export default Transactions;

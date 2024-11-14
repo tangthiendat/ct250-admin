@@ -262,6 +262,7 @@ const UpdateAirportForm: React.FC<UpdateAirportFormProps> = ({
             ]}
           >
             <Select
+              disabled={viewOnly}
               showSearch
               placeholder="Vui lòng chọn quốc gia"
               options={countryOptions}
