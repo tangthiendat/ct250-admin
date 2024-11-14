@@ -22,6 +22,7 @@ interface IPaymentMethodService {
     updatedPaymentMethod: IPaymentMethod,
   ): Promise<ApiResponse<IPaymentMethod>>;
   delete(paymentMethodId: number): Promise<ApiResponse<void>>;
+  getAllPaymentMethods(): Promise<ApiResponse<IPaymentMethod[]>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("payment-methods");
@@ -29,14 +30,12 @@ const apiClient: AxiosInstance = createApiClient("payment-methods");
 class PaymentMethodService implements IPaymentMethodService {
   async getPaymentMethods(
     pagination: PaginationParams,
-    //query: string,
     sort?: SortParams,
   ): Promise<ApiResponse<Page<IPaymentMethod>>> {
     return (
       await apiClient.get("", {
         params: {
           ...pagination,
-          // query,
           sortBy: sort?.sortBy !== "" ? sort?.sortBy : undefined,
           direction: sort?.direction !== "" ? sort?.direction : undefined,
         },
@@ -59,6 +58,9 @@ class PaymentMethodService implements IPaymentMethodService {
   }
   async delete(paymentMethodId: number): Promise<ApiResponse<void>> {
     return (await apiClient.delete(`/${paymentMethodId}`)).data;
+  }
+  async getAllPaymentMethods(): Promise<ApiResponse<IPaymentMethod[]>> {
+    return (await apiClient.get("/all")).data;
   }
 }
 

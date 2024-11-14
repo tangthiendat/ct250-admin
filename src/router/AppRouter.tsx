@@ -12,12 +12,13 @@ import Fees from "../pages/Fees";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Meals from "../pages/Meals";
+import PaymentMethods from "../pages/PaymentMethods";
 import Permissions from "../pages/Permissions";
 import Roles from "../pages/Roles";
 import Routes from "../pages/Routes";
 import Schedule from "../pages/Schedule";
+import Transactions from "../pages/Transactions";
 import Users from "../pages/Users";
-import PaymentMethods from "../pages/PaymentMethods";
 
 const router = createBrowserRouter([
   {
@@ -104,6 +105,10 @@ const router = createBrowserRouter([
       {
         path: "/payment-methods",
         element: <PaymentMethods />,
+      },
+      {
+        path: "/transactions",
+        element: <Transactions />,
       },
     ],
   },

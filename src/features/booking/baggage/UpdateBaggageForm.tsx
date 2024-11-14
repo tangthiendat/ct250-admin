@@ -16,8 +16,8 @@ import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { IBaggagePricing, IBaggages } from "../../../interfaces";
 import { RouteType } from "../../../interfaces/common/enums";
-import { baggageService } from "../../../services/booking/baggage-service";
 import { formatCurrency, parseCurrency } from "../../../utils";
+import { baggageService } from "../../../services";
 
 interface UpdateBaggageFormProps {
   baggageToUpdate?: IBaggages;

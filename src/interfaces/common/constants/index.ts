@@ -1,4 +1,4 @@
-import { CouponType, Module, PassengerType, RouteType } from "../enums";
+import { CouponType, Module, PassengerType, RouteType, TransactionStatus } from "../enums";
 
 export const PERMISSIONS = {
   [Module.USERS]: {
@@ -89,9 +89,15 @@ export const PERMISSIONS = {
   },
   [Module.PAYMENT_METHODS]: {
     GET_PAGINATION: { method: "GET", apiPath: "/api/v1/payment-methods" },
+    GET_ALL: { method: "GET", apiPath: "/api/v1/payment-methods/all" },
     CREATE: { method: "POST", apiPath: "/api/v1/payment-methods" },
     UPDATE: { method: "PUT", apiPath: "/api/v1/payment-methods/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/payment-methods/{id}" },
+  },
+  [Module.TRANSACTIONS]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/transactions" },
+    GET_BY_ID: { method: "GET", apiPath: "/api/v1/transactions/{id}" },
+    CREATE: { method: "POST", apiPath: "/api/v1/transactions" },
   },
 };
 
@@ -116,3 +122,10 @@ export const COUPON_TYPE_TRANSLATION: Record<CouponType, string> = {
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
 
 export const PRIMARY_COLOR = "#004AAD";
+
+
+export const TRANSACTION_STATUS_TRANSLATION: Record<TransactionStatus, string> = {
+  [TransactionStatus.COMPLETED]: "Hoàn thành",
+  [TransactionStatus.FAILED]: "Thất bại",
+  [TransactionStatus.PENDING]: "Đang xử lý",
+}

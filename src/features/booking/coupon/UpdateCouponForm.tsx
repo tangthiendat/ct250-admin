@@ -14,7 +14,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CouponType, ICoupons } from "../../../interfaces";
-import { couponService } from "../../../services/booking/coupon-service";
+import { couponService } from "../../../services";
 import { formatCurrency, parseCurrency } from "../../../utils";
 
 interface UpdateCouponFormProps {

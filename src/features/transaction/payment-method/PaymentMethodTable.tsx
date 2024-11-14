@@ -10,7 +10,6 @@ import {
   PERMISSIONS,
   SortParams,
 } from "../../../interfaces";
-import { paymentMethodService } from "../../../services/transaction/payment-method-service";
 import {
   colorSortDownIcon,
   colorSortUpIcon,
@@ -21,6 +20,7 @@ import {
 import Access from "../../auth/Access";
 import DeletePaymentMethod from "./DeletePaymentMethod";
 import UpdatePaymentMethod from "./UpdatePaymentMethod";
+import { paymentMethodService } from "../../../services";
 
 interface TableParams {
   pagination: TablePaginationConfig;

@@ -7,7 +7,7 @@ import { BsFillLuggageFill } from "react-icons/bs";
 import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
 import { FaLocationArrow } from "react-icons/fa6";
 import { GiCommercialAirplane } from "react-icons/gi";
-import { GrBusinessService } from "react-icons/gr";
+import { GrBusinessService, GrTransaction } from "react-icons/gr";
 import { IoFastFoodOutline, IoShieldCheckmark } from "react-icons/io5";
 import {
   MdDashboard,
@@ -161,7 +161,17 @@ const AdminLayout: React.FC = () => {
             PERMISSIONS[Module.PAYMENT_METHODS].GET_PAGINATION.method,
       );
 
-      const hasPaymentChildren: boolean = Boolean(viewPaymentMethods);
+      const viewTransactions = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.TRANSACTIONS].GET_PAGINATION.apiPath &&
+          item.method ===
+            PERMISSIONS[Module.TRANSACTIONS].GET_PAGINATION.method,
+      );
+
+      const hasPaymentChildren: boolean = Boolean(
+        viewPaymentMethods || viewTransactions,
+      );
 
       const menuItems = [
         {
@@ -331,6 +341,17 @@ const AdminLayout: React.FC = () => {
                           ),
                           key: "payment-methods",
                           icon: <MdOutlinePayment />,
+                        },
+                      ]
+                    : []),
+                  ...(viewTransactions
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/transactions">Giao dịch</NavLink>
+                          ),
+                          key: "transactions",
+                          icon: <GrTransaction />,
                         },
                       ]
                     : []),
