@@ -19,6 +19,7 @@ import Routes from "../pages/Routes";
 import Schedule from "../pages/Schedule";
 import Transactions from "../pages/Transactions";
 import Users from "../pages/Users";
+import SpecialServices from "../pages/SpecialServices";
 
 const router = createBrowserRouter([
   {
@@ -97,6 +98,10 @@ const router = createBrowserRouter([
       {
         path: "/baggages",
         element: <Baggages />,
+      },
+      {
+        path: "/special-services",
+        element: <SpecialServices />,
       },
       {
         path: "/coupons",
