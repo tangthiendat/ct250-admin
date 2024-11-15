@@ -1,4 +1,4 @@
-import { BookingStatus, CouponType, RouteType, TripType } from "../common";
+import { CouponType, RouteType } from "../common";
 
 export interface IMeal {
   mealId: number;
@@ -60,3 +60,40 @@ export interface CouponFilterCriteria {
   couponType?: CouponType;
 }
 
+
+export interface ICoupons {
+  couponId: number;
+  couponCode: string;
+  discountValue: number;
+  couponType: CouponType;
+  validFrom: string;
+  validTo: string;
+  createdAt: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+}
+
+
+export interface ISpecialServices {
+  specialServiceId: number;
+  serviceName: string;
+  description: string;
+  conditions: string;
+  maxPassengers: number;
+  requiredSupport: boolean;
+  healthVerification: boolean;
+  bookingLeadTime: number;
+  specialInstructions: string;
+  imgUrl?: string;
+  status: boolean;
+  createdAt: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+}
+
+export interface SpecialServiceFilterCriteria {
+  query?: string;
+  status?: boolean;
+}

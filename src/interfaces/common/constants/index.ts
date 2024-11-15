@@ -99,6 +99,13 @@ export const PERMISSIONS = {
     GET_BY_ID: { method: "GET", apiPath: "/api/v1/transactions/{id}" },
     CREATE: { method: "POST", apiPath: "/api/v1/transactions" },
   },
+  [Module.SPECIAL_SERVICES]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/special-services" },
+    GET_ALL: { method: "GET", apiPath: "/api/v1/special-services/all" },
+    CREATE: { method: "POST", apiPath: "/api/v1/special-services" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/special-services/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/special-services/{id}" },
+  },
 };
 
 

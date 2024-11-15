@@ -18,6 +18,7 @@ import {
 } from "react-icons/md";
 import { RiCalendarScheduleLine, RiCoupon2Line } from "react-icons/ri";
 import { TbReceiptTax, TbRouteSquare } from "react-icons/tb";
+import { TfiSupport } from "react-icons/tfi";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import Loading from "../common/components/Loading";
@@ -143,7 +144,17 @@ const AdminLayout: React.FC = () => {
           item.method === PERMISSIONS[Module.BAGGAGES].GET_PAGINATION.method,
       );
 
-      const hasServiceChildren: boolean = Boolean(viewMeals || viewBaggages);
+      const viewSpecialServices = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.SPECIAL_SERVICES].GET_PAGINATION.apiPath &&
+          item.method ===
+            PERMISSIONS[Module.SPECIAL_SERVICES].GET_PAGINATION.method,
+      );
+
+      const hasServiceChildren: boolean = Boolean(
+        viewMeals || viewBaggages || viewSpecialServices,
+      );
 
       const viewCoupons = permissions.find(
         (item) =>
@@ -299,6 +310,19 @@ const AdminLayout: React.FC = () => {
                           label: <NavLink to="/baggages">Hành lý</NavLink>,
                           key: "baggages",
                           icon: <BsFillLuggageFill size={17} />,
+                        },
+                      ]
+                    : []),
+                  ...(viewSpecialServices
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/special-services">
+                              Dịch vụ đặc biệt
+                            </NavLink>
+                          ),
+                          key: "special-services",
+                          icon: <TfiSupport />,
                         },
                       ]
                     : []),
