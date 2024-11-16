@@ -26,11 +26,21 @@ const Transactions: React.FC = () => {
     pageSize: Number(searchParams.get("pageSize")) || 10,
   };
 
-  const handleDateChange = (startDate: string | null, type: string | null) => {
+  const handleDateChange = (
+    startDate: string | null,
+    endDate: string | null,
+    type: string | null,
+  ) => {
     if (startDate) {
       searchParams.set("startDate", startDate);
     } else {
       searchParams.delete("startDate");
+    }
+
+    if (endDate) {
+      searchParams.set("endDate", endDate);
+    } else {
+      searchParams.delete("endDate");
     }
 
     if (type) {
@@ -46,6 +56,7 @@ const Transactions: React.FC = () => {
     query: searchParams.get("query") || undefined,
     status: (searchParams.get("status") as TransactionStatus) || undefined,
     startDate: searchParams.get("startDate") || undefined,
+    endDate: searchParams.get("endDate") || undefined,
     type: searchParams.get("type") || undefined,
   };
 

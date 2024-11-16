@@ -11,7 +11,6 @@ export interface IPaymentMethod {
 
 export interface ITransaction {
     transactionId: number;
-    // booking: ;
     paymentMethod: IPaymentMethod;
     amount: number;
     createdAt: string;
@@ -31,6 +30,7 @@ export interface TransactionFilterCriteria {
     query?: string;
     status?: TransactionStatus;
     startDate?: string;
+    endDate?: string;
     type?: string;
 }
 
