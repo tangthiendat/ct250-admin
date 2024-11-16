@@ -20,9 +20,11 @@ import {
   PERMISSIONS,
 } from "../../../interfaces";
 import {
+  colorFilterIcon,
   colorSortDownIcon,
   colorSortUpIcon,
   formatTimestamp,
+  getDefaultFilterValue,
   getDefaultSortOrder,
   getSortDirection,
 } from "../../../utils";
@@ -67,7 +69,7 @@ const SpecialServiceTable: React.FC<SpecialServiceTableProps> = ({
     }
   }, [specialServicePage]);
 
-  const handleTableChange: TableProps<ISpecialServices>["onChange"] = (
+  const handleTableChange: TableProps<IAirplane>["onChange"] = (
     pagination,
     filters,
     sorter,
@@ -80,6 +82,20 @@ const SpecialServiceTable: React.FC<SpecialServiceTableProps> = ({
     }));
     searchParams.set("page", String(pagination.current));
     searchParams.set("pageSize", String(pagination.pageSize));
+
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          searchParams.set(key, value.join(","));
+        } else {
+          if (value) {
+            searchParams.set(key, `${value}`);
+          } else {
+            searchParams.delete(key);
+          }
+        }
+      });
+    }
 
     let sortBy;
     let direction;
@@ -101,6 +117,7 @@ const SpecialServiceTable: React.FC<SpecialServiceTableProps> = ({
       searchParams.delete("direction");
       searchParams.delete("sortBy");
     }
+
     setSearchParams(searchParams);
   };
 
@@ -143,15 +160,14 @@ const SpecialServiceTable: React.FC<SpecialServiceTableProps> = ({
         const text = status ? "ACTIVE" : "INACTIVE";
         return <Tag color={color}>{text}</Tag>;
       },
-      filters: [
-        { text: "ACTIVE", value: true },
-        { text: "INACTIVE", value: false },
-      ],
-      defaultFilteredValue: searchParams
-        .getAll("status")
-        .map((value) => value === "true"),
+      filters: Object.values([true, false]).map((status: boolean) => ({
+        text: status ? "ACTIVE" : "INACTIVE",
+        value: status,
+      })),
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
+      // .map((value) => value === "true"),
       filterIcon: (filtered) => (
-        <FilterFilled style={{ color: filtered ? "#1890ff" : undefined }} />
+        <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
       ),
     },
     {

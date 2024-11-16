@@ -248,12 +248,17 @@ const UpdateSpecialServiceForm: React.FC<UpdateSpecialServiceFormProps> = ({
               },
             ]}
           >
-            <InputNumber readOnly={viewOnly} min={1} className="w-full" />
+            <InputNumber
+              readOnly={viewOnly}
+              min={1}
+              className="w-full"
+              addonAfter="người"
+            />
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item
-            label="Thời gian đặt trước (ngày)"
+            label="Thời gian đặt trước"
             name="bookingLeadTime"
             rules={[
               {
@@ -262,7 +267,12 @@ const UpdateSpecialServiceForm: React.FC<UpdateSpecialServiceFormProps> = ({
               },
             ]}
           >
-            <InputNumber readOnly={viewOnly} min={0} className="w-full" />
+            <InputNumber
+              readOnly={viewOnly}
+              min={0}
+              addonAfter="ngày"
+              className="w-full"
+            />
           </Form.Item>
         </Col>
       </Row>

@@ -40,7 +40,7 @@ const UpdateSpecialService: React.FC<UpdateSpecialServiceProps> = ({
         <UpdateSpecialServiceForm
           specialServiceToUpdate={specialService}
           onCancel={handleCloseModal}
-          viewOnly
+          // viewOnly
         />
       </Modal>
     </>
