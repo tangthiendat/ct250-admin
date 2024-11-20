@@ -143,7 +143,7 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col span={24}>
+        <Col span={12}>
           <Form.Item
             label="Giá trị mã giảm giá"
             name="discountValue"
@@ -179,6 +179,20 @@ const UpdateCouponForm: React.FC<UpdateCouponFormProps> = ({
               parser={(value) => parseCurrency(value) as unknown as 0}
               className="w-full"
             />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            label="Số lượng"
+            name="maxUsage"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập số lượng mã giảm giá",
+              },
+            ]}
+          >
+            <InputNumber readOnly={viewOnly} min={0} className="w-full" />
           </Form.Item>
         </Col>
       </Row>

@@ -29,7 +29,7 @@ const UpdateCoupon: React.FC<UpdateCouponProps> = ({ coupon }) => {
       </Tooltip>
       <Modal
         open={isOpenModal}
-        width="60%"
+        width="40%"
         title={<span className="text-lg">Chỉnh sửa mã giảm giá</span>}
         destroyOnClose
         onCancel={handleCloseModal}

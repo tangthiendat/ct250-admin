@@ -131,7 +131,7 @@ const CouponTable: React.FC<CouponTableProps> = ({ couponPage, isLoading }) => {
       title: "Giá trị mã giảm",
       key: "currentValue",
       dataIndex: "discountValue",
-      width: "20%",
+      width: "15%",
       render: (currentValue: number, record: ICoupons) => {
         const isValid = isInDateRange(
           dayjs().tz().format("YYYY-MM-DD"),
@@ -169,7 +169,12 @@ const CouponTable: React.FC<CouponTableProps> = ({ couponPage, isLoading }) => {
         <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
       ),
     },
-
+    {
+      title: "Số lượng",
+      key: "maxUsage",
+      dataIndex: "maxUsage",
+      width: "15%",
+    },
     {
       key: "createdAt",
       title: "Ngày tạo",

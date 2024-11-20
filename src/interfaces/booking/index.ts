@@ -68,6 +68,7 @@ export interface ICoupons {
   couponType: CouponType;
   validFrom: string;
   validTo: string;
+  maxUsage: number;
   createdAt: string;
   updatedAt?: string;
   createdBy?: string;
