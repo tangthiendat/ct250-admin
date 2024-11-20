@@ -29,7 +29,7 @@ const ViewCoupon: React.FC<ViewCouponProps> = ({ coupon }) => {
       </Tooltip>
       <Modal
         open={isOpenModal}
-        width="60%"
+        width="40%"
         title={<span className="text-lg">Xem thông tin mã giảm giá</span>}
         destroyOnClose
         onCancel={handleCloseModal}
