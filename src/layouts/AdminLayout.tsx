@@ -8,6 +8,7 @@ import { FaKey, FaUserCircle, FaUserCog, FaUsers } from "react-icons/fa";
 import { FaLocationArrow } from "react-icons/fa6";
 import { GiCommercialAirplane } from "react-icons/gi";
 import { GrBusinessService, GrTransaction } from "react-icons/gr";
+import { HiOutlineTicket } from "react-icons/hi2";
 import { IoFastFoodOutline, IoShieldCheckmark } from "react-icons/io5";
 import {
   MdDashboard,
@@ -16,7 +17,7 @@ import {
   MdOutlinePayment,
   MdOutlinePayments,
 } from "react-icons/md";
-import { RiCalendarScheduleLine, RiCoupon2Line } from "react-icons/ri";
+import { RiCalendarScheduleLine, RiCoupon3Fill } from "react-icons/ri";
 import { TbReceiptTax, TbRouteSquare } from "react-icons/tb";
 import { TfiSupport } from "react-icons/tfi";
 import { Outlet, useLocation, useNavigate } from "react-router";
@@ -27,7 +28,6 @@ import { useLoggedInUser } from "../features/auth/hooks/useLoggedInUser";
 import { PERMISSIONS } from "../interfaces/common/constants";
 import { Module } from "../interfaces/common/enums";
 import { authService } from "../services";
-
 const { Header, Sider } = Layout;
 
 const AdminLayout: React.FC = () => {
@@ -162,7 +162,13 @@ const AdminLayout: React.FC = () => {
           item.method === PERMISSIONS[Module.COUPONS].GET_PAGINATION.method,
       );
 
-      const hasBookingChildren: boolean = Boolean(viewCoupons);
+      const viewTickets = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.TICKETS].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.TICKETS].GET_PAGINATION.method,
+      );
+
+      const hasBookingChildren: boolean = Boolean(viewCoupons || viewTickets);
 
       const viewPaymentMethods = permissions.find(
         (item) =>
@@ -288,6 +294,31 @@ const AdminLayout: React.FC = () => {
               },
             ]
           : []),
+        ...(hasBookingChildren
+          ? [
+              {
+                label: "Đặt vé",
+                key: "booking-management",
+                icon: <MdOutlineAirplaneTicket size={18} />,
+                children: [
+                  ...(viewCoupons
+                    ? [
+                        {
+                          label: <NavLink to="/coupons">Mã giảm giá</NavLink>,
+                          key: "coupons",
+                          icon: <RiCoupon3Fill size={16} />,
+                        },
+                        {
+                          label: <NavLink to="/tickets">Vé điện tử</NavLink>,
+                          key: "tickets",
+                          icon: <HiOutlineTicket size={17} />,
+                        },
+                      ]
+                    : []),
+                ],
+              },
+            ]
+          : []),
         ...(hasServiceChildren
           ? [
               {
@@ -330,26 +361,7 @@ const AdminLayout: React.FC = () => {
               },
             ]
           : []),
-        ...(hasBookingChildren
-          ? [
-              {
-                label: "Đặt vé",
-                key: "booking-management",
-                icon: <MdOutlineAirplaneTicket size={18} />,
-                children: [
-                  ...(viewCoupons
-                    ? [
-                        {
-                          label: <NavLink to="/coupons">Mã giảm giá</NavLink>,
-                          key: "coupons",
-                          icon: <RiCoupon2Line size={16} />,
-                        },
-                      ]
-                    : []),
-                ],
-              },
-            ]
-          : []),
+
         ...(hasPaymentChildren
           ? [
               {

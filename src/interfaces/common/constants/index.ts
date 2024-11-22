@@ -106,6 +106,11 @@ export const PERMISSIONS = {
     UPDATE: { method: "PUT", apiPath: "/api/v1/special-services/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/special-services/{id}" },
   },
+  [Module.TICKETS]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/tickets" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/tickets/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/tickets/{id}" },
+  },
 };
 
 

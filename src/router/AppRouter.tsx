@@ -17,9 +17,10 @@ import Permissions from "../pages/Permissions";
 import Roles from "../pages/Roles";
 import Routes from "../pages/Routes";
 import Schedule from "../pages/Schedule";
+import SpecialServices from "../pages/SpecialServices";
+import Tickets from "../pages/Ticket";
 import Transactions from "../pages/Transactions";
 import Users from "../pages/Users";
-import SpecialServices from "../pages/SpecialServices";
 
 const router = createBrowserRouter([
   {
@@ -114,6 +115,10 @@ const router = createBrowserRouter([
       {
         path: "/transactions",
         element: <Transactions />,
+      },
+      {
+        path: "/tickets",
+        element: <Tickets />,
       },
     ],
   },
