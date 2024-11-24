@@ -2,8 +2,11 @@ import Access from "../features/auth/Access";
 import AddPaymentMethod from "../features/transaction/payment-method/AddPaymentMethod";
 import PaymentMethodsTable from "../features/transaction/payment-method/PaymentMethodTable";
 import { Module, PERMISSIONS } from "../interfaces";
+import { useDynamicTitle } from "../utils";
 
 const PaymentMethods: React.FC = () => {
+  useDynamicTitle("Quản lý các phương thức thanh toán - DaViKa Airways");
+
   return (
     <Access permission={PERMISSIONS[Module.PAYMENT_METHODS].GET_PAGINATION}>
       <div className="card">

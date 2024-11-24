@@ -2,8 +2,11 @@ import Access from "../features/auth/Access";
 import AddFee from "../features/flight/fee/AddFee";
 import FeesTable from "../features/flight/fee/FeesTable";
 import { Module, PERMISSIONS } from "../interfaces";
+import { useDynamicTitle } from "../utils";
 
 const Fees: React.FC = () => {
+  useDynamicTitle("Quản lý các loại phí - DaViKa Airways");
+
   return (
     <Access permission={PERMISSIONS[Module.FEES].GET_PAGINATION}>
       <div className="card">

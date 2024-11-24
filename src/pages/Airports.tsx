@@ -9,6 +9,7 @@ import { SortParams } from "../interfaces";
 import { PERMISSIONS } from "../interfaces/common/constants";
 import { Module } from "../interfaces/common/enums";
 import { airportService } from "../services";
+import { useDynamicTitle } from "../utils";
 
 const Airports: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -45,6 +46,8 @@ const Airports: React.FC = () => {
     }
     setSearchParams(searchParams);
   };
+
+  useDynamicTitle("Quản lý sân bay - DaViKa Airways");
 
   return (
     <Access permission={PERMISSIONS[Module.AIRPORTS].GET_PAGINATION}>
