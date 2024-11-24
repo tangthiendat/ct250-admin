@@ -1,6 +1,7 @@
 import { Dayjs } from "dayjs";
-import { CouponType, Gender, ICountry, PassengerType, RouteType } from "../common";
+import { BookingStatus, CouponType, Gender, ICountry, PassengerType, RouteType, TicketClassName, TripType } from "../common";
 import { IUser } from "../auth";
+import { IFlightSchedule, ISeat } from "../flight";
 
 export interface IMeal {
   mealId: number;
@@ -149,5 +150,45 @@ export interface PassengerFilterCriteria {
   type?: string;
 }
 
+export interface IBooking {
+  bookingId: number;
+  bookingCode: string;
+  tripType: TripType;
+  bookingFlights: IBookingFlight[];
+  totalPrice: number;
+  bookingStatus: BookingStatus;
+  coupon: ICoupons;
+  createdAt: string;
+  updatedAt?: string;
+}
 
+export interface IBookingFlight {
+  bookingFlightId: number;
+  flight: IFlightSchedule;
+  ticketClass: TicketClassName;
+  bookingPassengers: IBookingPassenger[];
+}
+
+export interface IBookingPassenger {
+  bookingPassengerId: number;
+  passenger: IPassenger;
+  ticket: ITicket;
+  specialServices: ISpecialServices[];
+  meals: IMeal[];
+  baggages: IBaggages[];
+  seat: ISeat;
+  isPrimaryContact: boolean;
+  isSharedSeat: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface BookingFilterCriteria {
+  query?: string;
+  bookingStatus?: BookingStatus;
+  tripType?: TripType;
+  startDate?: string;
+  endDate?: string;
+  type?: string;
+}
 

@@ -216,7 +216,7 @@ const ViewSeatAvailability: React.FC<ViewSeatAvailabilityProps> = ({
       </Button>
       <Modal
         open={isOpenModal}
-        width="40%"
+        width="50%"
         title={
           <span className="text-lg font-semibold">
             Sơ đồ chỗ ngồi của chuyến bay {flight.flightId}
@@ -225,9 +225,11 @@ const ViewSeatAvailability: React.FC<ViewSeatAvailabilityProps> = ({
         destroyOnClose
         onCancel={handleCloseModal}
         footer={null}
-        style={{ maxHeight: "80vh", overflowY: "auto" }}
       >
-        <div className="airplane-layout space-y-2 rounded-lg bg-gray-200 p-6 shadow-lg">
+        <div
+          className="airplane-layout space-y-2 rounded-lg bg-gray-200 p-6 shadow-lg"
+          style={{ maxHeight: "70vh", overflowY: "auto" }}
+        >
           <div className="cockpit mx-auto rounded-md bg-gray-700 px-2 py-2 text-center text-white">
             <strong>Buồng lái</strong>
           </div>

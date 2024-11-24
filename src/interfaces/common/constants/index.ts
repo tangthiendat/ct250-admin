@@ -1,4 +1,4 @@
-import { CouponType, Gender, Module, PassengerType, RouteType, TicketStatus, TransactionStatus } from "../enums";
+import { BookingStatus, CouponType, Gender, Module, PassengerType, RouteType, TicketStatus, TransactionStatus, TripType } from "../enums";
 
 export const PERMISSIONS = {
   [Module.USERS]: {
@@ -170,4 +170,21 @@ export const GENDER_TRANSLATION: Record<Gender, string> = {
   [Gender.MALE]: "Nam",
   [Gender.FEMALE]: "Nữ",
   [Gender.OTHER]: "Khác",
+}
+
+export const TRIP_TYPE_TRANSLATION: Record<TripType, string> = {
+  [TripType.ONE_WAY]: "Một chiều",
+  [TripType.ROUND_TRIP]: "Khứ hồi",
+  [TripType.MULTI_CITY]: "Đa chặng",
+}
+
+export const BOOKING_STATUS_TRANSLATION: Record<BookingStatus, string> = {
+  [BookingStatus.INIT]: "Đang xử lý",
+  [BookingStatus.CONFIRMED]: "Đã xác nhận",
+  [BookingStatus.CANCELLED]: "Đã hủy",
+  [BookingStatus.COMPLETED]: "Hoàn thành",
+  [BookingStatus.PENDING]: "Chờ xác nhận",
+  [BookingStatus.REFUNDED]: "Đã hoàn tiền",
+  [BookingStatus.PAID]: "Đã thanh toán",
+  [BookingStatus.RESERVED]: "Đã đặt chỗ",
 }
