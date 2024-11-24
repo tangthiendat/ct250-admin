@@ -5,12 +5,14 @@ import React from "react";
 import { useSearchParams } from "react-router-dom";
 import SearchDate from "../common/components/SearchDate";
 import Access from "../features/auth/Access";
+import TicketTable from "../features/booking/ticket/TicketTable";
 import {
   Module,
   PaginationParams,
   PERMISSIONS,
   SortParams,
-  TransactionFilterCriteria,
+  TicketFilterCriteria,
+  TicketStatus,
 } from "../interfaces";
 import { ticketService } from "../services/booking/ticket-service";
 
@@ -50,8 +52,9 @@ const Tickets: React.FC = () => {
     setSearchParams(searchParams);
   };
 
-  const filter: TransactionFilterCriteria = {
+  const filter: TicketFilterCriteria = {
     query: searchParams.get("query") || undefined,
+    status: (searchParams.get("status") as TicketStatus) || undefined,
     startDate: searchParams.get("startDate") || undefined,
     endDate: searchParams.get("endDate") || undefined,
     type: searchParams.get("type") || undefined,
@@ -93,7 +96,7 @@ const Tickets: React.FC = () => {
           <div className="w-[60%]">
             <div className="flex gap-3">
               <Input.Search
-                placeholder="Nhập mã vé điện tử, nhóm khách hàng, họ tê khách hàng, mã đặt chỗ..."
+                placeholder="Nhập mã vé điện tử, nhóm khách hàng, họ tên khách hàng, số điện thoại, mã đặt chỗ  để tìm kiếm..."
                 defaultValue={query}
                 enterButton
                 allowClear
@@ -103,10 +106,7 @@ const Tickets: React.FC = () => {
           </div>
           <SearchDate onDateChange={handleDateChange} />
         </div>
-        {/* <TransactionTable
-          transactionPage={data?.payload}
-          isLoading={isLoading}
-        /> */}
+        <TicketTable ticketPage={data?.payload} isLoading={isLoading} />
       </div>
     </Access>
   );

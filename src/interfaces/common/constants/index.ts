@@ -1,4 +1,4 @@
-import { CouponType, Module, PassengerType, RouteType, TransactionStatus } from "../enums";
+import { CouponType, Module, PassengerType, RouteType, TicketStatus, TransactionStatus } from "../enums";
 
 export const PERMISSIONS = {
   [Module.USERS]: {
@@ -140,4 +140,14 @@ export const TRANSACTION_STATUS_TRANSLATION: Record<TransactionStatus, string> =
   [TransactionStatus.COMPLETED]: "Hoàn thành",
   [TransactionStatus.FAILED]: "Thất bại",
   [TransactionStatus.PENDING]: "Đang xử lý",
+}
+
+
+export const TICKET_STATUS_TRANSLATION: Record<TicketStatus, string> = {
+  [TicketStatus.BOOKED]: "Đã đặt",
+  [TicketStatus.BOARDED]: "Đã lên máy bay",
+  [TicketStatus.CHECKED_IN]: "Đã check-in",
+  [TicketStatus.NO_SHOW]: "Không xuất hiện",
+  [TicketStatus.REFUNDED]: "Đã hoàn tiền",
+  [TicketStatus.RESCHEDULED]: "Đã đổi lịch",
 }

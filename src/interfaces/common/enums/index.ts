@@ -88,9 +88,12 @@ export enum TripType {
 }
 
 export enum TicketStatus {
-  CANCELLED = "CANCELLED",
-  BOOKED = "BOOKED",
-  USED = "USED",
+  BOOKED = "BOOKED", //	Vé đã được giao cho khách hàng.
+  CHECKED_IN = "CHECKED_IN",//	Khách hàng đã check-in trực tuyến hoặc tại quầy.
+  BOARDED = "BOARDED",	//Khách hàng đã lên máy bay.
+  NO_SHOW = "NO_SHOW",// Khách hàng không xuất hiện tại chuyến bay.
+  REFUNDED = "REFUNDED", //	Vé đã được hoàn tiền do khách hàng yêu cầu hoặc quy định của hãng.
+  RESCHEDULED = "RESCHEDULED",//	Vé đã được đổi sang chuyến bay khác.
 }
 
 export enum BookingStatus {

@@ -104,15 +104,20 @@ export interface ITicket {
   ticketId: number;
   ticketNumber: string;
   pdfUrl: string;
+  status: string;
+  passengerName: string;
+  passengerGroup: string;
+  bookingCode: string;
+  phoneNumber: string;
   createdAt: string;
   updatedAt?: string;
   createdBy?: string;
   updatedBy?: string;
-
 }
 
 export interface TicketFilterCriteria {
   query?: string;
+  status?: string;
   startDate?: string;
   endDate?: string;
   type?: string;
