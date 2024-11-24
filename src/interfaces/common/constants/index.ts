@@ -1,4 +1,4 @@
-import { CouponType, Module, PassengerType, RouteType, TransactionStatus } from "../enums";
+import { CouponType, Module, PassengerType, RouteType, TicketStatus, TransactionStatus } from "../enums";
 
 export const PERMISSIONS = {
   [Module.USERS]: {
@@ -106,6 +106,11 @@ export const PERMISSIONS = {
     UPDATE: { method: "PUT", apiPath: "/api/v1/special-services/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/special-services/{id}" },
   },
+  [Module.TICKETS]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/tickets" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/tickets/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/tickets/{id}" },
+  },
 };
 
 
@@ -135,4 +140,14 @@ export const TRANSACTION_STATUS_TRANSLATION: Record<TransactionStatus, string> =
   [TransactionStatus.COMPLETED]: "Hoàn thành",
   [TransactionStatus.FAILED]: "Thất bại",
   [TransactionStatus.PENDING]: "Đang xử lý",
+}
+
+
+export const TICKET_STATUS_TRANSLATION: Record<TicketStatus, string> = {
+  [TicketStatus.BOOKED]: "Đã đặt",
+  [TicketStatus.BOARDED]: "Đã lên máy bay",
+  [TicketStatus.CHECKED_IN]: "Đã check-in",
+  [TicketStatus.NO_SHOW]: "Không xuất hiện",
+  [TicketStatus.REFUNDED]: "Đã hoàn tiền",
+  [TicketStatus.RESCHEDULED]: "Đã đổi lịch",
 }

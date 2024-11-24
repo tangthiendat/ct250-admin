@@ -3,20 +3,20 @@ import { Input } from "antd";
 import { SearchProps } from "antd/es/input";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import Access from "../features/auth/Access";
 import SearchDate from "../common/components/SearchDate";
-import TransactionTable from "../features/transaction/transaction-details/TransactionTable";
+import Access from "../features/auth/Access";
+import TicketTable from "../features/booking/ticket/TicketTable";
 import {
   Module,
   PaginationParams,
   PERMISSIONS,
   SortParams,
-  TransactionFilterCriteria,
-  TransactionStatus,
+  TicketFilterCriteria,
+  TicketStatus,
 } from "../interfaces";
-import { transactionService } from "../services";
+import { ticketService } from "../services/booking/ticket-service";
 
-const Transactions: React.FC = () => {
+const Tickets: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get("query") || "";
@@ -52,9 +52,9 @@ const Transactions: React.FC = () => {
     setSearchParams(searchParams);
   };
 
-  const filter: TransactionFilterCriteria = {
+  const filter: TicketFilterCriteria = {
     query: searchParams.get("query") || undefined,
-    status: (searchParams.get("status") as TransactionStatus) || undefined,
+    status: (searchParams.get("status") as TicketStatus) || undefined,
     startDate: searchParams.get("startDate") || undefined,
     endDate: searchParams.get("endDate") || undefined,
     type: searchParams.get("type") || undefined,
@@ -66,7 +66,7 @@ const Transactions: React.FC = () => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["transactions", pagination, filter, sort].filter((key) => {
+    queryKey: ["tickets", pagination, filter, sort].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {
@@ -75,7 +75,7 @@ const Transactions: React.FC = () => {
         );
       }
     }),
-    queryFn: () => transactionService.getTransactions(pagination, filter, sort),
+    queryFn: () => ticketService.getTickets(pagination, filter, sort),
   });
 
   const handleSearch: SearchProps["onSearch"] = (value) => {
@@ -88,15 +88,15 @@ const Transactions: React.FC = () => {
   };
 
   return (
-    <Access permission={PERMISSIONS[Module.TRANSACTIONS].GET_PAGINATION}>
+    <Access permission={PERMISSIONS[Module.TICKETS].GET_PAGINATION}>
       <div className="card">
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Giao dịch</h2>
+          <h2 className="text-xl font-semibold">Vé điện tử</h2>
 
           <div className="w-[60%]">
             <div className="flex gap-3">
               <Input.Search
-                placeholder="Nhập tên khách hàng, mã đặt vé, mã giao dịch, phương thức thanh toán để tìm kiếm..."
+                placeholder="Nhập mã vé điện tử, nhóm khách hàng, họ tên khách hàng, số điện thoại, mã đặt chỗ  để tìm kiếm..."
                 defaultValue={query}
                 enterButton
                 allowClear
@@ -106,13 +106,10 @@ const Transactions: React.FC = () => {
           </div>
           <SearchDate onDateChange={handleDateChange} />
         </div>
-        <TransactionTable
-          transactionPage={data?.payload}
-          isLoading={isLoading}
-        />
+        <TicketTable ticketPage={data?.payload} isLoading={isLoading} />
       </div>
     </Access>
   );
 };
 
-export default Transactions;
+export default Tickets;

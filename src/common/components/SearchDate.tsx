@@ -203,7 +203,7 @@ const SearchDate: React.FC<SearchDateProps> = ({ onDateChange }) => {
             ? `${searchParams.get("startDate") || ""} - ${
                 searchParams.get("endDate") || ""
               }`
-            : searchParams.get("startDate") || "Lọc thời gian giao dịch"}
+            : searchParams.get("startDate") || "Lọc thời gian"}
         </Button>
         <Modal
           title="Chọn thời gian"
