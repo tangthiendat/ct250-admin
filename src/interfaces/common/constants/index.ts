@@ -1,4 +1,4 @@
-import { CouponType, Module, PassengerType, RouteType, TicketStatus, TransactionStatus } from "../enums";
+import { CouponType, Gender, Module, PassengerType, RouteType, TicketStatus, TransactionStatus } from "../enums";
 
 export const PERMISSIONS = {
   [Module.USERS]: {
@@ -111,6 +111,13 @@ export const PERMISSIONS = {
     UPDATE: { method: "PUT", apiPath: "/api/v1/tickets/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/tickets/{id}" },
   },
+  [Module.PASSENGERS]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/passengers" },
+    // GET_BY_ID: { method: "GET", apiPath: "/api/v1/passengers/{id}" },
+    // CREATE: { method: "POST", apiPath: "/api/v1/passengers" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/passengers/{id}" },
+    DELETE: { method: "DELETE", apiPath: "/api/v1/passengers/{id}" },
+  },
 };
 
 
@@ -150,4 +157,10 @@ export const TICKET_STATUS_TRANSLATION: Record<TicketStatus, string> = {
   [TicketStatus.NO_SHOW]: "Không xuất hiện",
   [TicketStatus.REFUNDED]: "Đã hoàn tiền",
   [TicketStatus.RESCHEDULED]: "Đã đổi lịch",
+}
+
+export const GENDER_TRANSLATION: Record<Gender, string> = {
+  [Gender.MALE]: "Nam",
+  [Gender.FEMALE]: "Nữ",
+  [Gender.OTHER]: "Khác",
 }

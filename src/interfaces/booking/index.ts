@@ -1,4 +1,6 @@
-import { CouponType, RouteType } from "../common";
+import { Dayjs } from "dayjs";
+import { CouponType, Gender, ICountry, PassengerType, RouteType } from "../common";
+import { IUser } from "../auth";
 
 export interface IMeal {
   mealId: number;
@@ -122,3 +124,28 @@ export interface TicketFilterCriteria {
   endDate?: string;
   type?: string;
 }
+
+export interface IPassenger {
+  passengerId: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string | Dayjs;
+  country: ICountry;
+  phoneNumber: string;
+  passengerType: PassengerType;
+  gender: Gender;
+  user: IUser;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface PassengerFilterCriteria {
+  query?: string;
+  passengerType?: PassengerType;
+  gender?: Gender;
+  startDate?: string;
+  endDate?: string;
+  type?: string;
+}
+

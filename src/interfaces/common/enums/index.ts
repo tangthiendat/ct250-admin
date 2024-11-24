@@ -23,6 +23,7 @@ export enum Module {
   PAYMENT_METHODS = "PAYMENT-METHODS",
   TRANSACTIONS = "TRANSACTIONS",
   TICKETS = "TICKETS",
+  PASSENGERS = "PASSENGERS",
 }
 
 //TRANSACTIONS
@@ -79,6 +80,12 @@ export enum PassengerType {
   ADULT = "ADULT",
   CHILD = "CHILD",
   INFANT = "INFANT",
+}
+
+export enum Gender {
+  MALE = "MALE",
+  FEMALE = "FEMALE",
+  OTHER = "OTHER",
 }
 
 export enum TripType {

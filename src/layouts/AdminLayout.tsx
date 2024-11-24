@@ -10,6 +10,7 @@ import { GiCommercialAirplane } from "react-icons/gi";
 import { GrBusinessService, GrTransaction } from "react-icons/gr";
 import { HiOutlineTicket } from "react-icons/hi2";
 import { IoFastFoodOutline, IoShieldCheckmark } from "react-icons/io5";
+import { LiaUsersSolid } from "react-icons/lia";
 import {
   MdDashboard,
   MdFlight,
@@ -168,7 +169,16 @@ const AdminLayout: React.FC = () => {
           item.method === PERMISSIONS[Module.TICKETS].GET_PAGINATION.method,
       );
 
-      const hasBookingChildren: boolean = Boolean(viewCoupons || viewTickets);
+      const viewPassengers = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.PASSENGERS].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.PASSENGERS].GET_PAGINATION.method,
+      );
+
+      const hasBookingChildren: boolean = Boolean(
+        viewCoupons || viewTickets || viewPassengers,
+      );
 
       const viewPaymentMethods = permissions.find(
         (item) =>
@@ -312,6 +322,11 @@ const AdminLayout: React.FC = () => {
                           label: <NavLink to="/tickets">Vé điện tử</NavLink>,
                           key: "tickets",
                           icon: <HiOutlineTicket size={17} />,
+                        },
+                        {
+                          label: <NavLink to="/passengers">Khách hàng</NavLink>,
+                          key: "passengers",
+                          icon: <LiaUsersSolid size={20} />,
                         },
                       ]
                     : []),

@@ -3,24 +3,18 @@ import {
   CaretUpFilled,
   FilterFilled,
 } from "@ant-design/icons";
-import {
-  Button,
-  Space,
-  Table,
-  TablePaginationConfig,
-  TableProps,
-  Tag,
-} from "antd";
+import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { FaFilePdf } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import {
-  ITicket,
+  Gender,
+  GENDER_TRANSLATION,
+  IPassenger,
   Module,
   Page,
+  PASSENGER_TYPE_TRANSLATION,
+  PassengerType,
   PERMISSIONS,
-  TICKET_STATUS_TRANSLATION,
-  TicketStatus,
 } from "../../../interfaces";
 import {
   colorFilterIcon,
@@ -32,19 +26,23 @@ import {
   getSortDirection,
 } from "../../../utils";
 import Access from "../../auth/Access";
-import DeleteTicket from "./DeleteTicket";
-import UpdateTicket from "./UpdateTicket";
+import DeletePassenger from "./DeletePassenger";
+import UpdatePassenger from "./UpdatePassenger";
+import ViewPassenger from "./ViewPassenger";
 
 interface TableParams {
   pagination: TablePaginationConfig;
 }
 
-interface TicketTableProps {
-  ticketPage?: Page<ITicket>;
+interface PassengerTableProps {
+  passengerPage?: Page<IPassenger>;
   isLoading: boolean;
 }
 
-const TicketTable: React.FC<TicketTableProps> = ({ ticketPage, isLoading }) => {
+const PassengerTable: React.FC<PassengerTableProps> = ({
+  passengerPage,
+  isLoading,
+}) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
@@ -56,19 +54,19 @@ const TicketTable: React.FC<TicketTableProps> = ({ ticketPage, isLoading }) => {
   }));
 
   useEffect(() => {
-    if (ticketPage) {
+    if (passengerPage) {
       setTableParams((prev) => ({
         ...prev,
         pagination: {
           ...prev.pagination,
-          total: ticketPage.meta?.total || 0,
+          total: passengerPage.meta?.total || 0,
           showTotal: (total) => `Tổng ${total} vé`,
         },
       }));
     }
-  }, [ticketPage]);
+  }, [passengerPage]);
 
-  const handleTableChange: TableProps<ITicket>["onChange"] = (
+  const handleTableChange: TableProps<IPassenger>["onChange"] = (
     pagination,
     filters,
     sorter,
@@ -120,119 +118,85 @@ const TicketTable: React.FC<TicketTableProps> = ({ ticketPage, isLoading }) => {
     setSearchParams(searchParams);
   };
 
-  const PassengerNameCell: React.FC<{
-    passengerName: string;
-    phoneNumber: string;
-    passengerGroup: string;
-  }> = ({ passengerName, phoneNumber, passengerGroup }) => {
-    const [isPhoneNumberVisible, setIsPhoneNumberVisible] = useState(false);
-
-    const togglePhoneNumberVisibility = () => {
-      setIsPhoneNumberVisible(!isPhoneNumberVisible);
-    };
-
-    return (
-      <div>
-        <div className="flex items-center">
-          <span>{passengerName}</span>
-          <Button
-            type="link"
-            icon={
-              isPhoneNumberVisible ? <CaretUpFilled /> : <CaretDownFilled />
-            }
-            onClick={togglePhoneNumberVisibility}
-          />
-        </div>
-        {isPhoneNumberVisible && (
-          <div className="text-xs text-gray-500">
-            <div>Nhóm khách hàng: {passengerGroup}</div>
-            <div>Số điện thoại: {phoneNumber}</div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const columns: TableProps<ITicket>["columns"] = [
+  const columns: TableProps<IPassenger>["columns"] = [
     {
-      title: "Vé",
-      key: "pdfUrl",
-      dataIndex: "pdfUrl",
-      width: "1%",
-      render: (pdfUrl: string) => {
+      title: "Họ tên khách hàng",
+      key: "fullName",
+      dataIndex: ["firstName", "lastName"],
+      width: "6%",
+      render: (text, record: IPassenger) =>
+        record ? `${record.lastName} ${record.firstName}` : "",
+    },
+    {
+      title: "Nhóm khách hàng",
+      key: "passengerGroup",
+      dataIndex: "passengerGroup",
+      width: "5%",
+    },
+    {
+      title: "Loại khách hàng",
+      key: "passengerType",
+      dataIndex: "passengerType",
+      width: "3%",
+      render: (passengerType: IPassenger["passengerType"]) => {
+        let color = "";
+        switch (passengerType) {
+          case PassengerType.ADULT:
+            color = "green";
+            break;
+          case PassengerType.CHILD:
+            color = "blue";
+            break;
+          case PassengerType.INFANT:
+            color = "orange";
+            break;
+        }
         return (
-          <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
-            <FaFilePdf size={24} style={{ color: "gray" }} />
-          </a>
+          <Tag color={color}>
+            {PASSENGER_TYPE_TRANSLATION[passengerType as PassengerType]}
+          </Tag>
         );
       },
-    },
-    {
-      title: "Mã vé",
-      key: "ticketNumber",
-      dataIndex: "ticketNumber",
-      width: "3%",
-    },
-    {
-      title: "Mã đặt chỗ",
-      key: "bookingCode",
-      dataIndex: "bookingCode",
-      width: "3%",
-    },
-    {
-      title: "Tên khách hàng",
-      key: "passengerName",
-      dataIndex: "passengerName",
-      width: "6%",
-      render: (passengerName: string, record: ITicket) => (
-        <PassengerNameCell
-          passengerName={passengerName}
-          phoneNumber={record.phoneNumber}
-          passengerGroup={record.passengerGroup}
-        />
+      filters: Object.values(PassengerType).map(
+        (passengerType: PassengerType) => ({
+          text: PASSENGER_TYPE_TRANSLATION[passengerType],
+          value: passengerType,
+        }),
+      ),
+      defaultFilteredValue: getDefaultFilterValue(
+        searchParams,
+        "passengerType",
+      ),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
       ),
     },
     {
-      title: "Trạng thái",
-      key: "status",
-      dataIndex: "status",
-      width: "2%",
-      render: (ticketStatus: ITicket["status"]) => {
+      title: "Giới tính",
+      key: "gender",
+      dataIndex: "gender",
+      width: "3%",
+      render: (gender: IPassenger["gender"]) => {
         let color = "";
 
-        switch (ticketStatus) {
-          case TicketStatus.BOOKED:
-            color = "green";
-            break;
-          case TicketStatus.BOARDED:
+        switch (gender) {
+          case Gender.MALE:
             color = "blue";
             break;
-          case TicketStatus.CHECKED_IN:
-            color = "orange";
+          case Gender.FEMALE:
+            color = "pink";
             break;
-          case TicketStatus.NO_SHOW:
-            color = "red";
-            break;
-          case TicketStatus.REFUNDED:
-            color = "gray";
-            break;
-          case TicketStatus.RESCHEDULED:
+          case Gender.OTHER:
             color = "purple";
             break;
         }
 
-        return (
-          <Tag color={color}>
-            {TICKET_STATUS_TRANSLATION[ticketStatus as TicketStatus]}
-          </Tag>
-        );
+        return <Tag color={color}>{GENDER_TRANSLATION[gender as Gender]}</Tag>;
       },
-      filters: Object.values(TicketStatus).map(
-        (ticketStatus: TicketStatus) => ({
-          text: TICKET_STATUS_TRANSLATION[ticketStatus],
-          value: ticketStatus,
-        }),
-      ),
+      filters: Object.values(Gender).map((gender: Gender) => ({
+        text: GENDER_TRANSLATION[gender],
+        value: gender,
+      })),
       defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
       filterIcon: (filtered) => (
         <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
@@ -274,13 +238,20 @@ const TicketTable: React.FC<TicketTableProps> = ({ ticketPage, isLoading }) => {
       title: "Hành động",
       key: "action",
       width: "2%",
-      render: (record: ITicket) => (
+      render: (record: IPassenger) => (
         <Space>
-          <Access permission={PERMISSIONS[Module.TICKETS].UPDATE} hideChildren>
-            <UpdateTicket ticket={record} />
+          <ViewPassenger passenger={record} />
+          <Access
+            permission={PERMISSIONS[Module.PASSENGERS].UPDATE}
+            hideChildren
+          >
+            <UpdatePassenger passenger={record} />
           </Access>
-          <Access permission={PERMISSIONS[Module.TICKETS].DELETE} hideChildren>
-            <DeleteTicket ticketId={record.ticketId} />
+          <Access
+            permission={PERMISSIONS[Module.PASSENGERS].DELETE}
+            hideChildren
+          >
+            <DeletePassenger passengerId={record.passengerId} />
           </Access>
         </Space>
       ),
@@ -291,9 +262,9 @@ const TicketTable: React.FC<TicketTableProps> = ({ ticketPage, isLoading }) => {
     <Table
       bordered={false}
       columns={columns}
-      rowKey={(record: ITicket) => record.ticketId}
+      rowKey={(record: IPassenger) => record.passengerId}
       pagination={tableParams.pagination}
-      dataSource={ticketPage?.content || []}
+      dataSource={passengerPage?.content || []}
       rowClassName={(_, index) =>
         index % 2 === 0 ? "table-row-light" : "table-row-gray"
       }
@@ -308,4 +279,4 @@ const TicketTable: React.FC<TicketTableProps> = ({ ticketPage, isLoading }) => {
   );
 };
 
-export default TicketTable;
+export default PassengerTable;
