@@ -15,6 +15,7 @@ import {
   TicketStatus,
 } from "../interfaces";
 import { ticketService } from "../services/booking/ticket-service";
+import { useDynamicTitle } from "../utils";
 
 const Tickets: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -86,6 +87,8 @@ const Tickets: React.FC = () => {
     }
     setSearchParams(searchParams);
   };
+
+  useDynamicTitle("Quản lý vé - DaViKa Airways");
 
   return (
     <Access permission={PERMISSIONS[Module.TICKETS].GET_PAGINATION}>

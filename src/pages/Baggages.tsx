@@ -13,6 +13,7 @@ import {
   SortParams,
 } from "../interfaces";
 import { baggageService } from "../services/booking/baggage-service";
+import { useDynamicTitle } from "../utils";
 
 const Baggages: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -45,6 +46,8 @@ const Baggages: React.FC = () => {
     }),
     queryFn: () => baggageService.getBaggages(pagination, filter, sort),
   });
+
+  useDynamicTitle("Quản lý hành lý - DaViKa Airways");
 
   return (
     <Access permission={PERMISSIONS[Module.BAGGAGES].GET_PAGINATION}>

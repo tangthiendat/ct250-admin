@@ -3,8 +3,11 @@ import { Module } from "../interfaces/common/enums";
 import Access from "../features/auth/Access";
 import AddPermission from "../features/auth/permissions/AddPermission";
 import PermissionsTable from "../features/auth/permissions/PermissionsTable";
+import { useDynamicTitle } from "../utils";
 
 const Permissions: React.FC = () => {
+  useDynamicTitle("Quản lý quyền hạn - DaViKa Airways");
+
   return (
     <Access permission={PERMISSIONS[Module.PERMISSIONS].GET_PAGINATION}>
       <div className="card">
