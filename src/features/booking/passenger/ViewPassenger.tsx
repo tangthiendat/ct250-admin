@@ -1,14 +1,14 @@
 import { EyeOutlined } from "@ant-design/icons";
 import { Modal, Tooltip } from "antd";
 import { useState } from "react";
-import { ITransaction } from "../../../interfaces";
-import UpdateTransactionForm from "./UpdateTransactionForm";
+import { IPassenger } from "../../../interfaces";
+import UpdateFormWrapper from "./UpdateFormWrapper";
 
-interface ViewTransactionProps {
-  transaction: ITransaction;
+interface ViewPassengerProps {
+  passenger: IPassenger;
 }
 
-const ViewTransaction: React.FC<ViewTransactionProps> = ({ transaction }) => {
+const ViewPassenger: React.FC<ViewPassengerProps> = ({ passenger }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const handleOpenModal = () => {
@@ -18,6 +18,7 @@ const ViewTransaction: React.FC<ViewTransactionProps> = ({ transaction }) => {
   const handleCloseModal = () => {
     setIsOpenModal(false);
   };
+
   return (
     <>
       <Tooltip title="Xem chi tiết">
@@ -28,16 +29,14 @@ const ViewTransaction: React.FC<ViewTransactionProps> = ({ transaction }) => {
       </Tooltip>
       <Modal
         open={isOpenModal}
-        width="40%"
-        title={
-          <span className="text-lg">Xem thông tin chi tiết giao dịch</span>
-        }
+        width="50%"
+        title={<span className="text-lg">Xem thông tin khách hàng</span>}
         destroyOnClose
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdateTransactionForm
-          transactionToUpdate={transaction}
+        <UpdateFormWrapper
+          passengerToUpdate={passenger}
           onCancel={handleCloseModal}
           viewOnly
         />
@@ -46,4 +45,4 @@ const ViewTransaction: React.FC<ViewTransactionProps> = ({ transaction }) => {
   );
 };
 
-export default ViewTransaction;
+export default ViewPassenger;

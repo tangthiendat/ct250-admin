@@ -15,6 +15,7 @@ import {
   SortParams,
 } from "../interfaces";
 import { couponService } from "../services/booking/coupon-service";
+import { useDynamicTitle } from "../utils";
 
 const Coupons: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,6 +57,8 @@ const Coupons: React.FC = () => {
     }
     setSearchParams(searchParams);
   };
+
+  useDynamicTitle("Quản lý mã giảm giá - DaViKa Airways");
 
   return (
     <Access permission={PERMISSIONS[Module.COUPONS].GET_PAGINATION}>

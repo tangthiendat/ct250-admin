@@ -14,6 +14,7 @@ import {
 import { PERMISSIONS } from "../interfaces/common/constants";
 import { AirplaneStatus, Module } from "../interfaces/common/enums";
 import { airplaneService } from "../services/flight/airplane-service";
+import { useDynamicTitle } from "../utils";
 
 const Airplanes: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -61,6 +62,8 @@ const Airplanes: React.FC = () => {
     }
     setSearchParams(searchParams);
   };
+
+  useDynamicTitle("Quản lý máy bay - DaViKa Airways");
 
   return (
     <Access permission={PERMISSIONS[Module.AIRPLANES].GET_PAGINATION}>

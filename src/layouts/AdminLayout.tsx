@@ -10,6 +10,7 @@ import { GiCommercialAirplane } from "react-icons/gi";
 import { GrBusinessService, GrTransaction } from "react-icons/gr";
 import { HiOutlineTicket } from "react-icons/hi2";
 import { IoFastFoodOutline, IoShieldCheckmark } from "react-icons/io5";
+import { LiaUsersSolid } from "react-icons/lia";
 import {
   MdDashboard,
   MdFlight,
@@ -168,7 +169,16 @@ const AdminLayout: React.FC = () => {
           item.method === PERMISSIONS[Module.TICKETS].GET_PAGINATION.method,
       );
 
-      const hasBookingChildren: boolean = Boolean(viewCoupons || viewTickets);
+      const viewPassengers = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.PASSENGERS].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.PASSENGERS].GET_PAGINATION.method,
+      );
+
+      const hasBookingChildren: boolean = Boolean(
+        viewCoupons || viewTickets || viewPassengers,
+      );
 
       const viewPaymentMethods = permissions.find(
         (item) =>
@@ -313,6 +323,11 @@ const AdminLayout: React.FC = () => {
                           key: "tickets",
                           icon: <HiOutlineTicket size={17} />,
                         },
+                        {
+                          label: <NavLink to="/passengers">Khách hàng</NavLink>,
+                          key: "passengers",
+                          icon: <LiaUsersSolid size={20} />,
+                        },
                       ]
                     : []),
                 ],
@@ -426,14 +441,39 @@ const AdminLayout: React.FC = () => {
     return <Loading />;
   }
 
+  const siderStyle: React.CSSProperties = {
+    overflow: "auto",
+    height: "100vh",
+    position: "fixed",
+    insetInlineStart: 0,
+    top: 0,
+    bottom: 0,
+    scrollbarWidth: "thin",
+    scrollbarGutter: "stable",
+    scrollbarColor: "black",
+    boxShadow: "0 0 10px 1px rgba(0, 0, 0, 0.1)",
+  };
+
+  const headerStyle: React.CSSProperties = {
+    background: colorBgContainer,
+    padding: 0,
+    zIndex: 1,
+    overflow: "auto",
+    position: "fixed",
+    insetInlineStart: collapsed ? 80 : 230,
+    top: 0,
+    right: 0,
+  };
+
   return (
     <Layout className="min-h-screen">
       <Sider
+        style={siderStyle}
+        width={230}
         trigger={null}
         collapsible
         collapsed={collapsed}
         theme="light"
-        className="shadow"
       >
         <div className="demo-logo-vertical flex flex-col items-center pb-6">
           <img src="/logo512.png" alt="Logo" className="w-36 p-3" />
@@ -449,8 +489,14 @@ const AdminLayout: React.FC = () => {
           }}
         />
       </Sider>
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+      <Layout
+        className="transition-all duration-200"
+        style={{ marginInlineStart: collapsed ? 80 : 230 }}
+      >
+        <Header
+          style={headerStyle}
+          className="shadow-md transition-all duration-200"
+        >
           <div className="flex items-center justify-between">
             <Button
               type="text"
@@ -490,8 +536,9 @@ const AdminLayout: React.FC = () => {
             </div>
           </div>
         </Header>
+
         <Layout.Content>
-          <div className="m-2">
+          <div className="m-2 mt-[70px]">
             <Outlet />
           </div>
         </Layout.Content>

@@ -2,6 +2,13 @@ import { blue, green, grey, orange, red } from "@ant-design/colors";
 import { SortOrder } from "antd/es/table/interface";
 import dayjs from "dayjs";
 import { FileType, TicketClassName } from "../interfaces";
+import { useEffect } from "react";
+
+export function useDynamicTitle(title: string) {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+}
 
 export function colorMethod(method: "GET" | "POST" | "PUT" | "DELETE") {
   switch (method) {

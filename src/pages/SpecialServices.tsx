@@ -14,6 +14,7 @@ import {
   SpecialServiceFilterCriteria,
 } from "../interfaces";
 import { specialService } from "../services/booking/special-service";
+import { useDynamicTitle } from "../utils";
 
 const SpecialServices: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -60,6 +61,8 @@ const SpecialServices: React.FC = () => {
     }
     setSearchParams(searchParams);
   };
+
+  useDynamicTitle("Quản lý dịch vụ đặc biệt - DaViKa Airways");
 
   return (
     <Access permission={PERMISSIONS[Module.SPECIAL_SERVICES].GET_PAGINATION}>
