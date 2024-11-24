@@ -19,7 +19,7 @@ import {
   MdOutlinePayments,
 } from "react-icons/md";
 import { RiCalendarScheduleLine, RiCoupon3Fill } from "react-icons/ri";
-import { TbReceiptTax, TbRouteSquare } from "react-icons/tb";
+import { TbBrandBooking, TbReceiptTax, TbRouteSquare } from "react-icons/tb";
 import { TfiSupport } from "react-icons/tfi";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
@@ -176,8 +176,15 @@ const AdminLayout: React.FC = () => {
           item.method === PERMISSIONS[Module.PASSENGERS].GET_PAGINATION.method,
       );
 
+      const viewBookings = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.BOOKINGS].GET_PAGINATION.apiPath &&
+          item.method === PERMISSIONS[Module.BOOKINGS].GET_PAGINATION.method,
+      );
+
       const hasBookingChildren: boolean = Boolean(
-        viewCoupons || viewTickets || viewPassengers,
+        viewCoupons || viewTickets || viewPassengers || viewBookings,
       );
 
       const viewPaymentMethods = permissions.find(
@@ -317,6 +324,11 @@ const AdminLayout: React.FC = () => {
                           label: <NavLink to="/coupons">Mã giảm giá</NavLink>,
                           key: "coupons",
                           icon: <RiCoupon3Fill size={16} />,
+                        },
+                        {
+                          label: <NavLink to="/bookings">Đặt chỗ</NavLink>,
+                          key: "bookings",
+                          icon: <TbBrandBooking size={18} />,
                         },
                         {
                           label: <NavLink to="/tickets">Vé điện tử</NavLink>,

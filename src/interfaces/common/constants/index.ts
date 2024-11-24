@@ -118,6 +118,13 @@ export const PERMISSIONS = {
     UPDATE: { method: "PUT", apiPath: "/api/v1/passengers/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/passengers/{id}" },
   },
+  [Module.BOOKINGS]: {
+    GET_PAGINATION: { method: "GET", apiPath: "/api/v1/bookings" },
+    // GET_BY_ID: { method: "GET", apiPath: "/api/v1/bookings/{id}" },
+    CREATE: { method: "POST", apiPath: "/api/v1/bookings" },
+    UPDATE: { method: "PUT", apiPath: "/api/v1/bookings/{id}" },
+    // DELETE: { method: "DELETE", apiPath: "/api/v1/bookings/{id}" },
+  },
 };
 
 

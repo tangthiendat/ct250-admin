@@ -22,6 +22,7 @@ import Tickets from "../pages/Ticket";
 import Transactions from "../pages/Transactions";
 import Users from "../pages/Users";
 import Passengers from "../pages/Passengers";
+import Bookings from "../pages/Bookings";
 
 const router = createBrowserRouter([
   {
@@ -124,6 +125,10 @@ const router = createBrowserRouter([
       {
         path: "/passengers",
         element: <Passengers />,
+      },
+      {
+        path: "/bookings",
+        element: <Bookings />,
       },
     ],
   },
