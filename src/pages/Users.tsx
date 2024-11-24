@@ -4,8 +4,11 @@ import { PERMISSIONS } from "../interfaces/common/constants";
 import UsersTable from "../features/auth/users/UsersTable";
 import AddUser from "../features/auth/users/AddUser";
 import { Module } from "../interfaces/common/enums";
+import { useDynamicTitle } from "../utils";
 
 const Users: React.FC = () => {
+  useDynamicTitle("Quản lý người dùng - DaViKa Airways");
+
   return (
     <Access permission={PERMISSIONS[Module.USERS].GET_PAGINATION}>
       <div className="card">

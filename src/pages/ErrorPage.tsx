@@ -4,6 +4,7 @@ import {
   useNavigate,
   useRouteError,
 } from "react-router-dom";
+import { useDynamicTitle } from "../utils";
 
 const ErrorPage: React.FC = () => {
   const routeError = useRouteError();
@@ -19,6 +20,8 @@ const ErrorPage: React.FC = () => {
   } else {
     errorMessage = "Unknown error";
   }
+
+  useDynamicTitle("Lỗi - DaViKa Airways");
 
   return (
     <div className="flex min-h-screen flex-col">

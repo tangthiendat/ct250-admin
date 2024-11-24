@@ -1,6 +1,9 @@
 import LoginForm from "../features/auth/LoginForm";
+import { useDynamicTitle } from "../utils";
 
 const Login: React.FC = () => {
+  useDynamicTitle("Đăng nhập - DaViKa Airways");
+
   return (
     <div className="flex py-20">
       <div className="flex min-h-full flex-1 flex-col justify-center lg:px-8">

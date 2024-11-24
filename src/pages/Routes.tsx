@@ -9,6 +9,7 @@ import { PaginationParams, SortParams } from "../interfaces";
 import { PERMISSIONS } from "../interfaces/common/constants";
 import { Module } from "../interfaces/common/enums";
 import { routeService } from "../services/flight/route-service";
+import { useDynamicTitle } from "../utils";
 
 const Routes: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -45,6 +46,8 @@ const Routes: React.FC = () => {
     }
     setSearchParams(searchParams);
   };
+
+  useDynamicTitle("Quản lý tuyến bay - DaViKa Airways");
 
   return (
     <Access permission={PERMISSIONS[Module.ROUTES].GET_PAGINATION}>

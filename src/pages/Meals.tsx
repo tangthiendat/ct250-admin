@@ -7,6 +7,7 @@ import AddMeal from "../features/booking/meal/AddMeal";
 import MealTable from "../features/booking/meal/MealTable";
 import { Module, PERMISSIONS, SortParams } from "../interfaces";
 import { mealService } from "../services/booking/meal-service";
+import { useDynamicTitle } from "../utils";
 
 const Meals: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -43,6 +44,8 @@ const Meals: React.FC = () => {
     }
     setSearchParams(searchParams);
   };
+
+  useDynamicTitle("Quản lý món ăn - DaViKa Airways");
 
   return (
     <Access permission={PERMISSIONS[Module.MEALS].GET_PAGINATION}>

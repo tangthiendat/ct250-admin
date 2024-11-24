@@ -15,6 +15,7 @@ import {
   TransactionStatus,
 } from "../interfaces";
 import { transactionService } from "../services";
+import { useDynamicTitle } from "../utils";
 
 const Transactions: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -86,6 +87,8 @@ const Transactions: React.FC = () => {
     }
     setSearchParams(searchParams);
   };
+
+  useDynamicTitle("Quản lý giao dịch - DaViKa Airways");
 
   return (
     <Access permission={PERMISSIONS[Module.TRANSACTIONS].GET_PAGINATION}>
