@@ -5,16 +5,17 @@ import {
 } from "@ant-design/icons";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { FaArrowRightToBracket } from "react-icons/fa6";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
-  Gender,
-  GENDER_TRANSLATION,
-  IPassenger,
+  BOOKING_STATUS_TRANSLATION,
+  BookingStatus,
+  IBooking,
   Module,
   Page,
-  PASSENGER_TYPE_TRANSLATION,
-  PassengerType,
   PERMISSIONS,
+  TRIP_TYPE_TRANSLATION,
+  TripType,
 } from "../../../interfaces";
 import {
   colorFilterIcon,
@@ -26,47 +27,45 @@ import {
   getSortDirection,
 } from "../../../utils";
 import Access from "../../auth/Access";
-import DeletePassenger from "./DeletePassenger";
-import UpdatePassenger from "./UpdatePassenger";
-import ViewPassenger from "./ViewPassenger";
 
 interface TableParams {
   pagination: TablePaginationConfig;
 }
 
-interface PassengerTableProps {
-  passengerPage?: Page<IPassenger>;
+interface BookingTableProps {
+  bookingPage?: Page<IBooking>;
   isLoading: boolean;
 }
 
-const PassengerTable: React.FC<PassengerTableProps> = ({
-  passengerPage,
+const BookingTable: React.FC<BookingTableProps> = ({
+  bookingPage,
   isLoading,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
       current: Number(searchParams.get("page")) || 1,
       pageSize: Number(searchParams.get("pageSize")) || 10,
       showSizeChanger: true,
-      showTotal: (total) => `Tổng ${total} vé`,
+      showTotal: (total) => `Tổng ${total} đặt chỗ`,
     },
   }));
 
   useEffect(() => {
-    if (passengerPage) {
+    if (bookingPage) {
       setTableParams((prev) => ({
         ...prev,
         pagination: {
           ...prev.pagination,
-          total: passengerPage.meta?.total || 0,
-          showTotal: (total) => `Tổng ${total} khách hàng`,
+          total: bookingPage.meta?.total || 0,
+          showTotal: (total) => `Tổng ${total} đặt chỗ`,
         },
       }));
     }
-  }, [passengerPage]);
+  }, [bookingPage]);
 
-  const handleTableChange: TableProps<IPassenger>["onChange"] = (
+  const handleTableChange: TableProps<IBooking>["onChange"] = (
     pagination,
     filters,
     sorter,
@@ -118,86 +117,108 @@ const PassengerTable: React.FC<PassengerTableProps> = ({
     setSearchParams(searchParams);
   };
 
-  const columns: TableProps<IPassenger>["columns"] = [
+  const columns: TableProps<IBooking>["columns"] = [
     {
-      title: "Họ tên khách hàng",
-      key: "fullName",
-      dataIndex: ["firstName", "lastName"],
-      width: "6%",
-      render: (text, record: IPassenger) =>
-        record ? `${record.lastName} ${record.firstName}` : "",
-    },
-    {
-      title: "Nhóm khách hàng",
-      key: "passengerGroup",
-      dataIndex: "passengerGroup",
-      width: "5%",
-    },
-    {
-      title: "Loại khách hàng",
-      key: "passengerType",
-      dataIndex: "passengerType",
+      title: "Mã đặt chỗ",
+      key: "bookingCode",
+      dataIndex: "bookingCode",
       width: "3%",
-      render: (passengerType: IPassenger["passengerType"]) => {
+      render: (bookingCode: string | null) => bookingCode || "Đang cập nhật",
+    },
+    {
+      title: "Tổng khách",
+      key: "totalPassengers",
+      dataIndex: "bookingFlights",
+      width: "3%",
+      render: (bookingFlights: IBooking["bookingFlights"]) => {
+        const totalPassengers =
+          bookingFlights[0]?.bookingPassengers.length || 0;
+        return totalPassengers;
+      },
+    },
+
+    {
+      title: "Tổng tiền",
+      key: "totalPrice",
+      dataIndex: "totalPrice",
+      width: "3%",
+      render(totalPrice: number) {
+        return totalPrice.toLocaleString();
+      },
+    },
+    {
+      title: "Chuyến bay",
+      key: "tripType",
+      dataIndex: "tripType",
+      width: "3%",
+      render: (tripType: IBooking["tripType"]) => {
         let color = "";
-        switch (passengerType) {
-          case PassengerType.ADULT:
+        switch (tripType) {
+          case TripType.ONE_WAY:
             color = "green";
             break;
-          case PassengerType.CHILD:
+          case TripType.ROUND_TRIP:
             color = "blue";
             break;
-          case PassengerType.INFANT:
+          case TripType.MULTI_CITY:
             color = "orange";
             break;
         }
         return (
-          <Tag color={color}>
-            {PASSENGER_TYPE_TRANSLATION[passengerType as PassengerType]}
-          </Tag>
+          <Tag color={color}>{TRIP_TYPE_TRANSLATION[tripType as TripType]}</Tag>
         );
       },
-      filters: Object.values(PassengerType).map(
-        (passengerType: PassengerType) => ({
-          text: PASSENGER_TYPE_TRANSLATION[passengerType],
-          value: passengerType,
-        }),
-      ),
-      defaultFilteredValue: getDefaultFilterValue(
-        searchParams,
-        "passengerType",
-      ),
+      filters: Object.values(TripType).map((tripType: TripType) => ({
+        text: TRIP_TYPE_TRANSLATION[tripType],
+        value: tripType,
+      })),
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "tripType"),
       filterIcon: (filtered) => (
         <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
       ),
     },
     {
-      title: "Giới tính",
-      key: "gender",
-      dataIndex: "gender",
-      width: "3%",
-      render: (gender: IPassenger["gender"]) => {
+      title: "Trạng thái",
+      key: "bookingStatus",
+      dataIndex: "bookingStatus",
+      width: "2%",
+      render: (bookingStatus: IBooking["bookingStatus"]) => {
         let color = "";
 
-        switch (gender) {
-          case Gender.MALE:
+        switch (bookingStatus) {
+          case BookingStatus.INIT:
             color = "blue";
             break;
-          case Gender.FEMALE:
-            color = "pink";
+          case BookingStatus.CANCELLED:
+            color = "red";
             break;
-          case Gender.OTHER:
-            color = "purple";
+          case BookingStatus.PENDING:
+            color = "orange";
+            break;
+          case BookingStatus.RESERVED:
+            color = "yellow";
+            break;
+          case BookingStatus.PAID:
+            color = "brown";
             break;
         }
 
-        return <Tag color={color}>{GENDER_TRANSLATION[gender as Gender]}</Tag>;
+        return (
+          <Tag color={color}>
+            {BOOKING_STATUS_TRANSLATION[bookingStatus as BookingStatus]}
+          </Tag>
+        );
       },
-      filters: Object.values(Gender).map((gender: Gender) => ({
-        text: GENDER_TRANSLATION[gender],
-        value: gender,
-      })),
-      defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
+      filters: Object.values(BookingStatus).map(
+        (bookingStatus: BookingStatus) => ({
+          text: BOOKING_STATUS_TRANSLATION[bookingStatus],
+          value: bookingStatus,
+        }),
+      ),
+      defaultFilteredValue: getDefaultFilterValue(
+        searchParams,
+        "bookingStatus",
+      ),
       filterIcon: (filtered) => (
         <FilterFilled style={{ color: colorFilterIcon(filtered) }} />
       ),
@@ -235,24 +256,24 @@ const PassengerTable: React.FC<PassengerTableProps> = ({
       ),
     },
     {
-      title: "Hành động",
+      title: "Chi tiết",
       key: "action",
-      width: "2%",
-      render: (record: IPassenger) => (
+      width: "1%",
+      render: (record: IBooking) => (
         <Space>
-          <ViewPassenger passenger={record} />
-          <Access
-            permission={PERMISSIONS[Module.PASSENGERS].UPDATE}
-            hideChildren
-          >
-            <UpdatePassenger passenger={record} />
-          </Access>
-          <Access
-            permission={PERMISSIONS[Module.PASSENGERS].DELETE}
-            hideChildren
-          >
-            <DeletePassenger passengerId={record.passengerId} />
-          </Access>
+          {
+            <Access
+              permission={PERMISSIONS[Module.BOOKINGS].GET_BY_ID}
+              hideChildren={false}
+            >
+              <div className="flex items-center justify-end px-5">
+                <FaArrowRightToBracket
+                  onClick={() => navigate(`${record.bookingId}`)}
+                  size={20}
+                />
+              </div>
+            </Access>
+          }
         </Space>
       ),
     },
@@ -262,9 +283,9 @@ const PassengerTable: React.FC<PassengerTableProps> = ({
     <Table
       bordered={false}
       columns={columns}
-      rowKey={(record: IPassenger) => record.passengerId}
+      rowKey={(record: IBooking) => record.bookingId}
       pagination={tableParams.pagination}
-      dataSource={passengerPage?.content || []}
+      dataSource={bookingPage?.content || []}
       rowClassName={(_, index) =>
         index % 2 === 0 ? "table-row-light" : "table-row-gray"
       }
@@ -279,4 +300,4 @@ const PassengerTable: React.FC<PassengerTableProps> = ({
   );
 };
 
-export default PassengerTable;
+export default BookingTable;

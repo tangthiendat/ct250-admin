@@ -1,17 +1,20 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "../features/auth/ProtectedRoute";
+import BookingDetails from "../features/booking/booking-detail/BookingDetails";
 import FeeDetails from "../features/flight/fee/FeeDetails";
 import FlightDetails from "../features/flight/schedule/FlightDetails";
 import AdminLayout from "../layouts/AdminLayout";
 import Airplanes from "../pages/Airplanes";
 import Airports from "../pages/Airports";
 import Baggages from "../pages/Baggages";
+import Bookings from "../pages/Bookings";
 import Coupons from "../pages/Coupons";
 import ErrorIndicator from "../pages/ErrorPage";
 import Fees from "../pages/Fees";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Meals from "../pages/Meals";
+import Passengers from "../pages/Passengers";
 import PaymentMethods from "../pages/PaymentMethods";
 import Permissions from "../pages/Permissions";
 import Roles from "../pages/Roles";
@@ -21,7 +24,6 @@ import SpecialServices from "../pages/SpecialServices";
 import Tickets from "../pages/Ticket";
 import Transactions from "../pages/Transactions";
 import Users from "../pages/Users";
-import Passengers from "../pages/Passengers";
 
 const router = createBrowserRouter([
   {
@@ -124,6 +126,21 @@ const router = createBrowserRouter([
       {
         path: "/passengers",
         element: <Passengers />,
+      },
+      {
+        path: "/bookings",
+        // element: <Bookings />,
+        children: [
+          {
+            path: "",
+            index: true,
+            element: <Bookings />,
+          },
+          {
+            path: ":id",
+            element: <BookingDetails />,
+          },
+        ],
       },
     ],
   },
