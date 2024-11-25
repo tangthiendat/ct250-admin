@@ -5,12 +5,15 @@ import {
 } from "@ant-design/icons";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { FaArrowRightToBracket } from "react-icons/fa6";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   BOOKING_STATUS_TRANSLATION,
   BookingStatus,
   IBooking,
+  Module,
   Page,
+  PERMISSIONS,
   TRIP_TYPE_TRANSLATION,
   TripType,
 } from "../../../interfaces";
@@ -23,6 +26,7 @@ import {
   getDefaultSortOrder,
   getSortDirection,
 } from "../../../utils";
+import Access from "../../auth/Access";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -38,6 +42,7 @@ const BookingTable: React.FC<BookingTableProps> = ({
   isLoading,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
       current: Number(searchParams.get("page")) || 1,
@@ -124,28 +129,25 @@ const BookingTable: React.FC<BookingTableProps> = ({
       title: "Tổng khách",
       key: "totalPassengers",
       dataIndex: "bookingFlights",
-      width: "2%",
+      width: "3%",
       render: (bookingFlights: IBooking["bookingFlights"]) => {
         const totalPassengers =
           bookingFlights[0]?.bookingPassengers.length || 0;
         return totalPassengers;
       },
     },
+
     {
-      title: "Tuyến bay",
-      key: "route",
-      dataIndex: "bookingFlights",
+      title: "Tổng tiền",
+      key: "totalPrice",
+      dataIndex: "totalPrice",
       width: "3%",
-      render: (bookingFlights: IBooking["bookingFlights"]) => {
-        const route =
-          bookingFlights[0]?.flight.route?.departureAirport.airportCode +
-          " - " +
-          bookingFlights[0]?.flight.route?.arrivalAirport.airportCode;
-        return route;
+      render(totalPrice: number) {
+        return totalPrice.toLocaleString();
       },
     },
     {
-      title: "Loại chuyến bay",
+      title: "Chuyến bay",
       key: "tripType",
       dataIndex: "tripType",
       width: "3%",
@@ -179,7 +181,7 @@ const BookingTable: React.FC<BookingTableProps> = ({
       title: "Trạng thái",
       key: "bookingStatus",
       dataIndex: "bookingStatus",
-      width: "3%",
+      width: "2%",
       render: (bookingStatus: IBooking["bookingStatus"]) => {
         let color = "";
 
@@ -254,11 +256,25 @@ const BookingTable: React.FC<BookingTableProps> = ({
       ),
     },
     {
-      title: "Hành động",
+      title: "Chi tiết",
       key: "action",
-      width: "2%",
+      width: "1%",
       render: (record: IBooking) => (
-        <Space>{/* <ViewPassenger passenger={record} /> */}</Space>
+        <Space>
+          {
+            <Access
+              permission={PERMISSIONS[Module.BOOKINGS].GET_BY_ID}
+              hideChildren={false}
+            >
+              <div className="flex items-center justify-end px-5">
+                <FaArrowRightToBracket
+                  onClick={() => navigate(`${record.bookingId}`)}
+                  size={20}
+                />
+              </div>
+            </Access>
+          }
+        </Space>
       ),
     },
   ];

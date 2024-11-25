@@ -1,7 +1,7 @@
 import { Dayjs } from "dayjs";
-import { BookingStatus, CouponType, Gender, ICountry, PassengerType, RouteType, TicketClassName, TripType } from "../common";
 import { IUser } from "../auth";
-import { IFlightSchedule, ISeat } from "../flight";
+import { BookingStatus, CouponType, Gender, ICountry, PassengerType, RouteType, TripType } from "../common";
+import { IFlightSchedule, ISeat, TicketClass } from "../flight";
 
 export interface IMeal {
   mealId: number;
@@ -165,7 +165,7 @@ export interface IBooking {
 export interface IBookingFlight {
   bookingFlightId: number;
   flight: IFlightSchedule;
-  ticketClass: TicketClassName;
+  ticketClass: TicketClass;
   bookingPassengers: IBookingPassenger[];
 }
 
@@ -175,8 +175,10 @@ export interface IBookingPassenger {
   ticket: ITicket;
   specialServices: ISpecialServices[];
   meals: IMeal[];
-  baggages: IBaggages[];
+  baggage: IBaggages;
+  bookingFlight: IBookingFlight;
   seat: ISeat;
+  passengerGroup: string;
   isPrimaryContact: boolean;
   isSharedSeat: boolean;
   createdAt: string;

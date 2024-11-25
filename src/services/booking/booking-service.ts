@@ -8,6 +8,7 @@ interface IBookingService {
         filter: BookingFilterCriteria,
         sort?: SortParams,
     ): Promise<ApiResponse<Page<IBooking>>>;
+    getBooking(bookingId: string): Promise<ApiResponse<IBooking>>;
     update(
         bookingId: number,
         updatedBooking: IBooking,
@@ -32,6 +33,9 @@ class BookingService implements IBookingService {
                 },
             })
         ).data;
+    }
+    async getBooking(bookingId: string): Promise<ApiResponse<IBooking>> {
+        return (await apiClient.get(`/${bookingId}`)).data;
     }
 
     async update(

@@ -119,6 +119,7 @@ export const PERMISSIONS = {
   [Module.BOOKINGS]: {
     GET_PAGINATION: { method: "GET", apiPath: "/api/v1/bookings" },
     CREATE: { method: "POST", apiPath: "/api/v1/bookings" },
+    GET_BY_ID: { method: "GET", apiPath: "/api/v1/bookings/{id}" },
   },
 };
 
