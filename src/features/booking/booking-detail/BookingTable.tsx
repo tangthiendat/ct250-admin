@@ -3,7 +3,7 @@ import {
   CaretUpFilled,
   FilterFilled,
 } from "@ant-design/icons";
-import { Table, TablePaginationConfig, TableProps, Tag } from "antd";
+import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
@@ -43,7 +43,7 @@ const BookingTable: React.FC<BookingTableProps> = ({
       current: Number(searchParams.get("page")) || 1,
       pageSize: Number(searchParams.get("pageSize")) || 10,
       showSizeChanger: true,
-      showTotal: (total) => `Tổng ${total} vé`,
+      showTotal: (total) => `Tổng ${total} đặt chỗ`,
     },
   }));
 
@@ -121,10 +121,10 @@ const BookingTable: React.FC<BookingTableProps> = ({
       render: (bookingCode: string | null) => bookingCode || "Đang cập nhật",
     },
     {
-      title: "Tổng hành khách",
+      title: "Tổng khách",
       key: "totalPassengers",
       dataIndex: "bookingFlights",
-      width: "4%",
+      width: "2%",
       render: (bookingFlights: IBooking["bookingFlights"]) => {
         const totalPassengers =
           bookingFlights[0]?.bookingPassengers.length || 0;
@@ -187,23 +187,14 @@ const BookingTable: React.FC<BookingTableProps> = ({
           case BookingStatus.INIT:
             color = "blue";
             break;
-          case BookingStatus.CONFIRMED:
-            color = "green";
-            break;
           case BookingStatus.CANCELLED:
             color = "red";
-            break;
-          case BookingStatus.COMPLETED:
-            color = "purple";
             break;
           case BookingStatus.PENDING:
             color = "orange";
             break;
           case BookingStatus.RESERVED:
             color = "yellow";
-            break;
-          case BookingStatus.REFUNDED:
-            color = "pink";
             break;
           case BookingStatus.PAID:
             color = "brown";
@@ -260,6 +251,14 @@ const BookingTable: React.FC<BookingTableProps> = ({
           <CaretUpFilled style={{ color: colorSortUpIcon(sortOrder) }} />
           <CaretDownFilled style={{ color: colorSortDownIcon(sortOrder) }} />
         </div>
+      ),
+    },
+    {
+      title: "Hành động",
+      key: "action",
+      width: "2%",
+      render: (record: IBooking) => (
+        <Space>{/* <ViewPassenger passenger={record} /> */}</Space>
       ),
     },
   ];

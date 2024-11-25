@@ -113,17 +113,12 @@ export const PERMISSIONS = {
   },
   [Module.PASSENGERS]: {
     GET_PAGINATION: { method: "GET", apiPath: "/api/v1/passengers" },
-    // GET_BY_ID: { method: "GET", apiPath: "/api/v1/passengers/{id}" },
-    // CREATE: { method: "POST", apiPath: "/api/v1/passengers" },
     UPDATE: { method: "PUT", apiPath: "/api/v1/passengers/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/passengers/{id}" },
   },
   [Module.BOOKINGS]: {
     GET_PAGINATION: { method: "GET", apiPath: "/api/v1/bookings" },
-    // GET_BY_ID: { method: "GET", apiPath: "/api/v1/bookings/{id}" },
     CREATE: { method: "POST", apiPath: "/api/v1/bookings" },
-    UPDATE: { method: "PUT", apiPath: "/api/v1/bookings/{id}" },
-    // DELETE: { method: "DELETE", apiPath: "/api/v1/bookings/{id}" },
   },
 };
 
@@ -180,11 +175,8 @@ export const TRIP_TYPE_TRANSLATION: Record<TripType, string> = {
 
 export const BOOKING_STATUS_TRANSLATION: Record<BookingStatus, string> = {
   [BookingStatus.INIT]: "Đang xử lý",
-  [BookingStatus.CONFIRMED]: "Đã xác nhận",
   [BookingStatus.CANCELLED]: "Đã hủy",
-  [BookingStatus.COMPLETED]: "Hoàn thành",
   [BookingStatus.PENDING]: "Chờ xác nhận",
-  [BookingStatus.REFUNDED]: "Đã hoàn tiền",
   [BookingStatus.PAID]: "Đã thanh toán",
   [BookingStatus.RESERVED]: "Đã đặt chỗ",
 }
