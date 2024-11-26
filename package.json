@@ -15,6 +15,7 @@
     "@tanstack/react-query-devtools": "^5.54.1",
     "antd": "^5.20.5",
     "axios": "^1.7.7",
+    "chart.js": "^4.4.6",
     "ct250-frontend": "file:",
     "dayjs": "^1.11.13",
     "gapi-script": "^1.2.0",
