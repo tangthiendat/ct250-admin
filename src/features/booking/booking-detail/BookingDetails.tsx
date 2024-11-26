@@ -187,7 +187,9 @@ const BookingDetails: React.FC = () => {
               )}
               {!returnFlight && (
                 <>
+                  <span>{startFlight.route.departureAirport.cityName}</span>
                   <GoArrowRight className="text-base" />
+                  <span>{startFlight.route.arrivalAirport.cityName}</span>
                 </>
               )}
             </div>
