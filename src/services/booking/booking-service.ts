@@ -26,6 +26,9 @@ interface IBookingService {
   getSalesStats(
     filter: StatisticFilterCriteria,
   ): Promise<ApiResponse<Map<string, number>>>;
+  getTop10Destinations(
+    filter: StatisticFilterCriteria,
+  ): Promise<ApiResponse<Map<string, number>>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("bookings");
@@ -71,6 +74,16 @@ class BookingService implements IBookingService {
   ): Promise<ApiResponse<Map<string, number>>> {
     return (
       await apiClient.get("/sales-stats", {
+        params: filter,
+      })
+    ).data;
+  }
+
+  async getTop10Destinations(
+    filter: StatisticFilterCriteria,
+  ): Promise<ApiResponse<Map<string, number>>> {
+    return (
+      await apiClient.get("/top-10-destinations", {
         params: filter,
       })
     ).data;

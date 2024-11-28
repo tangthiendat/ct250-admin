@@ -4,6 +4,7 @@ import Stats from "../features/dashboard/Stats";
 import { useDynamicTitle } from "../utils";
 import SalesStatsChart from "../features/dashboard/SalesStatsChart";
 import PassengerStatsChart from "../features/dashboard/PassengerStatsChart";
+import TopDestinationsChart from "../features/dashboard/TopDestinationsChart";
 
 const Home: React.FC = () => {
   useDynamicTitle("Trang chủ - DaViKa Airways");
@@ -48,9 +49,12 @@ const Home: React.FC = () => {
         <div>
           <SalesStatsChart />
         </div>
-        <div>
+        <div className="flex items-center">
           <div className="w-[40%]">
             <PassengerStatsChart />
+          </div>
+          <div className="w-[60%]">
+            <TopDestinationsChart />
           </div>
         </div>
       </div>
