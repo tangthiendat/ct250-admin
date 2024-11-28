@@ -3,6 +3,7 @@ import FilterTimeWithoutDate from "../common/components/FilterTimeWithoutDate";
 import Stats from "../features/dashboard/Stats";
 import { useDynamicTitle } from "../utils";
 import SalesStatsChart from "../features/dashboard/SalesStatsChart";
+import PassengerStatsChart from "../features/dashboard/PassengerStatsChart";
 
 const Home: React.FC = () => {
   useDynamicTitle("Trang chủ - DaViKa Airways");
@@ -46,6 +47,11 @@ const Home: React.FC = () => {
         </div>
         <div>
           <SalesStatsChart />
+        </div>
+        <div>
+          <div className="w-[40%]">
+            <PassengerStatsChart />
+          </div>
         </div>
       </div>
     </>
