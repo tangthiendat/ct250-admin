@@ -3,6 +3,7 @@ import {
   ApiResponse,
   BookingFilterCriteria,
   IBooking,
+  StatisticFilterCriteria,
   Page,
   PaginationParams,
   SortParams,
@@ -22,6 +23,9 @@ interface IBookingService {
   ): Promise<ApiResponse<IBooking>>;
   getLast30DaysBookingSales(): Promise<ApiResponse<number>>;
   getLast30DaysCount(): Promise<ApiResponse<number>>;
+  getSalesStats(
+    filter: StatisticFilterCriteria,
+  ): Promise<ApiResponse<Map<string, number>>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("bookings");
@@ -60,6 +64,16 @@ class BookingService implements IBookingService {
 
   async getLast30DaysCount(): Promise<ApiResponse<number>> {
     return (await apiClient.get("/last-30-days-count")).data;
+  }
+
+  async getSalesStats(
+    filter: StatisticFilterCriteria,
+  ): Promise<ApiResponse<Map<string, number>>> {
+    return (
+      await apiClient.get("/sales-stats", {
+        params: filter,
+      })
+    ).data;
   }
 }
 

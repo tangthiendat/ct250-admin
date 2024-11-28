@@ -67,16 +67,6 @@ const Stats: React.FC = () => {
           className="flex-1"
         />
       </Access>
-      {/* <Stat
-        name="Hành khách (30 ngày)"
-        value={"1000"}
-        icon={
-          <div className="rounded-full bg-[#FCFBBB] p-3">
-            <LiaUsersSolid size={30} className="text-[#7D6A26]" />
-          </div>
-        }
-        className="flex-1"
-      /> */}
     </div>
   );
 };

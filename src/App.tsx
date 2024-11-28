@@ -8,6 +8,8 @@ import { Toaster } from "react-hot-toast";
 import AppRouter from "./router/AppRouter";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import isoWeek from "dayjs/plugin/isoWeek";
+import quarterOfYear from "dayjs/plugin/quarterOfYear";
 import isBetween from "dayjs/plugin/isBetween";
 import { PRIMARY_COLOR, VIETNAM_TIMEZONE } from "./interfaces/common/constants";
 
@@ -15,6 +17,8 @@ dayjs.locale("vi");
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isBetween);
+dayjs.extend(isoWeek);
+dayjs.extend(quarterOfYear);
 dayjs.tz.setDefault(VIETNAM_TIMEZONE);
 
 const queryClient = new QueryClient({
