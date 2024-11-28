@@ -199,7 +199,7 @@ const BookingTable: React.FC<BookingTableProps> = ({
             color = "yellow";
             break;
           case BookingStatus.PAID:
-            color = "brown";
+            color = "green";
             break;
         }
 
@@ -266,7 +266,7 @@ const BookingTable: React.FC<BookingTableProps> = ({
               permission={PERMISSIONS[Module.BOOKINGS].GET_BY_ID}
               hideChildren={false}
             >
-              <div className="flex items-center justify-end px-5">
+              <div className="flex cursor-pointer items-center justify-end px-5">
                 <FaArrowRightToBracket
                   onClick={() => navigate(`${record.bookingId}`)}
                   size={20}

@@ -1,6 +1,14 @@
 import { Dayjs } from "dayjs";
 import { IUser } from "../auth";
-import { BookingStatus, CouponType, Gender, ICountry, PassengerType, RouteType, TripType } from "../common";
+import {
+  BookingStatus,
+  CouponType,
+  Gender,
+  ICountry,
+  PassengerType,
+  RouteType,
+  TripType,
+} from "../common";
 import { IFlightSchedule, ISeat, TicketClass } from "../flight";
 
 export interface IMeal {
@@ -44,7 +52,6 @@ export interface BaggageFilterCriteria {
   routeType?: RouteType;
 }
 
-
 export interface ICoupons {
   couponId: number;
   couponCode: string;
@@ -63,7 +70,6 @@ export interface CouponFilterCriteria {
   couponType?: CouponType;
 }
 
-
 export interface ICoupons {
   couponId: number;
   couponCode: string;
@@ -77,7 +83,6 @@ export interface ICoupons {
   createdBy?: string;
   updatedBy?: string;
 }
-
 
 export interface ISpecialServices {
   specialServiceId: number;
@@ -101,7 +106,6 @@ export interface SpecialServiceFilterCriteria {
   query?: string;
   status?: boolean;
 }
-
 
 export interface ITicket {
   ticketId: number;
@@ -194,3 +198,8 @@ export interface BookingFilterCriteria {
   type?: string;
 }
 
+export interface StatisticFilterCriteria {
+  startDate?: string;
+  endDate?: string;
+  type?: string;
+}

@@ -68,7 +68,7 @@ const PickerWithType = ({
   );
 };
 
-interface SearchDateProps {
+interface FilterTimeWithoutDateProps {
   onDateChange: (
     startDate: string | null,
     endDate: string | null,
@@ -76,9 +76,11 @@ interface SearchDateProps {
   ) => void;
 }
 
-const SearchDate: React.FC<SearchDateProps> = ({ onDateChange }) => {
+const FilterTimeWithoutDate: React.FC<FilterTimeWithoutDateProps> = ({
+  onDateChange,
+}) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [type, setType] = useState<PickerType>("date");
+  const [type, setType] = useState<PickerType>("month");
   const [open, setOpen] = useState(false);
   const [selectedDates, setSelectedDates] = useState<
     [string | null, string | null]
@@ -172,11 +174,11 @@ const SearchDate: React.FC<SearchDateProps> = ({ onDateChange }) => {
             onChange={handleTypeChange}
             style={{ width: "103%" }}
           >
-            <Option value="range">Khoảng thời gian</Option>
-            <Option value="date">Ngày</Option>
+            {/* <Option value="date">Ngày</Option> */}
             <Option value="month">Tháng</Option>
-            <Option value="quarter">Quý</Option>
+            {/* <Option value="quarter">Quý</Option> */}
             <Option value="year">Năm</Option>
+            <Option value="range">Khoảng thời gian</Option>
           </Select>
         </Col>
         <Col span={16}>
@@ -216,4 +218,4 @@ const SearchDate: React.FC<SearchDateProps> = ({ onDateChange }) => {
   );
 };
 
-export default SearchDate;
+export default FilterTimeWithoutDate;

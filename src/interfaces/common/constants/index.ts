@@ -1,4 +1,14 @@
-import { BookingStatus, CouponType, Gender, Module, PassengerType, RouteType, TicketStatus, TransactionStatus, TripType } from "../enums";
+import {
+  BookingStatus,
+  CouponType,
+  Gender,
+  Module,
+  PassengerType,
+  RouteType,
+  TicketStatus,
+  TransactionStatus,
+  TripType,
+} from "../enums";
 
 export const PERMISSIONS = {
   [Module.USERS]: {
@@ -110,6 +120,10 @@ export const PERMISSIONS = {
     GET_PAGINATION: { method: "GET", apiPath: "/api/v1/tickets" },
     UPDATE: { method: "PUT", apiPath: "/api/v1/tickets/{id}" },
     DELETE: { method: "DELETE", apiPath: "/api/v1/tickets/{id}" },
+    GET_LAST_30_DAYS_COUNT: {
+      method: "GET",
+      apiPath: "/api/v1/tickets/last-30-days-count",
+    },
   },
   [Module.PASSENGERS]: {
     GET_PAGINATION: { method: "GET", apiPath: "/api/v1/passengers" },
@@ -120,10 +134,16 @@ export const PERMISSIONS = {
     GET_PAGINATION: { method: "GET", apiPath: "/api/v1/bookings" },
     CREATE: { method: "POST", apiPath: "/api/v1/bookings" },
     GET_BY_ID: { method: "GET", apiPath: "/api/v1/bookings/{id}" },
+    GET_LAST_30_DAYS_SALES: {
+      method: "GET",
+      apiPath: "/api/v1/bookings/last-30-days-sales",
+    },
+    GET_LAST_30_DAYS_COUNT: {
+      method: "GET",
+      apiPath: "/api/v1/bookings/last-30-days-count",
+    },
   },
 };
-
-
 
 export const ROUTE_TYPE_TRANSLATION: Record<RouteType, string> = {
   [RouteType.DOMESTIC]: "Nội địa",
@@ -138,20 +158,19 @@ export const PASSENGER_TYPE_TRANSLATION: Record<PassengerType, string> = {
 
 export const COUPON_TYPE_TRANSLATION: Record<CouponType, string> = {
   [CouponType.AMOUNT]: "VND",
-  [CouponType.PERCENTAGE]: "%"
-}
+  [CouponType.PERCENTAGE]: "%",
+};
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
 
 export const PRIMARY_COLOR = "#004AAD";
 
-
-export const TRANSACTION_STATUS_TRANSLATION: Record<TransactionStatus, string> = {
-  [TransactionStatus.COMPLETED]: "Hoàn thành",
-  [TransactionStatus.FAILED]: "Thất bại",
-  [TransactionStatus.PENDING]: "Đang xử lý",
-}
-
+export const TRANSACTION_STATUS_TRANSLATION: Record<TransactionStatus, string> =
+  {
+    [TransactionStatus.COMPLETED]: "Hoàn thành",
+    [TransactionStatus.FAILED]: "Thất bại",
+    [TransactionStatus.PENDING]: "Đang xử lý",
+  };
 
 export const TICKET_STATUS_TRANSLATION: Record<TicketStatus, string> = {
   [TicketStatus.BOOKED]: "Đã đặt",
@@ -160,19 +179,19 @@ export const TICKET_STATUS_TRANSLATION: Record<TicketStatus, string> = {
   [TicketStatus.NO_SHOW]: "Không xuất hiện",
   [TicketStatus.REFUNDED]: "Đã hoàn tiền",
   [TicketStatus.RESCHEDULED]: "Đã đổi lịch",
-}
+};
 
 export const GENDER_TRANSLATION: Record<Gender, string> = {
   [Gender.MALE]: "Nam",
   [Gender.FEMALE]: "Nữ",
   [Gender.OTHER]: "Khác",
-}
+};
 
 export const TRIP_TYPE_TRANSLATION: Record<TripType, string> = {
   [TripType.ONE_WAY]: "Một chiều",
   [TripType.ROUND_TRIP]: "Khứ hồi",
   [TripType.MULTI_CITY]: "Đa chặng",
-}
+};
 
 export const BOOKING_STATUS_TRANSLATION: Record<BookingStatus, string> = {
   [BookingStatus.INIT]: "Đang xử lý",
@@ -180,4 +199,4 @@ export const BOOKING_STATUS_TRANSLATION: Record<BookingStatus, string> = {
   [BookingStatus.PENDING]: "Chờ xác nhận",
   [BookingStatus.PAID]: "Đã thanh toán",
   [BookingStatus.RESERVED]: "Đã đặt chỗ",
-}
+};
