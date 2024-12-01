@@ -15,6 +15,7 @@ import {
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import Loading from "../../common/components/Loading";
+import dayjs from "dayjs";
 
 ChartJS.register({
   CategoryScale,
@@ -31,7 +32,7 @@ const SalesStatsChart: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   const filter: StatisticFilterCriteria = {
-    startDate: searchParams.get("startDate") || undefined,
+    startDate: searchParams.get("startDate") || dayjs().format("YYYY-MM"),
     endDate: searchParams.get("endDate") || undefined,
     type: searchParams.get("endDate")
       ? "date"
